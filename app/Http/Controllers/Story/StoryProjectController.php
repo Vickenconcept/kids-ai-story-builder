@@ -1,0 +1,214 @@
+<?php
+
+namespace App\Http\Controllers\Story;
+
+use App\Contracts\Story\PageImageGenerator;
+use App\Data\Story\PageImageInput;
+use App\Enums\FeatureTier;
+use App\Enums\StoryProjectStatus;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreStoryProjectRequest;
+use App\Http\Requests\UpdateStoryProjectPresentationRequest;
+use App\Models\StoryProject;
+use App\Services\Media\StoryMediaStorage;
+use App\Services\Story\StoryPipelineDispatcher;
+use App\Support\StoryMediaUrl;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class StoryProjectController extends Controller
+{
+    public function index(Request $request): Response
+    {
+        $projects = StoryProject::query()
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->get([
+                'id',
+                'uuid',
+                'title',
+                'topic',
+                'status',
+                'page_count',
+                'pages_completed',
+                'created_at',
+                'updated_at',
+            ]);
+
+        return Inertia::render('Stories/Index', [
+            'projects' => $projects,
+        ]);
+    }
+
+    public function create(Request $request): Response
+    {
+        $this->authorize('create', StoryProject::class);
+
+        return Inertia::render('Stories/Create', [
+            'featureTier' => $request->user()->feature_tier?->value ?? FeatureTier::Basic->value,
+        ]);
+    }
+
+    public function store(StoreStoryProjectRequest $request, StoryPipelineDispatcher $dispatcher): \Illuminate\Http\RedirectResponse
+    {
+        $this->authorize('create', StoryProject::class);
+
+        $user = $request->user();
+        $includeVideo = $request->boolean('include_video')
+            && $user->feature_tier === FeatureTier::Pro;
+
+        $project = StoryProject::query()->create([
+            'user_id' => $user->id,
+            'title' => $request->string('title')->toString(),
+            'topic' => $request->string('topic')->toString(),
+            'lesson_type' => $request->string('lesson_type')->toString(),
+            'age_group' => $request->string('age_group')->toString(),
+            'page_count' => $request->integer('page_count'),
+            'illustration_style' => $request->string('illustration_style')->toString(),
+            'include_quiz' => $request->boolean('include_quiz'),
+            'include_narration' => $request->boolean('include_narration'),
+            'include_video' => $includeVideo,
+            'status' => StoryProjectStatus::Processing,
+            'pages_completed' => 0,
+        ]);
+
+        $dispatcher->queueStoryText($project);
+
+        return redirect()->route('stories.show', $project);
+    }
+
+    public function show(Request $request, StoryProject $story): Response
+    {
+        $this->authorize('view', $story);
+
+        $story->load('pages');
+
+        $pages = $story->pages->map(fn ($page) => [
+            'id' => $page->id,
+            'uuid' => $page->uuid,
+            'page_number' => $page->page_number,
+            'text_content' => $page->text_content,
+            'quiz_questions' => $page->quiz_questions,
+            'asset_errors' => $page->asset_errors,
+            'image_url' => StoryMediaUrl::resolve($page->image_path),
+            'audio_url' => StoryMediaUrl::resolve($page->audio_path),
+            'video_url' => StoryMediaUrl::resolve($page->video_path),
+        ]);
+
+        return Inertia::render('Stories/Show', [
+            'project' => [
+                'id' => $story->id,
+                'uuid' => $story->uuid,
+                'title' => $story->title,
+                'topic' => $story->topic,
+                'status' => $story->status->value,
+                'page_count' => $story->page_count,
+                'pages_completed' => $story->pages_completed,
+                'include_quiz' => $story->include_quiz,
+                'include_narration' => $story->include_narration,
+                'include_video' => $story->include_video,
+                'flip_gameplay_enabled' => $story->flip_gameplay_enabled,
+                'cover_front' => $this->hydrateCover($story->cover_front),
+                'cover_back' => $this->hydrateCover($story->cover_back),
+                'sharing_enabled' => $story->sharing_enabled,
+                'public_read_url' => route('stories.public.show', $story, absolute: true),
+                'flip_settings' => $story->flip_settings,
+            ],
+            'pages' => $pages,
+        ]);
+    }
+
+    public function updatePresentation(UpdateStoryProjectPresentationRequest $request, StoryProject $story): RedirectResponse
+    {
+        $this->authorize('update', $story);
+
+        $story->update($request->validated());
+
+        return back();
+    }
+
+    public function uploadCover(Request $request, StoryProject $story, StoryMediaStorage $storage): RedirectResponse
+    {
+        $this->authorize('update', $story);
+
+        $validated = $request->validate([
+            'surface' => ['required', Rule::in(['front', 'back'])],
+            'file' => ['required', 'file', 'max:10240', 'mimes:jpeg,jpg,png,gif,webp'],
+        ]);
+
+        $uploaded = $request->file('file');
+        $ext = strtolower($uploaded->getClientOriginalExtension() ?: 'png');
+        $name = 'cover-'.uniqid('', true).'.'.$ext;
+        $dir = 'stories/'.$story->id.'/covers';
+        $stored = $storage->storeBytes($uploaded->getContent(), $dir, $name, 'auto');
+        $kind = $ext === 'gif' ? 'gif' : 'image';
+        $config = ['kind' => $kind, 'path' => $stored];
+
+        if ($validated['surface'] === 'front') {
+            $story->update(['cover_front' => $config]);
+        } else {
+            $story->update(['cover_back' => $config]);
+        }
+
+        return back();
+    }
+
+    public function generateCoverAi(Request $request, StoryProject $story, PageImageGenerator $generator): RedirectResponse
+    {
+        $this->authorize('update', $story);
+
+        $validated = $request->validate([
+            'surface' => ['required', Rule::in(['front', 'back'])],
+            'prompt' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $promptBase = $validated['prompt'] ?? ($story->title.'. '.$story->topic);
+        $pageText = 'Book cover illustration, eye-catching, title mood: '.$promptBase;
+
+        $input = new PageImageInput(
+            $story->title,
+            $pageText,
+            $story->illustration_style,
+            $story->age_group,
+        );
+
+        $dir = 'stories/'.$story->id.'/covers';
+        $path = $generator->generate($input, $dir);
+        $config = [
+            'kind' => 'ai_image',
+            'path' => $path,
+            'prompt' => $promptBase,
+        ];
+
+        if ($validated['surface'] === 'front') {
+            $story->update(['cover_front' => $config]);
+        } else {
+            $story->update(['cover_back' => $config]);
+        }
+
+        return back();
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $config
+     * @return array<string, mixed>|null
+     */
+    private function hydrateCover(?array $config): ?array
+    {
+        if ($config === null || $config === []) {
+            return null;
+        }
+
+        $out = $config;
+        $kind = $config['kind'] ?? '';
+
+        if (in_array($kind, ['image', 'gif', 'ai_image'], true) && ! empty($config['path']) && is_string($config['path'])) {
+            $out['url'] = StoryMediaUrl::resolve($config['path']);
+        }
+
+        return $out;
+    }
+}

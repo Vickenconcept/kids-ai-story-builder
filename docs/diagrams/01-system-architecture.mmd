@@ -1,0 +1,32 @@
+flowchart TB
+  subgraph Client["Browser"]
+    UI[Vue + Inertia pages]
+    Viewer[Turn.js story viewer]
+    UI --> Viewer
+  end
+
+  subgraph Laravel["Laravel"]
+    Web[Web routes + controllers]
+    Jobs[Queue workers]
+    API[Internal services / AI orchestration]
+    Web --> API
+    API --> Jobs
+  end
+
+  subgraph Storage["Media"]
+    S3[(Object storage e.g. S3 / Cloudinary)]
+    DB[(Database)]
+  end
+
+  subgraph External["External APIs"]
+    OAI[OpenAI: text / image / TTS]
+    VID[Optional: Runway / Kaiber video]
+  end
+
+  UI <--> Web
+  Jobs --> OAI
+  Jobs --> VID
+  Jobs --> S3
+  Web --> DB
+  Jobs --> DB
+  Viewer --> S3

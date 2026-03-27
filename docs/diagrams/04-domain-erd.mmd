@@ -1,0 +1,32 @@
+erDiagram
+  User ||--o{ StoryProject : owns
+  StoryProject ||--o{ StoryPage : contains
+  StoryProject ||--o{ AIJob : tracks
+  User ||--o{ FeatureLevel : "plan / credits"
+
+  User {
+    int id
+    string email
+    int credits
+  }
+  StoryProject {
+    int id
+    string title
+    string topic
+    string status
+  }
+  StoryPage {
+    int id
+    int page_number
+    text text_content
+    string image_url
+    string audio_url
+    string video_url
+    json quiz_questions
+  }
+  AIJob {
+    int id
+    string type
+    string status
+    json payload
+  }

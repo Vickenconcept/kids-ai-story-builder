@@ -1,0 +1,8 @@
+flowchart LR
+  A[User input: topic, age, length, style] --> B[Generate story text per page]
+  B --> C[Generate image per page]
+  C --> D[Generate narration audio per page]
+  D --> E{Pro: video?}
+  E -->|Yes| F[Generate short clip per page]
+  E -->|No| G[Store assets + mark complete]
+  F --> G
