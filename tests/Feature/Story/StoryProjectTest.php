@@ -97,6 +97,29 @@ class StoryProjectTest extends TestCase
         $this->assertSame('#112233', $project->cover_front['color']);
 
         $this->actingAs($user)
+            ->patch(route('stories.update', $project), [
+                'cover_front' => [
+                    'kind' => 'solid',
+                    'color' => '#112233',
+                    'frame' => 'minimal-gilt',
+                ],
+            ])
+            ->assertRedirect();
+
+        $project->refresh();
+        $this->assertSame('minimal-gilt', $project->cover_front['frame']);
+
+        $this->actingAs($user)
+            ->patch(route('stories.update', $project), [
+                'cover_front' => [
+                    'kind' => 'solid',
+                    'color' => '#112233',
+                    'frame' => 'not-a-valid-frame',
+                ],
+            ])
+            ->assertSessionHasErrors('cover_front.frame');
+
+        $this->actingAs($user)
             ->patch(route('stories.pages.update', [$project, $page]), [
                 'quiz_questions' => [
                     ['question' => 'New?', 'choices' => ['X', 'Y'], 'answer' => 'Y'],

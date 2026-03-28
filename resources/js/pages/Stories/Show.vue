@@ -2,6 +2,7 @@
 import { Head, Link, router } from '@inertiajs/vue3';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import StoryFlipbook, { type CoverConfigJson } from '@/components/StoryFlipbook.vue';
+import { COVER_FRAME_OPTIONS, type CoverFrameId, normalizeCoverFrame } from '@/lib/coverFrames';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -91,13 +92,33 @@ async function copyPublicLink(): Promise<void> {
     }
 }
 
-function patchCoverConfig(config: Record<string, unknown>): void {
-    const key = coverSurface.value === 'front' ? 'cover_front' : 'cover_back';
-    router.patch(`/stories/${props.project.uuid}`, { [key]: config }, { preserveScroll: true });
+function patchCoverConfig(config: Record<string, string | number | boolean | null | undefined>): void {
+    const payload =
+        coverSurface.value === 'front' ? { cover_front: config } : { cover_back: config };
+    router.patch(`/stories/${props.project.uuid}`, payload, { preserveScroll: true });
+}
+
+const activeSurfaceCover = computed(() =>
+    coverSurface.value === 'front' ? props.project.cover_front : props.project.cover_back,
+);
+
+const selectedCoverFrame = computed(() => normalizeCoverFrame(activeSurfaceCover.value?.frame));
+
+function applyCoverFrame(frameId: CoverFrameId): void {
+    const raw = activeSurfaceCover.value;
+    const base =
+        raw && typeof raw === 'object' && raw !== null && 'kind' in raw
+            ? { ...(raw as Record<string, string | number | boolean | null | undefined>) }
+            : ({ kind: 'solid', color: solidColor.value } as const);
+    patchCoverConfig({ ...base, frame: frameId });
 }
 
 function applySolidCover(): void {
-    patchCoverConfig({ kind: 'solid', color: solidColor.value });
+    patchCoverConfig({
+        kind: 'solid',
+        color: solidColor.value,
+        frame: selectedCoverFrame.value,
+    });
 }
 
 function applyGradientCover(): void {
@@ -106,6 +127,7 @@ function applyGradientCover(): void {
         angle: gradAngle.value,
         from: gradFrom.value,
         to: gradTo.value,
+        frame: selectedCoverFrame.value,
     });
 }
 
@@ -280,6 +302,29 @@ onUnmounted(() => {
                         >
                             Back cover
                         </Button>
+                    </div>
+                    <div class="space-y-2">
+                        <Label class="text-xs">Cover frame style</Label>
+                        <p class="text-muted-foreground text-xs">
+                            Border and embossing on the hard cover. Front and back can each use a different template.
+                        </p>
+                        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                            <button
+                                v-for="opt in COVER_FRAME_OPTIONS"
+                                :key="opt.id"
+                                type="button"
+                                class="rounded-lg border p-3 text-left transition-colors select-none"
+                                :class="
+                                    selectedCoverFrame === opt.id
+                                        ? 'border-primary bg-primary/10 ring-primary/25 ring-1'
+                                        : 'border-border hover:border-muted-foreground/40'
+                                "
+                                @click="applyCoverFrame(opt.id)"
+                            >
+                                <span class="text-sm font-medium">{{ opt.label }}</span>
+                                <span class="text-muted-foreground mt-1 block text-xs leading-snug">{{ opt.hint }}</span>
+                            </button>
+                        </div>
                     </div>
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="space-y-2">

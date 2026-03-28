@@ -6,6 +6,7 @@ import { createApp, h, computed, nextTick, onBeforeUnmount, onMounted, reactive,
 import StoryQuizSheet, { type QuizRow } from '@/components/StoryQuizSheet.vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { coverFrameRootClass } from '@/lib/coverFrames';
 
 export type FlipbookPage = {
     uuid: string;
@@ -27,6 +28,8 @@ export type CoverConfigJson = {
     path?: string;
     url?: string;
     prompt?: string;
+    /** Decorative hard-cover border / embossing template */
+    frame?: string;
 } | null;
 
 const STORAGE_KEY = 'ai-storybook-flip-settings-v1';
@@ -63,6 +66,8 @@ const props = withDefaults(
 const flipRoot = ref<HTMLElement | null>(null);
 const pageAudioRef = ref<HTMLAudioElement | null>(null);
 const ready = ref(false);
+/** In double-page mode, shifts the stage so a single visible cover (closed front or closed back) sits centered. */
+const bookNudgePx = ref(0);
 let jq: JQueryStatic | null = null;
 
 const gameUnmounters: Array<() => void> = [];
@@ -330,6 +335,16 @@ function clearAdvanceTimer(): void {
     }
 }
 
+/** Pending deferred start of a narration clip (cleared on flip / pause). */
+let narrationStartTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearNarrationStartTimer(): void {
+    if (narrationStartTimer !== null) {
+        clearTimeout(narrationStartTimer);
+        narrationStartTimer = null;
+    }
+}
+
 function contentPageRange(): { start: number; end: number } {
     const start = FRONT_HARD_COUNT + 1;
     const mid = middleSlots();
@@ -348,20 +363,23 @@ function viewIsOnlyGameSheets(view: number[]): boolean {
     return inMiddle.every((tp) => mid[tp - start]?.type === 'game');
 }
 
+/** Story page indices for the spread, left → right (turn page order), no duplicate clips. */
 function storyIndicesInView(view: number[]): number[] {
     const { start, end } = contentPageRange();
     const mid = middleSlots();
-    const idxs: number[] = [];
-    for (const p of [...view].sort((a, b) => a - b)) {
+    const seen = new Set<number>();
+    const ordered: number[] = [];
+    for (const p of [...view].filter((n) => n > 0).sort((a, b) => a - b)) {
         if (p < start || p > end) {
             continue;
         }
         const slot = mid[p - start];
-        if (slot?.type === 'content') {
-            idxs.push(slot.idx);
+        if (slot?.type === 'content' && !seen.has(slot.idx)) {
+            seen.add(slot.idx);
+            ordered.push(slot.idx);
         }
     }
-    return [...new Set(idxs)].sort((a, b) => a - b);
+    return ordered;
 }
 
 function isPlayableAudioUrl(url: string | null | undefined): boolean {
@@ -369,12 +387,24 @@ function isPlayableAudioUrl(url: string | null | undefined): boolean {
 }
 
 function pauseNarration(): void {
+    clearNarrationStartTimer();
     const el = pageAudioRef.value;
     if (!el) {
         return;
     }
     el.onended = null;
     el.pause();
+}
+
+/** Turn.js `turned` passes (event, page, view); tolerate arity/order bugs and fall back to live view. */
+function resolveSpreadViewFromTurnEvent(a: unknown, b: unknown): number[] {
+    if (Array.isArray(b) && b.length > 0) {
+        return b as number[];
+    }
+    if (Array.isArray(a) && a.length > 0 && typeof (a as number[])[0] === 'number') {
+        return a as number[];
+    }
+    return getCurrentView();
 }
 
 function getTurnTotalPages(): number {
@@ -424,25 +454,45 @@ function maybeAdvanceAfterAudio(): void {
 
 function playStoryIndex(idx: number, onDone?: () => void): void {
     const el = pageAudioRef.value;
+    const notifyDone = (): void => {
+        window.setTimeout(() => onDone?.(), 0);
+    };
     if (!el || idx < 0 || idx >= props.pages.length) {
-        onDone?.();
+        notifyDone();
         return;
     }
     const url = props.pages[idx]?.audio_url;
+    clearNarrationStartTimer();
     el.onended = null;
     if (!isPlayableAudioUrl(url)) {
-        onDone?.();
+        notifyDone();
         return;
     }
-    el.src = url as string;
-    el.onended = () => {
-        el.onended = null;
-        onDone?.();
-    };
-    void el.play().catch(() => {
-        el.onended = null;
-        onDone?.();
-    });
+    const urlStr = url as string;
+    /* Defer so we are off the prior `ended` stack; load() helps the next clip; micro-delay aids chained autoplay. */
+    narrationStartTimer = window.setTimeout(() => {
+        narrationStartTimer = null;
+        el.onended = () => {
+            el.onended = null;
+            notifyDone();
+        };
+        el.src = urlStr;
+        el.load();
+        void el.play().catch(() => {
+            el.onended = null;
+            narrationStartTimer = window.setTimeout(() => {
+                narrationStartTimer = null;
+                el.onended = () => {
+                    el.onended = null;
+                    notifyDone();
+                };
+                void el.play().catch(() => {
+                    el.onended = null;
+                    notifyDone();
+                });
+            }, 45);
+        });
+    }, 0);
 }
 
 /** Play left-to-right narration for every story page currently visible (spread). */
@@ -492,9 +542,11 @@ function onTurning(): void {
     pauseNarration();
 }
 
-function onTurned(_e: unknown, _page: number, view: number[]): void {
+function onTurned(_e: unknown, pageOrView?: unknown, viewMaybe?: unknown): void {
+    const view = resolveSpreadViewFromTurnEvent(pageOrView ?? [], viewMaybe ?? []);
     playSpreadNarration(view);
     scheduleTimerAdvance(view);
+    syncBookHorizontalNudge();
 }
 
 function bookDimensions() {
@@ -504,9 +556,42 @@ function bookDimensions() {
     return { w, h };
 }
 
+function syncBookHorizontalNudge(): void {
+    if (!flipRoot.value || !jq || !ready.value) {
+        bookNudgePx.value = 0;
+        return;
+    }
+    if (settings.display !== 'double') {
+        bookNudgePx.value = 0;
+        return;
+    }
+    const { w } = bookDimensions();
+    const quarter = w / 4;
+    try {
+        const view = jq(flipRoot.value).turn('view') as number[];
+        const v0 = view[0] ?? 0;
+        const v1 = view[1] ?? 0;
+        /* Turn.js: closed front uses [0,1] (only right half); closed back uses [last,0] (only left half). */
+        if (v0 === 0 && v1 > 0) {
+            bookNudgePx.value = -quarter;
+        } else if (v0 > 0 && v1 === 0) {
+            bookNudgePx.value = quarter;
+        } else {
+            bookNudgePx.value = 0;
+        }
+    } catch {
+        bookNudgePx.value = 0;
+    }
+}
+
 const scalerStyle = computed(() => ({
     transform: `scale(${settings.bookZoomPercent / 100})`,
     transformOrigin: 'center center',
+}));
+
+const bookNudgeStyle = computed(() => ({
+    transform: `translateX(${bookNudgePx.value}px)`,
+    transition: 'transform 0.25s ease-out',
 }));
 
 async function loadTurn(): Promise<void> {
@@ -539,21 +624,37 @@ async function initTurn(): Promise<void> {
 
     const { w, h } = bookDimensions();
 
-    const frontWrap = jq('<div class="hard cover-front" />').css(coverHardStyle(props.coverFront ?? null));
-    frontWrap.append(
-        jq('<div class="cover-hard-inner flex h-full flex-col items-center justify-center p-6 text-center" />').append(
-            jq('<span class="cover-title text-lg font-semibold tracking-tight" />').text(props.title),
+    const frontStyle = coverHardStyle(props.coverFront ?? null);
+    const frontWrap = jq('<div class="hard cover-front cover-hard-realistic" />')
+        .css(frontStyle)
+        .addClass(coverFrameRootClass(props.coverFront?.frame));
+    if (Object.keys(frontStyle).length === 0) {
+        frontWrap.addClass('cover-hard-default-leather');
+    }
+    const frontStack = jq(
+        '<div class="cover-hard-stack relative flex h-full min-h-0 flex-col overflow-hidden" />',
+    );
+    frontStack.append(jq('<div class="cover-hard-frame" aria-hidden="true" />'));
+    frontStack.append(jq('<div class="cover-hard-spine cover-hard-spine--front" aria-hidden="true" />'));
+    frontStack.append(
+        jq(
+            '<div class="cover-hard-inner relative z-[1] flex h-full flex-col items-center justify-center px-5 py-8 text-center sm:px-8" />',
+        ).append(
+            jq(
+                '<span class="cover-title capitalize text-xl font-extrabold leading-snug tracking-tight text-balance sm:text-2xl sm:leading-snug" />',
+            ).text(props.title),
         ),
     );
+    frontWrap.append(frontStack);
     $root.append(frontWrap);
-    $root.append(jq('<div class="hard hard-inside" />'));
+    $root.append(jq('<div class="hard hard-inside hard-endpaper" aria-hidden="true" />'));
 
     const slots = middleSlots();
     for (const slot of slots) {
         if (slot.type === 'content') {
             const p = slot.page;
             const inner = jq(
-                '<div class="page-inner page-sheet flex h-full flex-col overflow-hidden bg-card" />',
+                '<div class="page-inner page-sheet page-sheet-realistic flex h-full flex-col overflow-hidden bg-card" />',
             );
             if (p.image_url) {
                 inner.append(
@@ -572,14 +673,14 @@ async function initTurn(): Promise<void> {
                 );
             }
             inner.append(
-                jq('<div class="shrink-0 border-t border-border/60 p-3 text-xs leading-snug sm:text-sm" />').append(
-                    jq('<p class="text-foreground/90" />').text(p.text_content ?? ''),
-                ),
+                jq(
+                    '<div class="page-sheet-foot shrink-0 border-t border-border/55 p-3 text-xs leading-snug sm:p-4 sm:text-sm" />',
+                ).append(jq('<p class="text-foreground/90" />').text(p.text_content ?? '')),
             );
             $root.append(inner);
         } else {
             const mount = jq(
-                '<div class="page-inner page-sheet story-game-sheet flex h-full flex-col overflow-hidden bg-card" />',
+                '<div class="page-inner page-sheet page-sheet-realistic story-game-sheet flex h-full flex-col overflow-hidden bg-card" />',
             );
             const holder = jq('<div class="game-sheet-mount min-h-0 flex-1 w-full" />').attr(
                 'data-page-uuid',
@@ -590,13 +691,27 @@ async function initTurn(): Promise<void> {
         }
     }
 
-    $root.append(jq('<div class="hard hard-inside-back" />'));
-    const backWrap = jq('<div class="hard cover-back" />').css(coverHardStyle(props.coverBack ?? null));
-    backWrap.append(
-        jq(
-            '<div class="cover-hard-inner flex h-full items-center justify-center p-6 text-center text-sm opacity-90" />',
-        ).text('The end'),
+    $root.append(jq('<div class="hard hard-inside-back hard-endpaper" aria-hidden="true" />'));
+    const backStyle = coverHardStyle(props.coverBack ?? null);
+    const backWrap = jq('<div class="hard cover-back cover-hard-realistic" />')
+        .css(backStyle)
+        .addClass(coverFrameRootClass(props.coverBack?.frame));
+    if (Object.keys(backStyle).length === 0) {
+        backWrap.addClass('cover-hard-default-leather');
+    }
+    const backStack = jq(
+        '<div class="cover-hard-stack relative flex h-full min-h-0 flex-col overflow-hidden" />',
     );
+    backStack.append(jq('<div class="cover-hard-frame cover-hard-frame--back" aria-hidden="true" />'));
+    backStack.append(jq('<div class="cover-hard-spine cover-hard-spine--back" aria-hidden="true" />'));
+    backStack.append(
+        jq(
+            '<div class="cover-hard-inner cover-hard-inner--back relative z-[1] flex h-full flex-col items-center justify-center px-5 py-8 text-center text-sm sm:px-8" />',
+        ).append(
+            jq('<span class="cover-end-title font-medium tracking-wide opacity-95" />').text('The end'),
+        ),
+    );
+    backWrap.append(backStack);
     $root.append(backWrap);
 
     const useAcceleration = settings.acceleration && !reducedMotion();
@@ -624,6 +739,7 @@ async function initTurn(): Promise<void> {
 
     await nextTick();
     mountGameApps();
+    syncBookHorizontalNudge();
 }
 
 function mountGameApps(): void {
@@ -692,6 +808,7 @@ function nextPage(): void {
 
 function onResize(): void {
     resizeTurn();
+    syncBookHorizontalNudge();
 }
 
 let rebuildTimer: ReturnType<typeof setTimeout> | null = null;
@@ -955,11 +1072,13 @@ onBeforeUnmount(() => {
         <div class="flip-stage perspective-desk w-full max-w-[min(100%,980px)]">
             <div class="book-ambient" aria-hidden="true" />
             <div class="book-drop-shadow">
-                <div class="book-scaler" :style="scalerStyle">
-                    <div
-                        ref="flipRoot"
-                        class="story-flipbook touch-none overflow-hidden rounded-lg border border-border"
-                    />
+                <div class="book-horizontal-nudge" :style="bookNudgeStyle">
+                    <div class="book-scaler" :style="scalerStyle">
+                        <div
+                            ref="flipRoot"
+                            class="story-flipbook touch-none overflow-hidden rounded-lg"
+                        />
+                    </div>
                 </div>
             </div>
             <div class="book-floor-shadow" aria-hidden="true" />
@@ -1011,6 +1130,10 @@ onBeforeUnmount(() => {
 
 .dark .book-drop-shadow {
     filter: drop-shadow(0 32px 56px rgb(0 0 0 / 0.55)) drop-shadow(0 14px 22px rgb(0 0 0 / 0.35));
+}
+
+.book-horizontal-nudge {
+    will-change: transform;
 }
 
 .book-scaler {
@@ -1079,10 +1202,680 @@ onBeforeUnmount(() => {
         inset 0 1px 0 rgb(255 255 255 / 0.03);
 }
 
+/* Inner story pages: paper depth, margin frame, subtle grain (matches cover polish) */
+.story-flipbook .page-inner.page-sheet.page-sheet-realistic {
+    position: relative;
+    isolation: isolate;
+    background-color: var(--card);
+    background-image:
+        radial-gradient(ellipse 92% 68% at 50% 10%, rgb(255 255 255 / 0.1), transparent 54%),
+        radial-gradient(ellipse 72% 52% at 86% 88%, rgb(0 0 0 / 0.045), transparent 52%),
+        radial-gradient(ellipse 62% 48% at 7% 78%, rgb(0 0 0 / 0.04), transparent 50%);
+    box-shadow:
+        inset 0 0 0 1px rgb(0 0 0 / 0.07),
+        inset 0 0 0 5px rgb(0 0 0 / 0.028),
+        inset 0 0 0 6px rgb(255 255 255 / 0.05),
+        inset 0 0 0 7px rgb(0 0 0 / 0.02),
+        inset 0 0 52px 18px rgb(0 0 0 / 0.065),
+        inset 0 18px 40px rgb(0 0 0 / 0.05),
+        inset 0 1px 0 rgb(255 255 255 / 0.48);
+}
+
+.dark .story-flipbook .page-inner.page-sheet.page-sheet-realistic {
+    background-image:
+        radial-gradient(ellipse 92% 68% at 50% 10%, rgb(255 255 255 / 0.05), transparent 54%),
+        radial-gradient(ellipse 72% 52% at 86% 88%, rgb(0 0 0 / 0.32), transparent 52%),
+        radial-gradient(ellipse 62% 48% at 7% 78%, rgb(0 0 0 / 0.28), transparent 50%);
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 0.06),
+        inset 0 0 0 5px rgb(0 0 0 / 0.22),
+        inset 0 0 0 6px rgb(255 255 255 / 0.03),
+        inset 0 0 0 7px rgb(0 0 0 / 0.12),
+        inset 0 0 60px 22px rgb(0 0 0 / 0.38),
+        inset 0 16px 36px rgb(0 0 0 / 0.34),
+        inset 0 1px 0 rgb(255 255 255 / 0.04);
+}
+
+.story-flipbook .page-inner.page-sheet.page-sheet-realistic::before {
+    content: '';
+    position: absolute;
+    inset: 10px 12px 12px 12px;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 0 0 1px rgb(0 0 0 / 0.08),
+        inset 0 0 0 4px rgb(0 0 0 / 0.025),
+        inset 0 0 32px rgb(0 0 0 / 0.07),
+        inset 0 1px 0 rgb(255 255 255 / 0.14);
+}
+
+.dark .story-flipbook .page-inner.page-sheet.page-sheet-realistic::before {
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 0.07),
+        inset 0 0 0 4px rgb(0 0 0 / 0.18),
+        inset 0 0 36px rgb(0 0 0 / 0.34),
+        inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+
+.story-flipbook .page-inner.page-sheet.page-sheet-realistic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: inherit;
+    opacity: 0.2;
+    mix-blend-mode: multiply;
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0,
+            transparent 1px,
+            rgb(0 0 0 / 0.02) 1px,
+            rgb(0 0 0 / 0.02) 2px
+        ),
+        repeating-linear-gradient(
+            98deg,
+            transparent 0,
+            transparent 3px,
+            rgb(0 0 0 / 0.016) 3px,
+            rgb(0 0 0 / 0.016) 4px
+        );
+}
+
+.dark .story-flipbook .page-inner.page-sheet.page-sheet-realistic::after {
+    opacity: 0.38;
+    mix-blend-mode: soft-light;
+}
+
+.story-flipbook .page-inner.page-sheet.page-sheet-realistic > * {
+    position: relative;
+    z-index: 3;
+}
+
+.story-flipbook .page-sheet-foot {
+    border-top-color: color-mix(in oklab, var(--border) 72%, transparent);
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.025), transparent 48%);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.2),
+        inset 0 10px 36px rgb(0 0 0 / 0.035);
+}
+
+.dark .story-flipbook .page-sheet-foot {
+    border-top-color: color-mix(in oklab, var(--border) 55%, transparent);
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.22), transparent 52%);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.06),
+        inset 0 10px 36px rgb(0 0 0 / 0.18);
+}
+
+/* Inner hard leaves (endpapers beside the block): cream paper, light tooth */
+.story-flipbook .hard.hard-endpaper {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse 100% 90% at 50% 0%, rgb(255 255 255 / 0.14), transparent 58%),
+        linear-gradient(
+            148deg,
+            color-mix(in oklab, var(--card) 90%, var(--muted)) 0%,
+            var(--card) 100%
+        );
+    box-shadow:
+        inset 0 0 0 1px rgb(0 0 0 / 0.06),
+        inset 0 0 52px 18px rgb(0 0 0 / 0.07),
+        inset 0 18px 40px rgb(0 0 0 / 0.05),
+        inset 0 1px 0 rgb(255 255 255 / 0.45);
+}
+
+.story-flipbook .hard.hard-endpaper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.45;
+    background-image: repeating-linear-gradient(
+        180deg,
+        rgb(0 0 0 / 0.018) 0px,
+        transparent 1px,
+        transparent 2px
+    );
+}
+
+.dark .story-flipbook .hard.hard-endpaper {
+    background:
+        radial-gradient(ellipse 100% 90% at 50% 0%, rgb(255 255 255 / 0.04), transparent 58%),
+        linear-gradient(
+            148deg,
+            color-mix(in oklab, var(--card) 86%, var(--muted)) 0%,
+            var(--card) 100%
+        );
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 0.05),
+        inset 0 0 60px 22px rgb(0 0 0 / 0.38),
+        inset 0 16px 36px rgb(0 0 0 / 0.34),
+        inset 0 1px 0 rgb(255 255 255 / 0.04);
+}
+
+.dark .story-flipbook .hard.hard-endpaper::before {
+    opacity: 0.35;
+    background-image: repeating-linear-gradient(
+        180deg,
+        rgb(255 255 255 / 0.02) 0px,
+        transparent 1px,
+        transparent 2px
+    );
+}
+
 .story-flipbook .cover-title {
+    max-width: min(100%, 16rem);
+    margin-inline: auto;
+    hyphens: auto;
+    overflow-wrap: anywhere;
     text-shadow:
-        0 1px 2px rgb(0 0 0 / 0.4),
-        0 4px 20px rgb(0 0 0 / 0.35);
+        0 0 1px rgb(0 0 0 / 0.55),
+        0 2px 4px rgb(0 0 0 / 0.45),
+        0 6px 24px rgb(0 0 0 / 0.38);
+}
+
+/* Hard covers: leather-like depth, ornate frame, recessed panel, spine ribs (front + back) */
+.story-flipbook .hard.cover-hard-realistic {
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 1px 0 rgb(255 255 255 / 0.07),
+        0 16px 36px rgb(0 0 0 / 0.34),
+        0 0 0 1px rgb(0 0 0 / 0.2),
+        inset 0 0 0 1px rgb(255 255 255 / 0.06),
+        inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+.story-flipbook .cover-front.cover-hard-realistic {
+    border-radius: 4px 8px 8px 4px;
+}
+
+.story-flipbook .cover-back.cover-hard-realistic {
+    border-radius: 8px 4px 4px 8px;
+}
+
+.dark .story-flipbook .hard.cover-hard-realistic {
+    box-shadow:
+        0 1px 0 rgb(255 255 255 / 0.04),
+        0 20px 48px rgb(0 0 0 / 0.55),
+        0 0 0 1px rgb(0 0 0 / 0.45),
+        inset 0 0 0 1px rgb(255 255 255 / 0.05),
+        inset 0 1px 0 rgb(255 255 255 / 0.04);
+}
+
+.story-flipbook .cover-hard-default-leather {
+    background:
+        radial-gradient(ellipse 130% 95% at 50% 100%, rgb(0 0 0 / 0.44), transparent 56%),
+        radial-gradient(ellipse 75% 55% at 12% 8%, rgb(255 255 255 / 0.1), transparent 50%),
+        radial-gradient(ellipse 55% 65% at 88% 90%, rgb(0 0 0 / 0.32), transparent 52%),
+        linear-gradient(148deg, #24160f 0%, #4a301f 36%, #3b2618 64%, #1c1009 100%);
+    color: rgb(245 240 232);
+}
+
+.dark .story-flipbook .cover-hard-default-leather {
+    background:
+        radial-gradient(ellipse 130% 95% at 50% 100%, rgb(0 0 0 / 0.5), transparent 56%),
+        radial-gradient(ellipse 75% 55% at 12% 8%, rgb(255 255 255 / 0.06), transparent 50%),
+        radial-gradient(ellipse 55% 65% at 88% 90%, rgb(0 0 0 / 0.4), transparent 52%),
+        linear-gradient(148deg, #1a0f0a 0%, #352218 38%, #2a1a12 62%, #120a06 100%);
+    color: rgb(235 228 218);
+}
+
+.story-flipbook .cover-hard-stack {
+    border-radius: inherit;
+}
+
+/* Frame layer: neutral base; each .cover-frame-* template fills in the full look */
+.story-flipbook .cover-hard-frame {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.03);
+}
+
+.story-flipbook .cover-hard-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: none;
+}
+
+.story-flipbook .cover-hard-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0;
+    mix-blend-mode: overlay;
+    background: none;
+}
+
+/* ─── Classic leather (warm antique, gold + tooled grain) ─── */
+.story-flipbook .cover-frame-classic-leather .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 2px rgb(212 175 55 / 0.28),
+        inset 0 0 0 6px rgb(60 35 20 / 0.35),
+        inset 0 0 0 9px rgb(212 175 55 / 0.12),
+        inset 0 0 0 11px rgb(0 0 0 / 0.2),
+        inset 0 0 56px 20px rgb(0 0 0 / 0.48),
+        inset 0 6px 22px rgb(255 255 255 / 0.06);
+}
+
+.story-flipbook .cover-frame-classic-leather .cover-hard-frame::before {
+    inset: 8% 7% 10% 7%;
+    border-radius: 3px;
+    box-shadow:
+        inset 0 0 0 1px rgb(0 0 0 / 0.52),
+        inset 0 10px 34px rgb(0 0 0 / 0.5),
+        inset 0 2px 0 rgb(255 255 255 / 0.07);
+}
+
+.story-flipbook .cover-frame-classic-leather .cover-hard-frame::after {
+    opacity: 0.14;
+    mix-blend-mode: overlay;
+    background-image: repeating-linear-gradient(
+        -14deg,
+        transparent 0,
+        transparent 2px,
+        rgb(40 20 10 / 0.06) 2px,
+        rgb(40 20 10 / 0.06) 3px
+    );
+}
+
+.story-flipbook .cover-frame-classic-leather .cover-hard-frame--back::before {
+    inset: 8% 7% 10% 7%;
+}
+
+.story-flipbook .cover-frame-classic-leather .cover-hard-spine {
+    width: min(5.5%, 22px);
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(30 15 8 / 0.45) 0px,
+        rgb(30 15 8 / 0.45) 3px,
+        rgb(255 230 200 / 0.07) 3px,
+        rgb(255 230 200 / 0.07) 7px
+    );
+    box-shadow: inset -5px 0 11px rgb(0 0 0 / 0.45);
+}
+
+/* ─── Minimal art book (silver hairline, huge calm field) ─── */
+.story-flipbook .cover-frame-minimal-gilt .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 1px rgb(220 220 228 / 0.55),
+        inset 0 0 0 3px rgb(0 0 0 / 0.06),
+        inset 0 0 0 4px rgb(255 255 255 / 0.04),
+        inset 0 0 24px 10px rgb(0 0 0 / 0.12);
+}
+
+.story-flipbook .cover-frame-minimal-gilt .cover-hard-frame::before {
+    inset: 4.5% 4.5% 5.5% 4.5%;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 0 0 1px rgb(0 0 0 / 0.08),
+        inset 0 2px 12px rgb(0 0 0 / 0.06),
+        inset 0 1px 0 rgb(255 255 255 / 0.25);
+}
+
+.story-flipbook .cover-frame-minimal-gilt .cover-hard-frame::after {
+    opacity: 0.35;
+    mix-blend-mode: soft-light;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 14px,
+        rgb(255 255 255 / 0.04) 14px,
+        rgb(255 255 255 / 0.04) 15px
+    );
+}
+
+.dark .story-flipbook .cover-frame-minimal-gilt .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 0.14),
+        inset 0 0 0 3px rgb(0 0 0 / 0.3),
+        inset 0 0 28px 12px rgb(0 0 0 / 0.35);
+}
+
+.dark .story-flipbook .cover-frame-minimal-gilt .cover-hard-frame::before {
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 0.06),
+        inset 0 2px 14px rgb(0 0 0 / 0.45),
+        inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+
+.dark .story-flipbook .cover-frame-minimal-gilt .cover-hard-frame::after {
+    opacity: 0.2;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 12px,
+        rgb(0 0 0 / 0.15) 12px,
+        rgb(0 0 0 / 0.15) 13px
+    );
+}
+
+/* ─── Industrial metal (stepped gunmetal bands, fine machine grid) ─── */
+.story-flipbook .cover-frame-modern-bevel .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 1px rgb(148 163 184 / 0.35),
+        inset 0 0 0 3px rgb(15 23 42 / 0.55),
+        inset 0 0 0 4px rgb(100 116 139 / 0.2),
+        inset 0 0 0 6px rgb(15 23 42 / 0.45),
+        inset 0 0 0 7px rgb(226 232 240 / 0.08),
+        inset 0 0 40px 18px rgb(0 0 0 / 0.4),
+        inset 0 8px 18px rgb(255 255 255 / 0.05);
+}
+
+.story-flipbook .cover-frame-modern-bevel .cover-hard-frame::before {
+    inset: 7% 6.5% 9% 6.5%;
+    border-radius: 1px;
+    box-shadow:
+        inset 0 0 0 1px rgb(30 41 59 / 0.7),
+        inset 0 4px 14px rgb(0 0 0 / 0.4),
+        inset 0 1px 0 rgb(148 163 184 / 0.25);
+}
+
+.story-flipbook .cover-frame-modern-bevel .cover-hard-frame::after {
+    opacity: 0.55;
+    mix-blend-mode: soft-light;
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 5px,
+            rgb(15 23 42 / 0.06) 5px,
+            rgb(15 23 42 / 0.06) 6px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 5px,
+            rgb(15 23 42 / 0.05) 5px,
+            rgb(15 23 42 / 0.05) 6px
+        );
+}
+
+.dark .story-flipbook .cover-frame-modern-bevel .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 1px rgb(148 163 184 / 0.22),
+        inset 0 0 0 3px rgb(0 0 0 / 0.6),
+        inset 0 0 0 5px rgb(71 85 105 / 0.25),
+        inset 0 0 0 6px rgb(0 0 0 / 0.5),
+        inset 0 0 0 7px rgb(226 232 240 / 0.05),
+        inset 0 0 48px 22px rgb(0 0 0 / 0.55),
+        inset 0 6px 16px rgb(255 255 255 / 0.04);
+}
+
+.dark .story-flipbook .cover-frame-modern-bevel .cover-hard-frame::before {
+    box-shadow:
+        inset 0 0 0 1px rgb(30 41 59 / 0.85),
+        inset 0 4px 18px rgb(0 0 0 / 0.55),
+        inset 0 1px 0 rgb(148 163 184 / 0.15);
+}
+
+.dark .story-flipbook .cover-frame-modern-bevel .cover-hard-frame::after {
+    opacity: 0.35;
+}
+
+/* ─── Baroque treasure (brass ladders + corner rosette glow) ─── */
+.story-flipbook .cover-frame-ornate-baroque .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 2px rgb(196 154 58 / 0.5),
+        inset 0 0 0 5px rgb(45 25 12 / 0.55),
+        inset 0 0 0 8px rgb(212 175 55 / 0.28),
+        inset 0 0 0 11px rgb(20 10 5 / 0.5),
+        inset 0 0 0 14px rgb(184 115 51 / 0.22),
+        inset 0 0 70px 28px rgb(0 0 0 / 0.55),
+        inset 0 8px 24px rgb(255 230 180 / 0.12);
+}
+
+.story-flipbook .cover-frame-ornate-baroque .cover-hard-frame::before {
+    inset: 12% 10% 14% 10%;
+    border-radius: 4px;
+    box-shadow:
+        inset 0 0 0 2px rgb(0 0 0 / 0.45),
+        inset 0 14px 46px rgb(0 0 0 / 0.62),
+        inset 0 2px 0 rgb(255 220 160 / 0.09);
+}
+
+.story-flipbook .cover-frame-ornate-baroque .cover-hard-frame::after {
+    opacity: 1;
+    mix-blend-mode: soft-light;
+    background-image:
+        radial-gradient(ellipse 38% 32% at 10% 8%, rgb(255 210 120 / 0.35), transparent 62%),
+        radial-gradient(ellipse 38% 32% at 90% 8%, rgb(255 210 120 / 0.35), transparent 62%),
+        radial-gradient(ellipse 35% 30% at 10% 92%, rgb(255 200 100 / 0.22), transparent 58%),
+        radial-gradient(ellipse 35% 30% at 90% 92%, rgb(255 200 100 / 0.22), transparent 58%),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgb(80 40 10 / 0.04) 3px,
+            rgb(80 40 10 / 0.04) 4px
+        );
+}
+
+.dark .story-flipbook .cover-frame-ornate-baroque .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 2px rgb(196 154 58 / 0.35),
+        inset 0 0 0 5px rgb(0 0 0 / 0.65),
+        inset 0 0 0 8px rgb(212 175 55 / 0.18),
+        inset 0 0 0 11px rgb(0 0 0 / 0.55),
+        inset 0 0 0 14px rgb(140 80 40 / 0.2),
+        inset 0 0 78px 30px rgb(0 0 0 / 0.65),
+        inset 0 6px 20px rgb(255 220 180 / 0.06);
+}
+
+.dark .story-flipbook .cover-frame-ornate-baroque .cover-hard-frame::after {
+    opacity: 0.85;
+}
+
+/* ─── Handmade cotton deckle (cream fog, fibrous scatter, uneven inset) ─── */
+.story-flipbook .cover-frame-deckle-paper .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 1px rgb(120 90 60 / 0.2),
+        inset 0 0 0 4px rgb(255 248 235 / 0.12),
+        inset 0 0 0 7px rgb(90 70 50 / 0.12),
+        inset 0 0 88px 36px rgb(139 90 60 / 0.22),
+        inset 0 18px 40px rgb(255 252 245 / 0.14),
+        inset 0 0 1px rgb(255 255 255 / 0.2);
+}
+
+.story-flipbook .cover-frame-deckle-paper .cover-hard-frame::before {
+    inset: 10% 9% 12.5% 11%;
+    border-radius: 10px 8px 12px 9px;
+    box-shadow:
+        inset 0 0 0 1px rgb(101 80 60 / 0.35),
+        inset 0 12px 38px rgb(80 55 40 / 0.18),
+        inset 0 2px 0 rgb(255 252 245 / 0.35);
+}
+
+.story-flipbook .cover-frame-deckle-paper .cover-hard-frame::after {
+    opacity: 0.65;
+    mix-blend-mode: multiply;
+    background-image:
+        radial-gradient(ellipse 100% 80% at 50% 50%, rgb(210 180 140 / 0.08), transparent 55%),
+        repeating-conic-gradient(
+            from 0deg at 50% 50%,
+            transparent 0deg,
+            transparent 2.2deg,
+            rgb(90 60 40 / 0.03) 2.2deg,
+            rgb(90 60 40 / 0.03) 2.8deg
+        ),
+        repeating-linear-gradient(
+            95deg,
+            transparent,
+            transparent 2px,
+            rgb(120 95 70 / 0.04) 2px,
+            rgb(120 95 70 / 0.04) 3px
+        );
+}
+
+.dark .story-flipbook .cover-frame-deckle-paper .cover-hard-frame {
+    box-shadow:
+        inset 0 0 0 1px rgb(255 250 240 / 0.08),
+        inset 0 0 0 4px rgb(0 0 0 / 0.35),
+        inset 0 0 0 7px rgb(90 75 60 / 0.2),
+        inset 0 0 96px 40px rgb(0 0 0 / 0.45),
+        inset 0 14px 36px rgb(255 245 230 / 0.06);
+}
+
+.dark .story-flipbook .cover-frame-deckle-paper .cover-hard-frame::before {
+    border-radius: 10px 8px 12px 9px;
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 0.08),
+        inset 0 12px 40px rgb(0 0 0 / 0.45),
+        inset 0 2px 0 rgb(255 245 235 / 0.08);
+}
+
+.dark .story-flipbook .cover-frame-deckle-paper .cover-hard-frame::after {
+    opacity: 0.45;
+    mix-blend-mode: soft-light;
+}
+
+.story-flipbook .cover-frame-minimal-gilt .cover-hard-spine {
+    width: min(3.4%, 14px);
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(0 0 0 / 0.1) 0px,
+        rgb(0 0 0 / 0.1) 2px,
+        rgb(255 255 255 / 0.18) 2px,
+        rgb(255 255 255 / 0.18) 5px
+    );
+    box-shadow: inset -2px 0 5px rgb(0 0 0 / 0.12);
+}
+
+.dark .story-flipbook .cover-frame-minimal-gilt .cover-hard-spine {
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(0 0 0 / 0.35) 0px,
+        rgb(0 0 0 / 0.35) 2px,
+        rgb(255 255 255 / 0.07) 2px,
+        rgb(255 255 255 / 0.07) 5px
+    );
+}
+
+.story-flipbook .cover-frame-modern-bevel .cover-hard-spine {
+    width: min(6%, 24px);
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(51 65 85 / 0.88) 0px,
+        rgb(51 65 85 / 0.88) 3px,
+        rgb(148 163 184 / 0.35) 3px,
+        rgb(148 163 184 / 0.35) 6px
+    );
+    box-shadow: inset -4px 0 8px rgb(0 0 0 / 0.55);
+}
+
+.dark .story-flipbook .cover-frame-modern-bevel .cover-hard-spine {
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(30 41 59 / 0.95) 0px,
+        rgb(30 41 59 / 0.95) 3px,
+        rgb(100 116 139 / 0.25) 3px,
+        rgb(100 116 139 / 0.25) 7px
+    );
+}
+
+.story-flipbook .cover-frame-ornate-baroque .cover-hard-spine {
+    width: min(6.8%, 27px);
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(50 28 12 / 0.65) 0px,
+        rgb(50 28 12 / 0.65) 2px,
+        rgb(212 175 55 / 0.28) 2px,
+        rgb(212 175 55 / 0.28) 5px,
+        rgb(35 18 8 / 0.7) 5px,
+        rgb(35 18 8 / 0.7) 8px
+    );
+    box-shadow:
+        inset -6px 0 12px rgb(0 0 0 / 0.5),
+        0 0 14px rgb(196 154 58 / 0.12);
+}
+
+.dark .story-flipbook .cover-frame-ornate-baroque .cover-hard-spine {
+    box-shadow:
+        inset -6px 0 14px rgb(0 0 0 / 0.6),
+        0 0 16px rgb(212 175 55 / 0.08);
+}
+
+.story-flipbook .cover-frame-deckle-paper .cover-hard-spine {
+    width: min(5.2%, 21px);
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(139 110 85 / 0.4) 0px,
+        rgb(139 110 85 / 0.4) 4px,
+        rgb(255 248 235 / 0.14) 4px,
+        rgb(255 248 235 / 0.14) 10px
+    );
+    box-shadow: inset -3px 0 9px rgb(90 70 50 / 0.3);
+}
+
+/* ─── Plain ─── */
+.story-flipbook .cover-frame-none .cover-hard-frame {
+    box-shadow: none;
+}
+
+.story-flipbook .cover-frame-none .cover-hard-frame::before,
+.story-flipbook .cover-frame-none .cover-hard-frame::after {
+    display: none;
+}
+
+.story-flipbook .cover-frame-none .cover-hard-spine {
+    width: min(3.8%, 15px);
+    opacity: 0.28;
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(0 0 0 / 0.12) 0px,
+        rgb(0 0 0 / 0.12) 4px,
+        rgb(255 255 255 / 0.05) 4px,
+        rgb(255 255 255 / 0.05) 8px
+    );
+    box-shadow: inset -2px 0 4px rgb(0 0 0 / 0.18);
+}
+
+.story-flipbook .cover-hard-spine {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    width: min(5%, 20px);
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        180deg,
+        rgb(0 0 0 / 0.32) 0px,
+        rgb(0 0 0 / 0.32) 4px,
+        rgb(255 255 255 / 0.06) 4px,
+        rgb(255 255 255 / 0.06) 8px
+    );
+    box-shadow: inset -4px 0 8px rgb(0 0 0 / 0.38);
+}
+
+.story-flipbook .cover-hard-spine--front {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.story-flipbook .cover-hard-spine--back {
+    right: 0;
+    transform: scaleX(-1);
+    border-radius: 3px 0 0 3px;
+}
+
+.story-flipbook .cover-end-title {
+    text-shadow:
+        0 1px 2px rgb(0 0 0 / 0.45),
+        0 4px 18px rgb(0 0 0 / 0.35);
 }
 
 details summary::-webkit-details-marker {

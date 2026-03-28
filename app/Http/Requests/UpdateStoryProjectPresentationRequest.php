@@ -7,6 +7,16 @@ use Illuminate\Validation\Rule;
 
 class UpdateStoryProjectPresentationRequest extends FormRequest
 {
+    /** @var list<string> */
+    public const COVER_FRAME_IDS = [
+        'classic-leather',
+        'minimal-gilt',
+        'modern-bevel',
+        'ornate-baroque',
+        'deckle-paper',
+        'none',
+    ];
+
     public function authorize(): bool
     {
         $story = $this->route('story');
@@ -29,6 +39,7 @@ class UpdateStoryProjectPresentationRequest extends FormRequest
             'cover_front.to' => ['sometimes', 'nullable', 'string', 'max:32'],
             'cover_front.path' => ['sometimes', 'nullable', 'string', 'max:512'],
             'cover_front.prompt' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'cover_front.frame' => ['sometimes', 'nullable', 'string', Rule::in(self::COVER_FRAME_IDS)],
             'cover_back' => ['sometimes', 'nullable', 'array'],
             'cover_back.kind' => ['sometimes', Rule::in($kinds)],
             'cover_back.color' => ['sometimes', 'nullable', 'string', 'max:32'],
@@ -37,6 +48,7 @@ class UpdateStoryProjectPresentationRequest extends FormRequest
             'cover_back.to' => ['sometimes', 'nullable', 'string', 'max:32'],
             'cover_back.path' => ['sometimes', 'nullable', 'string', 'max:512'],
             'cover_back.prompt' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'cover_back.frame' => ['sometimes', 'nullable', 'string', Rule::in(self::COVER_FRAME_IDS)],
             'flip_settings' => ['sometimes', 'nullable', 'array'],
             'flip_settings.audioOnFlip' => ['sometimes', 'boolean'],
             'flip_settings.spreadAudio' => ['sometimes', Rule::in(['first', 'sequence'])],

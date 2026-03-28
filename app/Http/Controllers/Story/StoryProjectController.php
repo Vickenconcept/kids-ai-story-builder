@@ -145,7 +145,11 @@ class StoryProjectController extends Controller
         $dir = 'stories/'.$story->id.'/covers';
         $stored = $storage->storeBytes($uploaded->getContent(), $dir, $name, 'auto');
         $kind = $ext === 'gif' ? 'gif' : 'image';
-        $config = ['kind' => $kind, 'path' => $stored];
+        $config = [
+            'kind' => $kind,
+            'path' => $stored,
+            'frame' => $this->inheritedCoverFrame($validated['surface'] === 'front' ? $story->cover_front : $story->cover_back),
+        ];
 
         if ($validated['surface'] === 'front') {
             $story->update(['cover_front' => $config]);
@@ -181,6 +185,7 @@ class StoryProjectController extends Controller
             'kind' => 'ai_image',
             'path' => $path,
             'prompt' => $promptBase,
+            'frame' => $this->inheritedCoverFrame($validated['surface'] === 'front' ? $story->cover_front : $story->cover_back),
         ];
 
         if ($validated['surface'] === 'front') {
@@ -210,5 +215,19 @@ class StoryProjectController extends Controller
         }
 
         return $out;
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $previous
+     */
+    private function inheritedCoverFrame(?array $previous): string
+    {
+        $f = is_array($previous) && isset($previous['frame']) && is_string($previous['frame'])
+            ? $previous['frame']
+            : 'classic-leather';
+
+        return in_array($f, UpdateStoryProjectPresentationRequest::COVER_FRAME_IDS, true)
+            ? $f
+            : 'classic-leather';
     }
 }
