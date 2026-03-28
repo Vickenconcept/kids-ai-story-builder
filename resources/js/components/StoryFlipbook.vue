@@ -1,3 +1,4 @@
+import '../../css/flipbook-realism.css';
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight, Settings2 } from 'lucide-vue-next';
 import type { JQueryStatic } from 'jquery';
@@ -79,10 +80,20 @@ function unmountGameApps(): void {
 }
 
 function normalizeQuiz(raw: unknown): QuizRow[] {
-    if (!Array.isArray(raw)) {
-        return [];
+    let arr: unknown[] = [];
+    if (Array.isArray(raw)) {
+        arr = raw;
+    } else if (typeof raw === 'string') {
+        try {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) {
+                arr = parsed;
+            }
+        } catch {
+            // ignore
+        }
     }
-    return raw.map((item) => {
+    return arr.map((item) => {
         if (!item || typeof item !== 'object') {
             return { question: '', choices: ['', ''], answer: '' };
         }
@@ -147,8 +158,8 @@ function setGameplayEnabled(checked: boolean): void {
     router.patch(`/stories/${props.storyUuid}`, { flip_gameplay_enabled: checked }, { preserveScroll: true });
 }
 
-const FRONT_HARD_COUNT = 2;
-const BACK_HARD_COUNT = 2;
+const FRONT_HARD_COUNT = 1;
+const BACK_HARD_COUNT = 1;
 
 type SpreadAudioMode = 'first' | 'sequence';
 type AutoAdvanceMode = 'off' | 'timer' | 'afterAudio';
@@ -158,11 +169,13 @@ const settings = reactive({
     spreadAudio: 'sequence' as SpreadAudioMode,
     autoAdvance: 'off' as AutoAdvanceMode,
     timerDelaySec: 5,
-    flipDuration: 650,
+    flipDuration: 1800,
     display: 'double' as 'single' | 'double',
     gradients: true,
     acceleration: true,
-    elevation: 48,
+    elevation: 200,
+    corners: 'all',
+    pagesInDOM: 10,
     bookZoomPercent: 100,
 });
 
@@ -547,6 +560,8 @@ function onTurned(_e: unknown, pageOrView?: unknown, viewMaybe?: unknown): void 
     playSpreadNarration(view);
     scheduleTimerAdvance(view);
     syncBookHorizontalNudge();
+    // Re-mount quiz/game sheets after each page turn
+    mountGameApps();
 }
 
 function bookDimensions() {
@@ -725,6 +740,9 @@ async function initTurn(): Promise<void> {
         acceleration: useAcceleration,
         display: settings.display,
         elevation: settings.elevation,
+        corners: settings.corners,
+        pages: props.pages.length,
+        pagesInDOM: settings.pagesInDOM,
         when: {
             turning: onTurning,
             turned: onTurned,

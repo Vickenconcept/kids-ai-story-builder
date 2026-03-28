@@ -1,0 +1,21 @@
+/* Flipbook realism enhancements */
+.flipbook {
+  perspective: 2000px;
+}
+.flipbook .page {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+.flipbook, .page {
+  overflow: visible !important;
+}
+.page::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0,0,0,0.2), transparent);
+  pointer-events: none;
+}
