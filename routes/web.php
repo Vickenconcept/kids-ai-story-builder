@@ -21,6 +21,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [StoryProjectController::class, 'store'])->name('store');
         Route::get('/{story:uuid}', [StoryProjectController::class, 'show'])->name('show');
         Route::patch('/{story:uuid}', [StoryProjectController::class, 'updatePresentation'])->name('update');
+        Route::delete('/{story:uuid}', [StoryProjectController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-destroy', [StoryProjectController::class, 'bulkDestroy'])->name('bulk-destroy');
         Route::post('/{story:uuid}/cover-upload', [StoryProjectController::class, 'uploadCover'])->name('cover.upload');
         Route::post('/{story:uuid}/cover-ai', [StoryProjectController::class, 'generateCoverAi'])->name('cover.ai');
         Route::patch('/{story:uuid}/pages/{page:uuid}', [StoryPageController::class, 'update'])->name('pages.update');

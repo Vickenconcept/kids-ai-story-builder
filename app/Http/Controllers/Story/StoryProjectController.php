@@ -20,6 +20,30 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 class StoryProjectController extends Controller
+
+    /**
+     * Delete a single story project.
+     */
+    public function destroy(Request $request, StoryProject $story): RedirectResponse
+    {
+        $this->authorize('delete', $story);
+        $story->delete();
+        return redirect()->route('stories.index')->with('success', 'Story deleted.');
+    }
+
+    /**
+     * Bulk delete story projects.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $ids = $request->input('ids', []);
+        if (!is_array($ids) || empty($ids)) {
+            return redirect()->route('stories.index')->with('error', 'No stories selected.');
+        }
+        $userId = $request->user()->id;
+        $deleted = StoryProject::where('user_id', $userId)->whereIn('id', $ids)->delete();
+        return redirect()->route('stories.index')->with('success', "$deleted stories deleted.");
+    }
 {
     public function index(Request $request): Response
     {
@@ -118,6 +142,7 @@ class StoryProjectController extends Controller
                 'flip_settings' => $story->flip_settings,
             ],
             'pages' => $pages,
+            'story_credits' => $request->user()->story_credits,
         ]);
     }
 

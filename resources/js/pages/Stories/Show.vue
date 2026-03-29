@@ -40,6 +40,7 @@ const props = defineProps<{
         flip_settings: Record<string, unknown> | null;
     };
     pages: PageRow[];
+    story_credits: number;
 }>();
 
 const viewMode = ref<'flip' | 'scroll'>('flip');
@@ -190,6 +191,13 @@ onUnmounted(() => {
                         <span class="font-medium">Pages:</span>
                         {{ project.pages_completed }} / {{ project.page_count }}
                     </p>
+                    <div class="mt-3 flex items-center gap-3">
+                        <span class="inline-flex items-center rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
+                            <svg class="mr-1 h-4 w-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="16" text-anchor="middle" font-size="10" fill="currentColor">C</text></svg>
+                            Credits: {{ props.story_credits }}
+                        </span>
+                        <span class="text-xs text-muted-foreground">Credits are required to generate new stories, covers, audio, and games. <a href="#" class="text-blue-600 underline">Buy more credits</a></span>
+                    </div>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <div

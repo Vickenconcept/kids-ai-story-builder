@@ -17,9 +17,42 @@ type ProjectRow = {
     updated_at: string;
 };
 
-defineProps<{
-    projects: ProjectRow[];
-}>();
+
+import { ref } from 'vue';
+import { router } from '@inertiajs/vue3';
+
+const props = defineProps<{ projects: ProjectRow[] }>();
+
+const selected = ref<number[]>([]);
+
+function toggleSelect(id: number) {
+    if (selected.value.includes(id)) {
+        selected.value = selected.value.filter((x) => x !== id);
+    } else {
+        selected.value.push(id);
+    }
+}
+
+function selectAll() {
+    if (selected.value.length === props.projects.length) {
+        selected.value = [];
+    } else {
+        selected.value = props.projects.map((p) => p.id);
+    }
+}
+
+function deleteStory(uuid: string) {
+    if (confirm('Delete this story?')) {
+        router.delete(`/stories/${uuid}`);
+    }
+}
+
+function bulkDelete() {
+    if (selected.value.length === 0) return;
+    if (confirm(`Delete ${selected.value.length} stories?`)) {
+        router.post('/stories/bulk-destroy', { ids: selected.value });
+    }
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Stories', href: '/stories' },
@@ -34,11 +67,6 @@ const breadcrumbs: BreadcrumbItem[] = [
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-semibold tracking-tight">Story projects</h1>
-                    <p class="text-muted-foreground text-sm">
-                        URLs use UUIDs. With default settings, all generation jobs run on the
-                        <code class="text-xs">default</code> queue (run
-                        <code class="text-xs">php artisan queue:work</code>).
-                    </p>
                 </div>
                 <Button as-child>
                     <Link href="/stories/create" class="flex items-center gap-2">
@@ -52,12 +80,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                 class="overflow-hidden rounded-xl border border-sidebar-border/70 bg-card dark:border-sidebar-border"
             >
                 <div
-                    class="text-muted-foreground grid grid-cols-[1fr_auto_auto_auto] gap-2 border-b px-4 py-2 text-xs font-medium uppercase"
+                    class="text-muted-foreground grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-2 border-b px-4 py-2 text-xs font-medium uppercase"
                 >
+                    <input type="checkbox" :checked="selected.length === projects.length && projects.length > 0" @change="selectAll" />
                     <span>Title</span>
                     <span>Status</span>
                     <span>Progress</span>
                     <span class="text-right">Open</span>
+                    <span class="text-right">Delete</span>
                 </div>
                 <div
                     v-if="projects.length === 0"
@@ -68,8 +98,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <div
                     v-for="p in projects"
                     :key="p.uuid"
-                    class="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 border-b px-4 py-3 text-sm last:border-0"
+                    class="grid grid-cols-[auto_1fr_auto_auto_auto_auto] items-center gap-2 border-b px-4 py-3 text-sm last:border-0"
                 >
+                    <input type="checkbox" :checked="selected.includes(p.id)" @change="toggleSelect(p.id)" />
                     <span class="font-medium">{{ p.title }}</span>
                     <span class="capitalize">{{ p.status }}</span>
                     <span>{{ p.pages_completed }} / {{ p.page_count }} pages</span>
@@ -81,6 +112,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </Link>
                         </Button>
                     </div>
+                    <div class="text-right">
+                        <Button variant="destructive" size="sm" @click="deleteStory(p.uuid)">Delete</Button>
+                    </div>
+                </div>
+                <div v-if="projects.length > 0" class="p-4">
+                    <Button variant="destructive" size="sm" :disabled="selected.length === 0" @click="bulkDelete">
+                        Delete selected
+                    </Button>
                 </div>
             </div>
         </div>
