@@ -20,6 +20,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 class StoryProjectController extends Controller
+{
     /**
      * Delete a single story project.
      */
