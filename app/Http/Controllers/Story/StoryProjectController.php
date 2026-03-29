@@ -20,7 +20,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 class StoryProjectController extends Controller
-
     /**
      * Delete a single story project.
      */
@@ -44,7 +43,6 @@ class StoryProjectController extends Controller
         $deleted = StoryProject::where('user_id', $userId)->whereIn('id', $ids)->delete();
         return redirect()->route('stories.index')->with('success', "$deleted stories deleted.");
     }
-{
     public function index(Request $request): Response
     {
         $projects = StoryProject::query()
