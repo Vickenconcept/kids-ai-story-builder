@@ -155,9 +155,9 @@ import { Head } from '@inertiajs/vue3';
         <div
             class="mx-auto mt-40 flex w-max items-center gap-2 rounded-full border border-slate-300 px-4 py-2 hover:border-slate-400/70 md:mt-32"
         >
-            <span>Launch angle: Story to Video Content Engine</span>
+            <span>Launch window open now for early affiliates</span>
             <button class="flex items-center gap-1 font-medium">
-                <span>Open Affiliate Pitch</span>
+                <span>Request JV Access</span>
                 <svg
                     width="19"
                     height="19"
@@ -178,28 +178,27 @@ import { Head } from '@inertiajs/vue3';
         <h5
             class="mx-auto mt-8 max-w-[850px] text-center text-4xl font-medium md:text-7xl"
         >
-            Launch a Brand-New AI Story and Video Creator Built to Convert on JVZoo
+            New AI Story to Video App Built for JVZoo Profits
         </h5>
 
         <p
             class="mx-auto mt-6 max-w-2xl text-center text-sm max-md:px-2 md:text-base"
         >
-            Position this as a multi-purpose AI content engine, not just a
-            story app. Buyers get books, images, narration and page videos in
-            minutes, while affiliates get a visual offer that is easy to demo
-            and easy to sell.
+            Turn one click into fully illustrated, narrated and animated story
+            content. Low frontend, strong upsell stack, visual demo advantage,
+            and up to 75% commissions for affiliates who move fast.
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3">
             <button
                 class="rounded-full bg-slate-800 px-6 py-3 font-medium text-white transition hover:bg-black"
             >
-                Get JV Partner Access
+                Request JV Approval
             </button>
             <button
                 class="flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3 hover:bg-slate-200/30"
             >
-                <span>See Conversion Plan</span>
+                <span>Watch 2-Minute Demo</span>
                 <svg
                     width="6"
                     height="8"
@@ -216,6 +215,47 @@ import { Head } from '@inertiajs/vue3';
                     />
                 </svg>
             </button>
+        </div>
+    </section>
+
+    <section class="mx-auto -mt-28 max-w-6xl px-4 pb-10 md:px-8">
+        <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <p class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">
+                    Affiliate Earnings Angle
+                </p>
+                <h3 class="mt-2 text-xl font-semibold text-slate-900">
+                    Earn Up To 75% Per Sale
+                </h3>
+                <p class="mt-2 text-sm text-slate-600">
+                    High-converting emotional niche, low-friction frontend, and
+                    upsells built to increase EPC.
+                </p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <p class="text-xs font-semibold tracking-wide text-amber-600 uppercase">
+                    Launch Urgency
+                </p>
+                <h3 class="mt-2 text-xl font-semibold text-slate-900">
+                    Early Window = Higher EPC
+                </h3>
+                <p class="mt-2 text-sm text-slate-600">
+                    Fresh launch momentum, lower affiliate competition, and
+                    faster conversions during the opening push.
+                </p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <p class="text-xs font-semibold tracking-wide text-emerald-600 uppercase">
+                    Core Positioning
+                </p>
+                <h3 class="mt-2 text-xl font-semibold text-slate-900">
+                    AI Story to Video Content Machine
+                </h3>
+                <p class="mt-2 text-sm text-slate-600">
+                    This is not another generic AI tool. It is a visual
+                    transformation product that sells itself in under 2 minutes.
+                </p>
+            </div>
         </div>
     </section>
 
@@ -245,6 +285,8 @@ import { Head } from '@inertiajs/vue3';
                             narrated and animated storybook. This gives buyers
                             fast output with high perceived value and gives your
                             sales page an immediate show-don't-tell advantage.
+                            This product demonstrates value visually before the
+                            buyer reads long copy.
                         </p>
                         <div class="mt-8">
                             <a
@@ -281,6 +323,8 @@ import { Head } from '@inertiajs/vue3';
                             The transformation is visual, emotional and simple:
                             idea to finished story video. Affiliates can explain
                             it in seconds and demo it in under two minutes.
+                            The sales story is straightforward and beginner
+                            affiliates can still run this effectively.
                         </p>
                         <div class="mt-8">
                             <a
@@ -316,7 +360,8 @@ import { Head } from '@inertiajs/vue3';
                             Use a low-friction frontend, then stack clear value:
                             PRO video credits, higher limits, and done-for-you
                             packs. This supports both conversion volume and
-                            strong EPC for affiliates.
+                            strong EPC for affiliates. Keep front-end friction
+                            low, then monetize with value-first upgrades.
                         </p>
                         <div class="mt-8">
                             <a
@@ -346,6 +391,22 @@ import { Head } from '@inertiajs/vue3';
                     Unique story-to-video pipeline, emotional market appeal,
                     visual output that increases perceived value, and a clearer
                     outcome than generic AI writing tools.
+                </p>
+            </div>
+
+            <div class="mb-10 w-full max-w-full rounded-xl border border-zinc-200 bg-zinc-50 p-6 sm:max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
+                <h2 class="text-xl font-semibold text-zinc-900">
+                    How This Converts in 60 Seconds
+                </h2>
+                <div class="mt-4 grid gap-3 text-sm text-zinc-700 md:grid-cols-2">
+                    <p>1. Show story creation from one prompt.</p>
+                    <p>2. Show illustrations generated for each page.</p>
+                    <p>3. Show narration applied automatically.</p>
+                    <p>4. Show page video for the wow moment.</p>
+                    <p>5. Close the sale with clear pricing and bonus stack.</p>
+                </div>
+                <p class="mt-4 text-sm font-medium text-zinc-900">
+                    Simple, visual, emotional. No complex explanation needed.
                 </p>
             </div>
 
@@ -830,6 +891,10 @@ import { Head } from '@inertiajs/vue3';
                             video features. Upsell 2: expanded or unlimited
                             limits. Upsell 3: done-for-you packs.
                         </p>
+                        <p class="mt-3 text-sm text-gray-700">
+                            Commission structure: frontend 50% to 75%, upsells
+                            included, built to reward volume affiliates.
+                        </p>
                         <div class="mt-8">
                             <a
                                 href="#"
@@ -864,6 +929,10 @@ import { Head } from '@inertiajs/vue3';
                             Include demo video, email swipes, ad copy, banners
                             and short scripts so affiliates can publish promos
                             the same day they get approved.
+                        </p>
+                        <p class="mt-3 text-sm text-gray-700">
+                            We remove friction so affiliates can start promoting
+                            today, not next week.
                         </p>
                         <div class="mt-8">
                             <a
