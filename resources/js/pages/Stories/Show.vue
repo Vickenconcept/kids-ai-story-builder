@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
+import { Clapperboard } from 'lucide-vue-next';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import StoryCoverSettingsAccordion from '@/components/StoryCoverSettingsAccordion.vue';
 import StoryFlipbook from '@/components/StoryFlipbook.vue';
@@ -58,6 +59,8 @@ const props = defineProps<{
     };
     pages: PageRow[];
     story_credits: number;
+    feature_tier: string;
+    video_credit_cost: number;
 }>();
 
 const viewMode = ref<'flip' | 'scroll'>('flip');
@@ -77,6 +80,7 @@ const pageDirtyQuiz = ref<Record<string, boolean>>({});
 const pageSaveState = ref<Record<string, 'idle' | 'unsaved' | 'saving' | 'saved' | 'error'>>({});
 const advancedSaveBusy = ref(false);
 const advancedDirty = ref(false);
+const pageVideoBusy = ref<Record<string, boolean>>({});
 
 type ProgressSample = {
     at: number;
@@ -107,6 +111,8 @@ const unsavedPagesCount = computed(() => {
     return uuids.filter((uuid) => pageSaveState.value[uuid] === 'unsaved' || pageSaveState.value[uuid] === 'error').length;
 });
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
+const isPro = computed(() => props.feature_tier === 'pro');
+const canAffordSingleVideo = computed(() => props.story_credits >= props.video_credit_cost);
 
 const creditsExhausted = computed(() => {
     if (props.project.status !== 'failed') {
@@ -405,6 +411,37 @@ function savePageText(pageUuid: string): void {
     );
 }
 
+function canGenerateVideoForPage(page: PageRow): boolean {
+    if (!isPro.value) {
+        return false;
+    }
+
+    if (!canAffordSingleVideo.value) {
+        return false;
+    }
+
+    return Boolean(page.image_url) && !Boolean(pageVideoBusy.value[page.uuid]);
+}
+
+function generateVideoForPage(page: PageRow): void {
+    if (!canGenerateVideoForPage(page)) {
+        return;
+    }
+
+    pageVideoBusy.value = { ...pageVideoBusy.value, [page.uuid]: true };
+    router.post(
+        `/stories/${props.project.uuid}/pages/${page.uuid}/generate-video`,
+        {},
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onFinish: () => {
+                pageVideoBusy.value = { ...pageVideoBusy.value, [page.uuid]: false };
+            },
+        },
+    );
+}
+
 function saveAdvancedSettings(): Promise<boolean> {
     if (!advancedDirty.value) {
         return Promise.resolve(true);
@@ -605,16 +642,37 @@ onUnmounted(() => {
                     >
                         <div class="mb-2 flex items-center justify-between gap-2">
                             <h2 class="text-base font-semibold">Page {{ page.page_number }}</h2>
-                            <Button
-                                type="button"
-                                size="sm"
-                                variant="outline"
-                                :disabled="Boolean(pageSaveBusy[page.uuid])"
-                                @click="savePageText(page.uuid)"
-                            >
-                                {{ saveLabelFor(page.uuid) }}
-                            </Button>
+                            <div class="flex items-center gap-2">
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    :disabled="!canGenerateVideoForPage(page)"
+                                    @click="generateVideoForPage(page)"
+                                >
+                                    <Clapperboard class="mr-1 size-4" />
+                                    {{ page.video_url ? 'Regenerate video' : 'Generate video' }}
+                                </Button>
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    :disabled="Boolean(pageSaveBusy[page.uuid])"
+                                    @click="savePageText(page.uuid)"
+                                >
+                                    {{ saveLabelFor(page.uuid) }}
+                                </Button>
+                            </div>
                         </div>
+                        <p class="mb-2 text-xs text-muted-foreground">
+                            Per-page video costs {{ props.video_credit_cost }} credits.
+                        </p>
+                        <p v-if="!isPro" class="mb-2 text-xs text-amber-600">
+                            Upgrade to Pro to generate page video.
+                        </p>
+                        <p v-else-if="!canAffordSingleVideo" class="mb-2 text-xs text-destructive">
+                            Not enough credits for a page video.
+                        </p>
                         <p
                             v-if="pageSaveState[page.uuid] === 'saved'"
                             class="mb-2 text-xs text-emerald-600"
@@ -837,7 +895,20 @@ onUnmounted(() => {
                     :key="page.uuid"
                     class="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border"
                 >
-                    <h2 class="mb-3 text-lg font-medium">Page {{ page.page_number }}</h2>
+                    <div class="mb-3 flex items-center justify-between gap-2">
+                        <h2 class="text-lg font-medium">Page {{ page.page_number }}</h2>
+                        <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            :disabled="!canGenerateVideoForPage(page)"
+                            @click="generateVideoForPage(page)"
+                        >
+                            <Clapperboard class="mr-1 size-4" />
+                            {{ page.video_url ? 'Regenerate video' : 'Generate video' }}
+                        </Button>
+                    </div>
+                    <p class="mb-3 text-xs text-muted-foreground">Per-page video costs {{ props.video_credit_cost }} credits.</p>
 
                     <div class="grid gap-6 lg:grid-cols-2">
                         <div class="space-y-3 text-sm leading-relaxed">

@@ -10,6 +10,8 @@ use App\Enums\StoryProjectStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStoryProjectRequest;
 use App\Http\Requests\UpdateStoryProjectPresentationRequest;
+use App\Jobs\Story\GenerateStoryPageVideoJob;
+use App\Models\StoryPage;
 use App\Models\StoryProject;
 use App\Services\Media\StoryMediaStorage;
 use App\Services\Story\StoryPipelineDispatcher;
@@ -188,7 +190,41 @@ class StoryProjectController extends Controller
             ],
             'pages' => $pages,
             'story_credits' => $request->user()->story_credits,
+            'feature_tier' => $request->user()->feature_tier?->value ?? FeatureTier::Basic->value,
+            'video_credit_cost' => (int) config('story.credit_costs.video', 0),
         ]);
+    }
+
+    public function generatePageVideo(
+        Request $request,
+        StoryProject $story,
+        StoryPage $page,
+        StoryCreditService $credits,
+    ): RedirectResponse {
+        $this->authorize('update', $story);
+
+        if ($page->story_project_id !== $story->id) {
+            abort(404);
+        }
+
+        $user = $request->user();
+        if ($user->feature_tier !== FeatureTier::Pro) {
+            return back()->with('error', 'Page video generation requires Pro tier.');
+        }
+
+        if (! filled($page->image_path)) {
+            return back()->with('error', 'Generate image first before creating video for this page.');
+        }
+
+        $needed = $credits->cost('video');
+        if ((int) $user->story_credits < $needed) {
+            return back()->with('error', 'Not enough credits for page video. Required: '.$needed.' credits.');
+        }
+
+        GenerateStoryPageVideoJob::dispatch($page->id)
+            ->onQueue(config('story.queues.video'));
+
+        return back()->with('success', 'Video generation queued for page '.$page->page_number.'.');
     }
 
     public function startMediaGeneration(

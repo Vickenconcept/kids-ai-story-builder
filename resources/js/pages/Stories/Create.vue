@@ -46,8 +46,8 @@ function normalizePageCount(): void {
         return;
     }
 
-    if (form.page_count < 3) {
-        form.page_count = 3;
+    if (form.page_count < 2) {
+        form.page_count = 2;
     }
 
     if (form.page_count > 15) {
@@ -59,10 +59,10 @@ const isPro = props.featureTier === 'pro';
 
 const pages = computed(() => {
     if (typeof form.page_count !== 'number' || Number.isNaN(form.page_count)) {
-        return 3;
+        return 2;
     }
 
-    return Math.min(15, Math.max(3, form.page_count));
+    return Math.min(15, Math.max(2, form.page_count));
 });
 
 const costs = computed<CreditCosts>(() => ({
@@ -98,6 +98,32 @@ const canEnableNarration = computed(() => props.storyCredits >= requiredWithNarr
 const canEnableVideo = computed(() => isPro && props.storyCredits >= requiredWithVideoOn.value);
 const canSubmit = computed(() => props.storyCredits >= breakdown.value.total);
 const remainingCredits = computed(() => props.storyCredits - breakdown.value.total);
+
+function clampPages(value: number): number {
+    return Math.min(15, Math.max(0, value));
+}
+
+const maxPagesWithNarration = computed(() => {
+    const perPage = costs.value.image + costs.value.audio + (form.include_video && isPro ? costs.value.video : 0);
+    const available = props.storyCredits - costs.value.text;
+
+    if (perPage <= 0) {
+        return 15;
+    }
+
+    return clampPages(Math.floor(available / perPage));
+});
+
+const maxPagesWithVideo = computed(() => {
+    const perPage = costs.value.image + costs.value.video + (form.include_narration ? costs.value.audio : 0);
+    const available = props.storyCredits - costs.value.text;
+
+    if (perPage <= 0) {
+        return 15;
+    }
+
+    return clampPages(Math.floor(available / perPage));
+});
 
 watch(
     () => [pages.value, form.include_narration, form.include_video, isPro],
@@ -156,7 +182,8 @@ const illustrationStyleOptions = [
             <form class="flex flex-col gap-6" @submit.prevent="submit">
                 <div class="grid gap-2">
                     <Label for="title">Title</Label>
-                    <Input id="title" v-model="form.title" required />
+                    <Input id="title" v-model="form.title" placeholder="e.g. Luna and the Lost Stars" required />
+                    <p class="text-muted-foreground text-xs">Give your story a short, catchy title.</p>
                     <p v-if="form.errors.title" class="text-destructive text-sm">
                         {{ form.errors.title }}
                     </p>
@@ -164,7 +191,8 @@ const illustrationStyleOptions = [
 
                 <div class="grid gap-2">
                     <Label for="topic">Topic</Label>
-                    <Input id="topic" v-model="form.topic" required />
+                    <Input id="topic" v-model="form.topic" placeholder="e.g. Friendship, planets, and teamwork" required />
+                    <p class="text-muted-foreground text-xs">Describe what the story should be about.</p>
                 </div>
 
                 <div class="grid gap-2 sm:grid-cols-2 sm:gap-4">
@@ -201,11 +229,13 @@ const illustrationStyleOptions = [
                             id="page_count"
                             v-model.number="form.page_count"
                             type="number"
-                            min="3"
+                            min="2"
                             max="15"
+                            placeholder="2-15"
                             required
                             @input="normalizePageCount"
                         />
+                        <p class="text-muted-foreground text-xs">Choose between 2 and 15 pages.</p>
                         <p v-if="form.errors.page_count" class="text-destructive text-sm">
                             {{ form.errors.page_count }}
                         </p>
@@ -268,10 +298,10 @@ const illustrationStyleOptions = [
                         </span>
                     </label>
                     <p v-if="isPro && !canEnableVideo" class="text-destructive text-xs">
-                        Not enough credits to enable video for {{ pages }} pages.
+                        Not enough credits to enable video for {{ pages }} pages. You can afford up to {{ maxPagesWithVideo }} page(s) with video.
                     </p>
                     <p v-if="!form.include_narration && !canEnableNarration" class="text-destructive text-xs">
-                        Not enough credits to enable narration for {{ pages }} pages.
+                        Not enough credits to enable narration for {{ pages }} pages. You can afford up to {{ maxPagesWithNarration }} page(s) with narration.
                     </p>
                     <p v-else class="text-muted-foreground text-xs">
                         Video generation is available on the Pro tier.
