@@ -114,16 +114,18 @@ const unsavedPagesCount = computed(() => {
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
 const isPro = computed(() => props.feature_tier === 'pro');
 const canAffordSingleVideo = computed(() => props.story_credits >= props.video_credit_cost);
-const currentFlipPage = computed(() => {
-    if (!currentFlipPageUuid.value) {
-        return null;
+const canGeneratePageVideoInFlipbook = computed(() => isPro.value && canAffordSingleVideo.value);
+const pageVideoActionHint = computed(() => {
+    if (!isPro.value) {
+        return 'Upgrade to Pro to generate page video.';
     }
 
-    return props.pages.find((p) => p.uuid === currentFlipPageUuid.value) ?? null;
+    if (!canAffordSingleVideo.value) {
+        return 'Not enough credits for a page video.';
+    }
+
+    return '';
 });
-
-const activeFlipPage = computed(() => currentFlipPage.value ?? props.pages[0] ?? null);
-
 const creditsExhausted = computed(() => {
     if (props.project.status !== 'failed') {
         return false;
@@ -453,7 +455,19 @@ function generateVideoForPage(page: PageRow): void {
 }
 
 function onFlipViewPageChange(pageUuid: string | null): void {
-    currentFlipPageUuid.value = pageUuid;
+    if (pageUuid) {
+        currentFlipPageUuid.value = pageUuid;
+    }
+}
+
+function onFlipbookGeneratePageVideo(pageUuid: string): void {
+    const page = props.pages.find((p) => p.uuid === pageUuid);
+
+    if (!page) {
+        return;
+    }
+
+    generateVideoForPage(page);
 }
 
 function saveAdvancedSettings(): Promise<boolean> {
@@ -883,22 +897,13 @@ onUnmounted(() => {
                         :cover-front="project.cover_front"
                         :cover-back="project.cover_back"
                         :flip-settings="project.flip_settings"
+                        :show-page-video-action="true"
+                        :can-generate-page-video="canGeneratePageVideoInFlipbook"
+                        :page-video-busy="pageVideoBusy"
+                        :page-video-action-hint="pageVideoActionHint"
                         @view-page-change="onFlipViewPageChange"
+                        @generate-page-video="onFlipbookGeneratePageVideo"
                     >
-                        <template #book-top-left>
-                            <Button
-                                v-if="activeFlipPage"
-                                type="button"
-                                size="sm"
-                                variant="outline"
-                                :disabled="!canGenerateVideoForPage(activeFlipPage)"
-                                @click="generateVideoForPage(activeFlipPage)"
-                            >
-                                <Clapperboard class="mr-1 size-4" />
-                                {{ activeFlipPage.video_url ? 'Regenerate video' : `Generate video (Page ${activeFlipPage.page_number})` }}
-                            </Button>
-                        </template>
-
                         <template #setup-extra>
                             <StoryCoverSettingsAccordion
                                 :story-uuid="project.uuid"

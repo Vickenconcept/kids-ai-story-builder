@@ -53,6 +53,14 @@ const props = withDefaults(
         coverBack?: CoverConfigJson;
         /** Saved flip UI (audio, auto-advance, Turn options). Public reader uses this; author overlays localStorage then server wins. */
         flipSettings?: Record<string, unknown> | null;
+        /** Show per-page video action button in the page image area. */
+        showPageVideoAction?: boolean;
+        /** Global eligibility gate (tier + credits); per-page checks still apply. */
+        canGeneratePageVideo?: boolean;
+        /** Busy state per page while request is in flight. */
+        pageVideoBusy?: Record<string, boolean>;
+        /** Optional reason shown as disabled button tooltip. */
+        pageVideoActionHint?: string;
     }>(),
     {
         playAudioOnFlip: true,
@@ -63,11 +71,16 @@ const props = withDefaults(
         coverFront: null,
         coverBack: null,
         flipSettings: null,
+        showPageVideoAction: false,
+        canGeneratePageVideo: false,
+        pageVideoBusy: () => ({}),
+        pageVideoActionHint: '',
     },
 );
 
 const emit = defineEmits<{
     'view-page-change': [pageUuid: string | null];
+    'generate-page-video': [pageUuid: string];
 }>();
 
 const flipRoot = ref<HTMLElement | null>(null);
@@ -788,9 +801,10 @@ async function initTurn(): Promise<void> {
     }
 
     const $root = jq(flipRoot.value);
+    $root.off('.pageVideoAction');
 
     try {
-        $root.turn('disable', true);
+        $root.turn('destroy');
     } catch {
         /* */
     }
@@ -830,16 +844,20 @@ async function initTurn(): Promise<void> {
 
     const slots = middleSlots();
 
-    for (const slot of slots) {
+    slots.forEach((slot, slotIndex) => {
         if (slot.type === 'content') {
             const p = slot.page;
             const inner = jq(
                 '<div class="page-inner page-sheet page-sheet-realistic flex h-full flex-col overflow-hidden bg-card" />',
             );
+            const turnPageNumber = FRONT_HARD_COUNT + 1 + slotIndex;
+            const buttonSideClass = turnPageNumber % 2 === 0 ? 'left-2' : 'right-2';
+            const pageBusy = Boolean(props.pageVideoBusy?.[p.uuid]);
+            const canGenerateThisPage =
+                Boolean(props.canGeneratePageVideo) && Boolean(p.image_url) && !pageBusy;
 
             if (p.image_url) {
-                inner.append(
-                    jq('<div class="relative min-h-0 flex-1 bg-muted/30" />').append(
+                const imageWrap = jq('<div class="relative min-h-0 flex-1 bg-muted/30" />').append(
                         jq('<img />')
                             .attr('src', p.image_url)
                             .attr('alt', `Page ${p.page_number}`)
@@ -850,8 +868,38 @@ async function initTurn(): Promise<void> {
                                 height: '100%',
                                 objectFit: 'contain',
                             }),
-                    ),
-                );
+                    );
+
+                if (props.showPageVideoAction) {
+                    const disabledReason = !props.canGeneratePageVideo
+                        ? props.pageVideoActionHint || 'Video generation is unavailable.'
+                        : pageBusy
+                          ? 'Video is being generated for this page.'
+                          : !p.image_url
+                            ? 'Generate an image first.'
+                            : '';
+                    const label = pageBusy
+                        ? 'Generating...'
+                        : p.video_url
+                          ? 'Regenerate video'
+                          : 'Generate video';
+
+                    const button = jq(
+                        `<button type="button" class="absolute top-2 ${buttonSideClass} z-20 rounded-md border border-border/80 bg-background/90 px-2.5 py-1 text-[11px] font-semibold shadow-sm backdrop-blur-sm transition hover:bg-background disabled:cursor-not-allowed disabled:opacity-50" data-action="generate-page-video" data-page-uuid="${p.uuid}">${label}</button>`,
+                    );
+
+                    if (!canGenerateThisPage) {
+                        button.attr('disabled', 'true');
+
+                        if (disabledReason) {
+                            button.attr('title', disabledReason);
+                        }
+                    }
+
+                    imageWrap.append(button);
+                }
+
+                inner.append(imageWrap);
             }
 
             inner.append(
@@ -871,7 +919,7 @@ async function initTurn(): Promise<void> {
             mount.append(holder);
             $root.append(mount);
         }
-    }
+    });
 
     $root.append(jq('<div class="hard hard-inside-back hard-endpaper" aria-hidden="true" />'));
     const backStyle = coverHardStyle(props.coverBack ?? null);
@@ -913,7 +961,6 @@ async function initTurn(): Promise<void> {
         elevation: settings.elevation,
         corners: settings.corners,
         pages: totalRenderedPages,
-        pagesInDOM: settings.pagesInDOM,
         when: {
             turning: onTurning,
             turned: onTurned,
@@ -921,6 +968,22 @@ async function initTurn(): Promise<void> {
     });
 
     ready.value = true;
+
+    $root.on('pointerdown.pageVideoAction mousedown.pageVideoAction touchstart.pageVideoAction', '[data-action="generate-page-video"]', (e: unknown) => {
+        (e as Event).stopPropagation();
+    });
+    $root.on('click.pageVideoAction', '[data-action="generate-page-video"]', (e: unknown) => {
+        (e as Event).preventDefault();
+        (e as Event).stopPropagation();
+        const target = e.currentTarget as HTMLElement | null;
+        const pageUuid = target?.getAttribute('data-page-uuid');
+
+        if (!pageUuid) {
+            return;
+        }
+
+        emit('generate-page-video', pageUuid);
+    });
 
     const currentView = $root.turn('view') as unknown as number[];
     emitVisiblePageUuid(currentView);
@@ -1099,7 +1162,7 @@ onBeforeUnmount(() => {
 
     if (flipRoot.value && jq) {
         try {
-            jq(flipRoot.value).turn('disable', true);
+            jq(flipRoot.value).turn('destroy');
         } catch {
             /* */
         }
