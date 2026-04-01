@@ -122,6 +122,8 @@ const currentFlipPage = computed(() => {
     return props.pages.find((p) => p.uuid === currentFlipPageUuid.value) ?? null;
 });
 
+const activeFlipPage = computed(() => currentFlipPage.value ?? props.pages[0] ?? null);
+
 const creditsExhausted = computed(() => {
     if (props.project.status !== 'failed') {
         return false;
@@ -869,17 +871,17 @@ onUnmounted(() => {
                     tabindex="-1"
                     class="border-border bg-card/30 relative w-full rounded-xl border p-3 shadow-sm"
                 >
-                    <div class="absolute top-3 left-3 z-20">
+                    <div class="absolute top-3 left-3 z-20 xl:left-[340px]">
                         <Button
-                            v-if="currentFlipPage"
+                            v-if="activeFlipPage"
                             type="button"
                             size="sm"
                             variant="outline"
-                            :disabled="!canGenerateVideoForPage(currentFlipPage)"
-                            @click="generateVideoForPage(currentFlipPage)"
+                            :disabled="!canGenerateVideoForPage(activeFlipPage)"
+                            @click="generateVideoForPage(activeFlipPage)"
                         >
                             <Clapperboard class="mr-1 size-4" />
-                            {{ currentFlipPage.video_url ? 'Regenerate video' : `Generate video (Page ${currentFlipPage.page_number})` }}
+                            {{ activeFlipPage.video_url ? 'Regenerate video' : `Generate video (Page ${activeFlipPage.page_number})` }}
                         </Button>
                     </div>
                     <StoryFlipbook

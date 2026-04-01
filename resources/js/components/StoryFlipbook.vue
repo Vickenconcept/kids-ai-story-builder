@@ -900,6 +900,8 @@ async function initTurn(): Promise<void> {
 
     const useAcceleration = settings.acceleration && !reducedMotion();
 
+    const totalRenderedPages = $root.children().length;
+
     $root.turn({
         width: w,
         height: h,
@@ -910,7 +912,7 @@ async function initTurn(): Promise<void> {
         display: settings.display,
         elevation: settings.elevation,
         corners: settings.corners,
-        pages: props.pages.length,
+        pages: totalRenderedPages,
         pagesInDOM: settings.pagesInDOM,
         when: {
             turning: onTurning,
