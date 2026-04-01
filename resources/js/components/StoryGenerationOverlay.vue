@@ -27,11 +27,9 @@ const emit = defineEmits<{
 }>();
 
 const processingLines = [
-    'Warming up our story engines...',
-    'Mapping scenes and characters...',
-    'Painting illustrations and page details...',
-    'Composing narration and quiz flow...',
-    'Polishing your book for reading...',
+    'Creating your story pages...',
+    'Preparing visuals and narration...',
+    'Final touches before your story opens...',
 ];
 
 const lineIndex = ref(0);
@@ -74,6 +72,19 @@ const detailLine = computed(() =>
           : processingLines[lineIndex.value],
 );
 
+const stageLabel = computed(() => {
+    if (props.successTransition) {
+        return 'Done';
+    }
+    if (progressPercent.value < 34) {
+        return 'Writing story';
+    }
+    if (progressPercent.value < 84) {
+        return 'Preparing media';
+    }
+    return 'Finishing up';
+});
+
 onMounted(() => {
     lineTimer = window.setInterval(() => {
         lineIndex.value = (lineIndex.value + 1) % processingLines.length;
@@ -91,44 +102,41 @@ onBeforeUnmount(() => {
     <div
         v-if="showOverlay"
         class="fixed inset-0 z-70 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-500"
-        :class="successTransition ? 'bg-slate-950/55 opacity-0' : 'bg-slate-950/70 opacity-100'"
+        :class="successTransition ? 'bg-black/30 opacity-0' : 'bg-black/45 opacity-100'"
     >
-        <div class="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/15 bg-slate-900 text-slate-100 shadow-2xl">
-            <div class="pointer-events-none relative h-24 overflow-hidden bg-linear-to-r from-cyan-500/20 via-teal-400/15 to-emerald-500/20">
-                <div class="ai-wave ai-wave-a" />
-                <div class="ai-wave ai-wave-b" />
+        <div class="w-full max-w-xl overflow-hidden rounded-2xl border border-border bg-background text-foreground shadow-2xl">
+            <div class="pointer-events-none flex items-center justify-between border-b border-border bg-muted/45 px-5 py-3">
+                <span class="text-xs font-semibold tracking-wide uppercase text-muted-foreground">{{ stageLabel }}</span>
+                <div class="loading-dots" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                </div>
             </div>
 
-            <div class="space-y-5 p-6 sm:p-7">
+            <div class="space-y-5 p-5 sm:p-6">
                 <div>
                     <h2 class="text-xl font-semibold tracking-tight sm:text-2xl">{{ headline }}</h2>
-                    <p class="mt-2 text-sm text-slate-300">
+                    <p class="text-muted-foreground mt-2 text-sm">
                         {{ detailLine }}
                     </p>
                 </div>
 
-                <div class="space-y-2 rounded-lg border border-white/10 bg-white/5 p-4">
-                    <div class="flex items-center justify-between text-xs text-slate-300">
-                        <span>Story pages progress</span>
+                <div class="space-y-2 rounded-lg border border-border bg-muted/35 p-4">
+                    <div class="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>Progress</span>
                         <span>{{ pagesCompleted }} / {{ pageCount }} ({{ progressPercent }}%)</span>
                     </div>
-                    <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-700/70">
+                    <div class="h-2.5 w-full overflow-hidden rounded-full bg-muted">
                         <div
-                            class="h-full rounded-full bg-linear-to-r from-cyan-400 via-teal-400 to-emerald-400 transition-all duration-500"
+                            class="h-full rounded-full bg-primary transition-all duration-500"
                             :style="{ width: `${progressPercent}%` }"
                         />
                     </div>
-                    <p v-if="formattedEta" class="text-[11px] text-slate-300">Estimated time: {{ formattedEta }}</p>
+                    <p v-if="formattedEta" class="text-[11px] text-muted-foreground">Estimated time: {{ formattedEta }}</p>
                 </div>
 
-                <div class="grid gap-2 text-xs text-slate-300 sm:grid-cols-2">
-                    <p class="rounded-md border border-white/10 bg-white/5 px-3 py-2">Queue pending: {{ queue.pending }}</p>
-                    <p class="rounded-md border border-white/10 bg-white/5 px-3 py-2">Queue running: {{ queue.running }}</p>
-                    <p class="rounded-md border border-white/10 bg-white/5 px-3 py-2">Queue done: {{ queue.succeeded }}</p>
-                    <p class="rounded-md border border-white/10 bg-white/5 px-3 py-2">Queue failed: {{ queue.failed }}</p>
-                </div>
-
-                <p v-if="haltedByCredits && queue.last_error" class="rounded-lg border border-rose-300/35 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
+                <p v-if="haltedByCredits && queue.last_error" class="rounded-lg border border-rose-300/50 bg-rose-50 px-3 py-2 text-xs text-rose-700">
                     {{ queue.last_error }}
                 </p>
 
@@ -141,39 +149,37 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.ai-wave {
-    position: absolute;
-    left: -20%;
-    width: 140%;
-    height: 90px;
-    border-radius: 100%;
-    filter: blur(12px);
-    animation: drift 4.2s ease-in-out infinite;
+.loading-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.ai-wave-a {
-    top: 4px;
-    background: radial-gradient(circle at 30% 50%, rgb(45 212 191 / 0.45), transparent 62%);
+.loading-dots > span {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--primary));
+    animation: dotPulse 1.2s ease-in-out infinite;
 }
 
-.ai-wave-b {
-    top: 26px;
-    animation-delay: 0.7s;
-    animation-duration: 5s;
-    background: radial-gradient(circle at 65% 50%, rgb(34 211 238 / 0.35), transparent 64%);
+.loading-dots > span:nth-child(2) {
+    animation-delay: 0.16s;
 }
 
-@keyframes drift {
+.loading-dots > span:nth-child(3) {
+    animation-delay: 0.32s;
+}
+
+@keyframes dotPulse {
     0% {
-        transform: translateX(0) scale(1);
-    }
-
-    50% {
-        transform: translateX(4%) scale(1.03);
+        opacity: 0.35;
+        transform: scale(0.85);
     }
 
     100% {
-        transform: translateX(0) scale(1);
+        opacity: 1;
+        transform: scale(1);
     }
 }
 </style>

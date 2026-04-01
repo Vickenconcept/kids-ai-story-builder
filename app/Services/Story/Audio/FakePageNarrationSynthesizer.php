@@ -11,7 +11,7 @@ class FakePageNarrationSynthesizer implements PageNarrationSynthesizer
         private readonly StoryMediaStorage $media,
     ) {}
 
-    public function synthesize(string $text, string $storageDirectory): string
+    public function synthesize(string $text, string $storageDirectory, ?string $voice = null): string
     {
         $body = "Fake narration (not playable audio).\n\n".$text;
         $name = 'audio-'.uniqid('', true).'.txt';

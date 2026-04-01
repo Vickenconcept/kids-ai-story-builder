@@ -55,7 +55,8 @@ class GenerateStoryPageAudioJob implements ShouldQueue
         try {
             $credits->spendOnce('audio:page:'.$page->id, $project->user, 'audio');
             $dir = 'stories/'.$project->id;
-            $path = $tts->synthesize((string) $page->text_content, $dir);
+            $voice = is_array($project->meta) ? ($project->meta['tts_voice'] ?? null) : null;
+            $path = $tts->synthesize((string) $page->text_content, $dir, is_string($voice) ? $voice : null);
             $page->update(['audio_path' => $path]);
             $recorder->complete($jobRow);
         } catch (Throwable $e) {

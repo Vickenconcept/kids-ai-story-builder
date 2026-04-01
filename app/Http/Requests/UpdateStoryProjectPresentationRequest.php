@@ -31,6 +31,9 @@ class UpdateStoryProjectPresentationRequest extends FormRequest
         return [
             'sharing_enabled' => ['sometimes', 'boolean'],
             'flip_gameplay_enabled' => ['sometimes', 'boolean'],
+            'illustration_style' => ['sometimes', 'string', 'max:80'],
+            'meta' => ['sometimes', 'array'],
+            'meta.tts_voice' => ['sometimes', 'string', Rule::in(['alloy', 'ash', 'coral', 'echo', 'fable', 'nova', 'onyx', 'sage', 'shimmer'])],
             'cover_front' => ['sometimes', 'nullable', 'array'],
             'cover_front.kind' => ['sometimes', Rule::in($kinds)],
             'cover_front.color' => ['sometimes', 'nullable', 'string', 'max:32'],

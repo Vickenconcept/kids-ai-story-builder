@@ -13,11 +13,11 @@ class OpenAiPageNarrationSynthesizer implements PageNarrationSynthesizer
         private readonly StoryMediaStorage $media,
     ) {}
 
-    public function synthesize(string $text, string $storageDirectory): string
+    public function synthesize(string $text, string $storageDirectory, ?string $voice = null): string
     {
         $binary = $this->client->audio()->speech([
             'model' => config('story.models.tts'),
-            'voice' => config('story.models.tts_voice'),
+            'voice' => $voice ?: config('story.models.tts_voice'),
             'input' => mb_substr($text, 0, 4096),
         ]);
 

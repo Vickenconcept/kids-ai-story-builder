@@ -165,13 +165,14 @@ const illustrationStyleOptions = [
                             </span>
                         </span>
                     </label>
-                    <label v-if="isPro" class="flex cursor-pointer items-center gap-2">
-                        <input
-                            v-model="form.include_video"
-                            type="checkbox"
-                            class="size-4 rounded border"
-                        />
+                    <label v-if="isPro" class="hover:bg-muted/40 flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-border/60 p-2.5 transition-colors">
                         <span>Include page video (Pro)</span>
+                        <span class="relative inline-flex">
+                            <input v-model="form.include_video" type="checkbox" class="peer sr-only" />
+                            <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
+                            </span>
+                        </span>
                     </label>
                     <p v-else class="text-muted-foreground text-xs">
                         Video generation is available on the Pro tier.

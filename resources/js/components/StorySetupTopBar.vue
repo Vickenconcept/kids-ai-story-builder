@@ -16,6 +16,7 @@ const props = defineProps<{
         uuid: string;
         title: string;
         status: string;
+        can_start_media?: boolean;
         page_count: number;
         pages_completed: number;
         sharing_enabled: boolean;
@@ -23,6 +24,7 @@ const props = defineProps<{
     };
     storyCredits: number;
     viewMode: 'flip' | 'scroll';
+    showViewMode?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -64,6 +66,12 @@ async function copyPublicLink(): Promise<void> {
                     <div class="mt-1 hidden items-center gap-2 text-xs md:flex">
                         <span class="border-border bg-muted/50 inline-flex items-center rounded-md border px-2 py-0.5 font-medium capitalize">
                             Status: {{ project.status }}
+                        </span>
+                        <span
+                            v-if="project.can_start_media"
+                            class="inline-flex items-center rounded-md border border-sky-300 bg-sky-50 px-2 py-0.5 font-semibold text-sky-800"
+                        >
+                            Stage: Draft review
                         </span>
                         <span class="border-border bg-muted/50 inline-flex items-center rounded-md border px-2 py-0.5 font-medium">
                             Pages: {{ project.pages_completed }} / {{ project.page_count }}
@@ -124,6 +132,7 @@ async function copyPublicLink(): Promise<void> {
                 </Dialog>
 
                 <div
+                    v-if="showViewMode !== false"
                     class="bg-muted/60 hidden rounded-lg border border-border p-0.5 text-xs font-medium sm:flex"
                     role="group"
                     aria-label="View mode"

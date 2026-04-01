@@ -144,6 +144,8 @@ class StoryProjectController extends Controller
                 'include_quiz' => $story->include_quiz,
                 'include_narration' => $story->include_narration,
                 'include_video' => $story->include_video,
+                'illustration_style' => $story->illustration_style,
+                'tts_voice' => is_array($story->meta) ? ($story->meta['tts_voice'] ?? config('story.models.tts_voice')) : config('story.models.tts_voice'),
                 'flip_gameplay_enabled' => $story->flip_gameplay_enabled,
                 'cover_front' => $this->hydrateCover($story->cover_front),
                 'cover_back' => $this->hydrateCover($story->cover_back),
@@ -158,17 +160,71 @@ class StoryProjectController extends Controller
                     'failed' => (int) ($jobCounts[StoryAiJobStatus::Failed->value] ?? 0),
                     'last_error' => $latestFailedError,
                 ],
+                'can_start_media' => $story->status === StoryProjectStatus::Draft,
             ],
             'pages' => $pages,
             'story_credits' => $request->user()->story_credits,
         ]);
     }
 
+    public function startMediaGeneration(Request $request, StoryProject $story, StoryPipelineDispatcher $dispatcher): RedirectResponse
+    {
+        $this->authorize('update', $story);
+
+        $validated = $request->validate([
+            'generate_images' => ['sometimes', 'boolean'],
+            'generate_audio' => ['sometimes', 'boolean'],
+            'generate_video' => ['sometimes', 'boolean'],
+        ]);
+
+        $story->loadMissing('pages');
+
+        if ($story->status !== StoryProjectStatus::Draft) {
+            return back();
+        }
+
+        if ($story->pages->isEmpty()) {
+            return back()->with('error', 'No generated pages found. Please generate story text first.');
+        }
+
+        $generateImages = (bool) ($validated['generate_images'] ?? true);
+        $generateAudio = (bool) ($validated['generate_audio'] ?? $story->include_narration);
+        $generateVideo = (bool) ($validated['generate_video'] ?? $story->include_video);
+
+        if ($generateVideo) {
+            $generateImages = true;
+        }
+
+        $isPro = $request->user()?->feature_tier === FeatureTier::Pro;
+        if (! $isPro) {
+            $generateVideo = false;
+        }
+
+        $story->update([
+            'status' => StoryProjectStatus::Processing,
+            'pages_completed' => 0,
+        ]);
+
+        $dispatcher->dispatchSelectedMedia(
+            $story->fresh(['pages', 'user']),
+            $generateImages,
+            $generateAudio,
+            $generateVideo,
+        );
+
+        return back();
+    }
+
     public function updatePresentation(UpdateStoryProjectPresentationRequest $request, StoryProject $story): RedirectResponse
     {
         $this->authorize('update', $story);
 
-        $story->update($request->validated());
+        $validated = $request->validated();
+        if (array_key_exists('meta', $validated) && is_array($validated['meta'])) {
+            $validated['meta'] = array_merge($story->meta ?? [], $validated['meta']);
+        }
+
+        $story->update($validated);
 
         return back();
     }

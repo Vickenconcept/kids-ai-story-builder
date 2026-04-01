@@ -10,7 +10,6 @@ use App\Models\StoryPage;
 use App\Models\StoryProject;
 use App\Services\Story\StoryAiJobRecorder;
 use App\Services\Story\StoryCreditService;
-use App\Services\Story\StoryPipelineDispatcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -42,7 +41,6 @@ class GenerateStoryTextJob implements ShouldQueue
     public function handle(
         TextStoryGenerator $textGenerator,
         StoryCreditService $credits,
-        StoryPipelineDispatcher $dispatcher,
         StoryAiJobRecorder $recorder,
     ): void {
         $project = StoryProject::query()->with('user')->findOrFail($this->storyProjectId);
@@ -75,11 +73,11 @@ class GenerateStoryTextJob implements ShouldQueue
                 }
                 $project->update([
                     'pages_completed' => 0,
+                    'status' => StoryProjectStatus::Draft,
                 ]);
             });
 
             $recorder->complete($jobRow);
-            $dispatcher->dispatchPageImages($project->fresh(['pages', 'user']));
         } catch (Throwable $e) {
             $recorder->fail($jobRow, $e);
             $project->update(['status' => StoryProjectStatus::Failed]);

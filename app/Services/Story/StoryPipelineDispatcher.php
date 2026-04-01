@@ -3,6 +3,7 @@
 namespace App\Services\Story;
 
 use App\Enums\FeatureTier;
+use App\Enums\StoryProjectStatus;
 use App\Jobs\Story\GenerateStoryPageAudioJob;
 use App\Jobs\Story\GenerateStoryPageImageJob;
 use App\Jobs\Story\GenerateStoryPageVideoJob;
@@ -28,6 +29,39 @@ class StoryPipelineDispatcher
             GenerateStoryPageImageJob::dispatch($page->id)
                 ->onQueue(config('story.queues.image'));
         }
+    }
+
+    public function dispatchPageAudio(StoryProject $project): void
+    {
+        foreach ($project->pages as $page) {
+            GenerateStoryPageAudioJob::dispatch($page->id)
+                ->onQueue(config('story.queues.audio'));
+        }
+    }
+
+    public function dispatchSelectedMedia(StoryProject $project, bool $generateImages, bool $generateAudio, bool $generateVideo): void
+    {
+        $project->update([
+            'include_narration' => $generateAudio,
+            'include_video' => $generateVideo,
+        ]);
+
+        if ($generateImages) {
+            $this->dispatchPageImages($project);
+
+            return;
+        }
+
+        if ($generateAudio) {
+            $this->dispatchPageAudio($project);
+
+            return;
+        }
+
+        $project->update([
+            'pages_completed' => $project->page_count,
+            'status' => StoryProjectStatus::Ready,
+        ]);
     }
 
     public function afterImage(StoryPage $page): void
