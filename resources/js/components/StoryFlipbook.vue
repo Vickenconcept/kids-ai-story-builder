@@ -1078,7 +1078,6 @@ function scheduleRebuildTurn(): void {
     if (rebuildTimer !== null) {
         clearTimeout(rebuildTimer);
     }
-
     rebuildTimer = window.setTimeout(() => {
         rebuildTimer = null;
         ready.value = false;
