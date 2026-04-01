@@ -871,19 +871,6 @@ onUnmounted(() => {
                     tabindex="-1"
                     class="border-border bg-card/30 relative w-full rounded-xl border p-3 shadow-sm"
                 >
-                    <div class="absolute top-3 left-3 z-20 xl:left-[340px]">
-                        <Button
-                            v-if="activeFlipPage"
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            :disabled="!canGenerateVideoForPage(activeFlipPage)"
-                            @click="generateVideoForPage(activeFlipPage)"
-                        >
-                            <Clapperboard class="mr-1 size-4" />
-                            {{ activeFlipPage.video_url ? 'Regenerate video' : `Generate video (Page ${activeFlipPage.page_number})` }}
-                        </Button>
-                    </div>
                     <StoryFlipbook
                         :key="flipbookKey"
                         :title="project.title"
@@ -898,6 +885,20 @@ onUnmounted(() => {
                         :flip-settings="project.flip_settings"
                         @view-page-change="onFlipViewPageChange"
                     >
+                        <template #book-top-left>
+                            <Button
+                                v-if="activeFlipPage"
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                :disabled="!canGenerateVideoForPage(activeFlipPage)"
+                                @click="generateVideoForPage(activeFlipPage)"
+                            >
+                                <Clapperboard class="mr-1 size-4" />
+                                {{ activeFlipPage.video_url ? 'Regenerate video' : `Generate video (Page ${activeFlipPage.page_number})` }}
+                            </Button>
+                        </template>
+
                         <template #setup-extra>
                             <StoryCoverSettingsAccordion
                                 :story-uuid="project.uuid"

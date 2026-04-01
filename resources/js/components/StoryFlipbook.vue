@@ -1127,6 +1127,9 @@ onBeforeUnmount(() => {
             </StoryFlipbookSetupPanel>
 
             <section class="relative z-0 flex min-w-0 flex-col items-center gap-4">
+                <div class="absolute top-2 left-2 z-30">
+                    <slot name="book-top-left" />
+                </div>
                 <p class="text-muted-foreground max-w-xl text-center text-xs">
                     Drag the <strong>page corners</strong> to flip (mouse or touch). Keyboard:
                     <kbd class="bg-muted rounded px-1">←</kbd> /
@@ -1158,7 +1161,10 @@ onBeforeUnmount(() => {
             </section>
         </div>
 
-        <div v-else class="flex w-full flex-col items-center gap-4">
+        <div v-else class="relative flex w-full flex-col items-center gap-4">
+            <div class="absolute top-2 left-2 z-30">
+                <slot name="book-top-left" />
+            </div>
             <p class="text-muted-foreground max-w-md text-center text-xs">
                 Drag the page corners or use
                 <kbd class="bg-muted rounded px-1">←</kbd>
