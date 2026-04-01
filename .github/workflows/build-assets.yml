@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: build-assets-${{ github.ref }}
@@ -54,12 +54,7 @@ jobs:
       - name: Build frontend assets
         run: NODE_ENV=production npm run build
 
-      - name: Commit built assets
+      - name: Verify manifest entry exists
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f public/build
-          git diff --cached --quiet && exit 0
-          git commit -m "chore(ci): build frontend assets [skip ci]"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin HEAD:"${GITHUB_REF_NAME}"
+          test -f public/build/manifest.json
+          grep -q '"resources/js/app.ts"' public/build/manifest.json
