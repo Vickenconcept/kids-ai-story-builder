@@ -50,11 +50,11 @@ import { Head } from '@inertiajs/vue3';
                 id="menu"
                 class="flex items-center gap-8 font-medium max-md:absolute max-md:top-0 max-md:left-0 max-md:h-full max-md:w-0 max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-white/50 max-md:backdrop-blur max-md:transition-all max-md:duration-300"
             >
-                <a href="#" class="hover:text-gray-600"> Home </a>
+                <a href="#" class="hover:text-gray-600"> JV Home </a>
                 <div
                     class="group relative flex cursor-pointer items-center gap-1"
                 >
-                    <span>Products</span>
+                    <span>Affiliate Tools</span>
                     <svg
                         width="18"
                         height="18"
@@ -77,30 +77,30 @@ import { Head } from '@inertiajs/vue3';
                             href="#"
                             class="transition-all hover:translate-x-1 hover:text-slate-500"
                         >
-                            Templates
+                            Demo Video
                         </a>
                         <a
                             href="#"
                             class="transition-all hover:translate-x-1 hover:text-slate-500"
                         >
-                            UI Components
+                            Email Swipes
                         </a>
                         <a
                             href="#"
                             class="transition-all hover:translate-x-1 hover:text-slate-500"
                         >
-                            Mobile Apps
+                            Ad Creatives
                         </a>
                         <a
                             href="#"
                             class="transition-all hover:translate-x-1 hover:text-slate-500"
                         >
-                            Web Apps
+                            Bonus Ideas
                         </a>
                     </div>
                 </div>
-                <a href="#" class="hover:text-gray-600"> Stories </a>
-                <a href="#" class="hover:text-gray-600"> Pricing </a>
+                <a href="#" class="hover:text-gray-600"> Funnel </a>
+                <a href="#" class="hover:text-gray-600"> Commissions </a>
                 <!-- <a href="#" class="hover:text-gray-600">
                 Docs
             </a> -->
@@ -127,7 +127,7 @@ import { Head } from '@inertiajs/vue3';
             <button
                 class="hidden rounded-full bg-gray-800 px-6 py-3 font-medium text-white transition hover:bg-black md:block"
             >
-                Contact Us
+                Request JV Access
             </button>
 
             <button
@@ -155,9 +155,9 @@ import { Head } from '@inertiajs/vue3';
         <div
             class="mx-auto mt-40 flex w-max items-center gap-2 rounded-full border border-slate-300 px-4 py-2 hover:border-slate-400/70 md:mt-32"
         >
-            <span>New announcement on your inbox</span>
+            <span>Launch angle: Story to Video Content Engine</span>
             <button class="flex items-center gap-1 font-medium">
-                <span>Read more</span>
+                <span>Open Affiliate Pitch</span>
                 <svg
                     width="19"
                     height="19"
@@ -178,26 +178,28 @@ import { Head } from '@inertiajs/vue3';
         <h5
             class="mx-auto mt-8 max-w-[850px] text-center text-4xl font-medium md:text-7xl"
         >
-            Build apps faster with ui components
+            Launch a Brand-New AI Story and Video Creator Built to Convert on JVZoo
         </h5>
 
         <p
             class="mx-auto mt-6 max-w-2xl text-center text-sm max-md:px-2 md:text-base"
         >
-            Build sleek, consistent UIs without wrestling with design systems,
-            our components handle the heavy lifting so you can ship faster.
+            Position this as a multi-purpose AI content engine, not just a
+            story app. Buyers get books, images, narration and page videos in
+            minutes, while affiliates get a visual offer that is easy to demo
+            and easy to sell.
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3">
             <button
                 class="rounded-full bg-slate-800 px-6 py-3 font-medium text-white transition hover:bg-black"
             >
-                Get Started
+                Get JV Partner Access
             </button>
             <button
                 class="flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3 hover:bg-slate-200/30"
             >
-                <span>Learn More</span>
+                <span>See Conversion Plan</span>
                 <svg
                     width="6"
                     height="8"
@@ -235,24 +237,20 @@ import { Head } from '@inertiajs/vue3';
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
                     >
                         <h2 class="text-3xl font-bold text-gray-800">
-                            Promoting Sustainable Lifestyle Choices
-                            <span class="text-indigo-600">Choices</span>
+                            Buyer-Facing Core Promise
+                            <span class="text-indigo-600">Story to Video in Minutes</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            The "Eco-Tracker" project aims to create a web-based
-                            platform that encourages individuals to adopt
-                            sustainable lifestyle choices and actively
-                            contribute to environmental conservation. The
-                            platform will provide users with personalized
-                            tracking, education, and engagement features to
-                            empower them to make eco-friendly decisions in
-                            various aspects of their lives.
+                            Turn any prompt into a fully illustrated,
+                            narrated and animated storybook. This gives buyers
+                            fast output with high perceived value and gives your
+                            sales page an immediate show-don't-tell advantage.
                         </p>
                         <div class="mt-8">
                             <a
                                 href="#"
                                 class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >Start Now</a
+                                >See Buyer Hook</a
                             >
                         </div>
                     </div>
@@ -275,24 +273,20 @@ import { Head } from '@inertiajs/vue3';
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
                     >
                         <h2 class="text-3xl font-bold text-gray-800">
-                            Promoting Sustainable Lifestyle Choices
-                            <span class="text-indigo-600">Choices</span>
+                            Affiliate-Facing Core Promise
+                            <span class="text-indigo-600">Easy to Promote</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            The "Eco-Tracker" project aims to create a web-based
-                            platform that encourages individuals to adopt
-                            sustainable lifestyle choices and actively
-                            contribute to environmental conservation. The
-                            platform will provide users with personalized
-                            tracking, education, and engagement features to
-                            empower them to make eco-friendly decisions in
-                            various aspects of their lives.
+                            AI plus kids plus content is a strong JVZoo angle.
+                            The transformation is visual, emotional and simple:
+                            idea to finished story video. Affiliates can explain
+                            it in seconds and demo it in under two minutes.
                         </p>
                         <div class="mt-8">
                             <a
                                 href="#"
                                 class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >Start Now</a
+                                >See Promo Angles</a
                             >
                         </div>
                     </div>
@@ -315,24 +309,20 @@ import { Head } from '@inertiajs/vue3';
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
                     >
                         <h2 class="text-3xl font-bold text-gray-800">
-                            Promoting Sustainable Lifestyle Choices
-                            <span class="text-indigo-600">Choices</span>
+                            Revenue-Focused Funnel Positioning
+                            <span class="text-indigo-600">For Launch Day</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            The "Eco-Tracker" project aims to create a web-based
-                            platform that encourages individuals to adopt
-                            sustainable lifestyle choices and actively
-                            contribute to environmental conservation. The
-                            platform will provide users with personalized
-                            tracking, education, and engagement features to
-                            empower them to make eco-friendly decisions in
-                            various aspects of their lives.
+                            Use a low-friction frontend, then stack clear value:
+                            PRO video credits, higher limits, and done-for-you
+                            packs. This supports both conversion volume and
+                            strong EPC for affiliates.
                         </p>
                         <div class="mt-8">
                             <a
                                 href="#"
                                 class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >Start Now</a
+                                >See Revenue Stack</a
                             >
                         </div>
                     </div>
@@ -350,11 +340,12 @@ import { Head } from '@inertiajs/vue3';
                 <h1
                     class="mb-4 text-2xl font-medium tracking-tight text-zinc-800 md:text-3xl"
                 >
-                    Designed for real products
+                    Why This Will Convert
                 </h1>
                 <p class="max-w-xl text-sm tracking-tight text-zinc-800">
-                    We create thoughtfully crafted experiences that serve real
-                    users while driving meaningful business outcomes.
+                    Unique story-to-video pipeline, emotional market appeal,
+                    visual output that increases perceived value, and a clearer
+                    outcome than generic AI writing tools.
                 </p>
             </div>
 
@@ -400,12 +391,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            User-first design
+                            Story to video engine
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        We design with real users in mind, focusing on clarity,
-                        usability and accessibility from day one.
+                        Transform one prompt into full story pages, matching
+                        visuals, narration and optional per-page videos.
                     </p>
                 </div>
 
@@ -436,12 +427,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Fully responsive
+                            Emotional niche demand
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Interfaces that look and feel great on desktop, tablet
-                        and mobile, no compromises.
+                        Parents, creators and educators already want this
+                        output category, so traffic angles are easier to test.
                     </p>
                 </div>
 
@@ -481,12 +472,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Global-ready UX
+                            Visual demo advantage
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Clean files, clear specs and developer-friendly
-                        documentation - ready to build.
+                        One quick demo shows the entire transformation and lifts
+                        trust faster than text-only software pitches.
                     </p>
                 </div>
 
@@ -529,12 +520,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Scalable systems
+                            Premium differentiator
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Consistent components, tokens and patterns built to grow
-                        with your product.
+                        Page-level video output is the premium hook that helps
+                        separate this offer from basic story generators.
                     </p>
                 </div>
 
@@ -576,12 +567,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Easy to iterate
+                            Plug-and-play promo kit
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Flexible designs that adapt quickly as your product,
-                        users and goals evolve.
+                        Provide launch assets so affiliates can run quickly:
+                        swipes, creatives, short scripts and bonus ideas.
                     </p>
                 </div>
 
@@ -609,12 +600,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Performance-aware
+                            JV-friendly commissions
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Optimized layouts and interactions that support fast
-                        load times and smooth experiences.
+                        Position commission at 50% to 75% to attract active
+                        affiliates who can send volume immediately.
                     </p>
                 </div>
 
@@ -649,12 +640,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Tool-friendly
+                            Multiple buyer use-cases
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Designs built with localization, multiple languages and
-                        diverse audiences in mind.
+                        Buyers can use outputs for bedtime stories, content
+                        channels, digital bundles and client deliverables.
                     </p>
                 </div>
 
@@ -681,12 +672,12 @@ import { Head } from '@inertiajs/vue3';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Dev-ready handoff
+                            Beginner-safe onboarding
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        From startups to enterprise, our designs integrate
-                        seamlessly with your existing workflows.
+                        A fast first-win experience improves buyer confidence,
+                        increases retention and lowers refund pressure.
                     </p>
                 </div>
             </div>
@@ -724,11 +715,11 @@ import { Head } from '@inertiajs/vue3';
                         </div>
                         <div class="space-y-2">
                             <h3 class="text-base font-semibold text-slate-700">
-                                Real-Time Analytics
+                                Audience 1: Parents
                             </h3>
                             <p class="text-sm text-slate-600">
-                                Get instant insights into your finances with
-                                live dashboards.
+                                Personalized bedtime stories with visuals and
+                                narration that feel custom and memorable.
                             </p>
                         </div>
                     </div>
@@ -763,11 +754,11 @@ import { Head } from '@inertiajs/vue3';
                         </div>
                         <div class="space-y-2">
                             <h3 class="text-base font-semibold text-slate-700">
-                                Bank-Grade Security
+                                Audience 2: Creators
                             </h3>
                             <p class="text-sm text-slate-600">
-                                End-to-end encryption, 2FA, compliance with GDPR
-                                standards.
+                                Rapidly generate themed kids content for
+                                YouTube, reels, shorts and faceless formats.
                             </p>
                         </div>
                     </div>
@@ -802,11 +793,11 @@ import { Head } from '@inertiajs/vue3';
                         </div>
                         <div class="space-y-2">
                             <h3 class="text-base font-semibold text-slate-700">
-                                Customizable Reports
+                                Audience 3: Sellers
                             </h3>
                             <p class="text-sm text-slate-600">
-                                Export professional, audit-ready financial
-                                reports for tax or internal review.
+                                Package outputs into digital products, bundles,
+                                or client-ready story content services.
                             </p>
                         </div>
                     </div>
@@ -831,24 +822,19 @@ import { Head } from '@inertiajs/vue3';
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
                     >
                         <h2 class="text-3xl font-bold text-gray-800">
-                            Promoting Sustainable Lifestyle Choices
-                            <span class="text-indigo-600">Choices</span>
+                            Recommended Pricing Structure
+                            <span class="text-indigo-600">JVZoo-Friendly</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            The "Eco-Tracker" project aims to create a web-based
-                            platform that encourages individuals to adopt
-                            sustainable lifestyle choices and actively
-                            contribute to environmental conservation. The
-                            platform will provide users with personalized
-                            tracking, education, and engagement features to
-                            empower them to make eco-friendly decisions in
-                            various aspects of their lives.
+                            Frontend at $7 to $19 for volume. Upsell 1: PRO
+                            video features. Upsell 2: expanded or unlimited
+                            limits. Upsell 3: done-for-you packs.
                         </p>
                         <div class="mt-8">
                             <a
                                 href="#"
                                 class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >Start Now</a
+                                >Open Pricing Stack</a
                             >
                         </div>
                     </div>
@@ -871,24 +857,19 @@ import { Head } from '@inertiajs/vue3';
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
                     >
                         <h2 class="text-3xl font-bold text-gray-800">
-                            Promoting Sustainable Lifestyle Choices
-                            <span class="text-indigo-600">Choices</span>
+                            Affiliate Assets to Ship Fast
+                            <span class="text-indigo-600">Done-for-You</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            The "Eco-Tracker" project aims to create a web-based
-                            platform that encourages individuals to adopt
-                            sustainable lifestyle choices and actively
-                            contribute to environmental conservation. The
-                            platform will provide users with personalized
-                            tracking, education, and engagement features to
-                            empower them to make eco-friendly decisions in
-                            various aspects of their lives.
+                            Include demo video, email swipes, ad copy, banners
+                            and short scripts so affiliates can publish promos
+                            the same day they get approved.
                         </p>
                         <div class="mt-8">
                             <a
                                 href="#"
                                 class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >Start Now</a
+                                >View Asset Checklist</a
                             >
                         </div>
                     </div>
@@ -911,24 +892,19 @@ import { Head } from '@inertiajs/vue3';
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
                     >
                         <h2 class="text-3xl font-bold text-gray-800">
-                            Promoting Sustainable Lifestyle Choices
-                            <span class="text-indigo-600">Choices</span>
+                            Bonus Strategy That Lifts Conversions
+                            <span class="text-indigo-600">Without New UI</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            The "Eco-Tracker" project aims to create a web-based
-                            platform that encourages individuals to adopt
-                            sustainable lifestyle choices and actively
-                            contribute to environmental conservation. The
-                            platform will provide users with personalized
-                            tracking, education, and engagement features to
-                            empower them to make eco-friendly decisions in
-                            various aspects of their lives.
+                            Add practical bonuses buyers understand instantly:
+                            100 story prompts, kids channel guide and book
+                            monetization playbook to increase conversion rates.
                         </p>
                         <div class="mt-8">
                             <a
                                 href="#"
                                 class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >Start Now</a
+                                >See Bonus Stack</a
                             >
                         </div>
                     </div>
@@ -941,16 +917,16 @@ import { Head } from '@inertiajs/vue3';
     <footer
         class="flex w-full flex-col items-center justify-around gap-3 bg-black py-4 text-sm text-white/70 md:flex-row"
     >
-        <p>Copyright © 2025 PrebuiltUI. All rights reservered.</p>
+        <p>Copyright © 2026 JV Launch Assets. All rights reserved.</p>
         <div class="flex items-center gap-4">
-            <a href="#" class="transition-all hover:text-white"> Contact Us </a>
+            <a href="#" class="transition-all hover:text-white"> JV Support </a>
             <div class="h-8 w-px bg-white/20"></div>
             <a href="#" class="transition-all hover:text-white">
-                Privacy Policy
+                Affiliate Terms
             </a>
             <div class="h-8 w-px bg-white/20"></div>
             <a href="#" class="transition-all hover:text-white">
-                Trademark Policy
+                Promo Compliance
             </a>
         </div>
     </footer>
