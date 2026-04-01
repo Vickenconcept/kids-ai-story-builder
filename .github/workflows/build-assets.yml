@@ -61,9 +61,13 @@ jobs:
 
           SOURCE_SHA="$(git rev-parse --short HEAD)"
 
+          test -f public/build/manifest.json
+          grep -q '"resources/js/app.ts"' public/build/manifest.json
+
           # Build artifacts are published to deploy branch, so main stays source-only.
           git checkout -B deploy
           git add -A
+          git add -f public/build
           git diff --cached --quiet && exit 0
           git commit -m "chore(ci): deploy build from ${SOURCE_SHA} [skip ci]"
           git push --force-with-lease origin deploy
