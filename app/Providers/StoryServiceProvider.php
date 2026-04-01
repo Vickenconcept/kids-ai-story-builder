@@ -14,6 +14,7 @@ use App\Services\Story\Text\FakeTextStoryGenerator;
 use App\Services\Story\Text\OpenAiTextStoryGenerator;
 use App\Services\Media\StoryMediaStorage;
 use App\Services\Story\Video\NullPageVideoGenerator;
+use App\Services\Story\Video\RunwayPageVideoGenerator;
 use Illuminate\Support\ServiceProvider;
 use OpenAI;
 use OpenAI\Client;
@@ -62,8 +63,14 @@ class StoryServiceProvider extends ServiceProvider
                 : $this->app->make(OpenAiPageNarrationSynthesizer::class);
         });
 
-        $this->app->bind(PageVideoGenerator::class, function () {
-            return new NullPageVideoGenerator($this->app->make(StoryMediaStorage::class));
+        $this->app->bind(PageVideoGenerator::class, function () use ($useFake) {
+            $storage = $this->app->make(StoryMediaStorage::class);
+
+            if (! $useFake) {
+                return new RunwayPageVideoGenerator($storage);
+            }
+
+            return new NullPageVideoGenerator($storage);
         });
     }
 }

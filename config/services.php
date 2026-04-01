@@ -40,6 +40,16 @@ return [
         'organization' => env('OPENAI_ORGANIZATION'),
     ],
 
+    'runway' => [
+        'api_key' => env('RUNWAY_API_KEY'),
+        'version' => env('RUNWAY_API_VERSION', '2024-11-06'),
+        'model' => env('RUNWAY_MODEL', 'gen4_turbo'),
+        'ratio' => env('RUNWAY_RATIO', '1280:720'),
+        'duration_seconds' => (int) env('RUNWAY_DURATION_SECONDS', 5),
+        'poll_interval_ms' => (int) env('RUNWAY_POLL_INTERVAL_MS', 2000),
+        'max_polls' => (int) env('RUNWAY_MAX_POLLS', 120),
+    ],
+
     'cloudinary' => [
         /*
          * Prefer CLOUDINARY_URL (Dashboard → API Keys → “API environment variable”):

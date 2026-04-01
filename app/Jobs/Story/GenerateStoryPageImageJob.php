@@ -14,6 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class GenerateStoryPageImageJob implements ShouldQueue
@@ -44,6 +45,12 @@ class GenerateStoryPageImageJob implements ShouldQueue
     ): void {
         $page = StoryPage::query()->with(['project.user'])->findOrFail($this->storyPageId);
         $project = $page->project;
+        Log::info('story.job.image.start', [
+            'project_id' => $project->id,
+            'page_id' => $page->id,
+            'page_number' => $page->page_number,
+            'queue' => config('story.queues.image'),
+        ]);
         $jobRow = $recorder->begin($project, StoryAiJobType::PageImage, $page, ['stage' => 'image']);
 
         try {
@@ -60,11 +67,21 @@ class GenerateStoryPageImageJob implements ShouldQueue
             $path = $images->generate($input, $dir);
             $page->update(['image_path' => $path]);
             $recorder->complete($jobRow);
+            Log::info('story.job.image.success', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+                'path' => $path,
+            ]);
         } catch (Throwable $e) {
             $recorder->fail($jobRow, $e);
             $errors = $page->asset_errors ?? [];
             $errors['image'] = $e->getMessage();
             $page->update(['asset_errors' => $errors]);
+            Log::error('story.job.image.failed', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         $dispatcher->afterImage($page->fresh());

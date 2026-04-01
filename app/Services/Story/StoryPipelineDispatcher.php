@@ -10,6 +10,7 @@ use App\Jobs\Story\GenerateStoryPageVideoJob;
 use App\Jobs\Story\GenerateStoryTextJob;
 use App\Models\StoryPage;
 use App\Models\StoryProject;
+use Illuminate\Support\Facades\Log;
 
 class StoryPipelineDispatcher
 {
@@ -41,18 +42,42 @@ class StoryPipelineDispatcher
 
     public function dispatchSelectedMedia(StoryProject $project, bool $generateImages, bool $generateAudio, bool $generateVideo): void
     {
+        Log::info('story.pipeline.media.selected', [
+            'project_id' => $project->id,
+            'project_uuid' => $project->uuid,
+            'user_id' => $project->user_id,
+            'requested_generate_images' => $generateImages,
+            'requested_generate_audio' => $generateAudio,
+            'requested_generate_video' => $generateVideo,
+            'user_feature_tier' => $project->user?->feature_tier?->value,
+        ]);
+
         $project->update([
             'include_narration' => $generateAudio,
             'include_video' => $generateVideo,
         ]);
 
+        Log::info('story.pipeline.media.persisted', [
+            'project_id' => $project->id,
+            'include_narration' => $project->include_narration,
+            'include_video' => $project->include_video,
+        ]);
+
         if ($generateImages) {
+            Log::info('story.pipeline.dispatch.images', [
+                'project_id' => $project->id,
+                'page_count' => $project->pages->count(),
+            ]);
             $this->dispatchPageImages($project);
 
             return;
         }
 
         if ($generateAudio) {
+            Log::info('story.pipeline.dispatch.audio', [
+                'project_id' => $project->id,
+                'page_count' => $project->pages->count(),
+            ]);
             $this->dispatchPageAudio($project);
 
             return;
@@ -68,7 +93,20 @@ class StoryPipelineDispatcher
     {
         $project = $page->project->fresh(['user']);
 
+        Log::info('story.pipeline.after_image', [
+            'project_id' => $project->id,
+            'page_id' => $page->id,
+            'page_number' => $page->page_number,
+            'include_narration' => $project->include_narration,
+            'include_video' => $project->include_video,
+            'user_feature_tier' => $project->user?->feature_tier?->value,
+        ]);
+
         if ($project->include_narration) {
+            Log::info('story.pipeline.queue_audio_after_image', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+            ]);
             GenerateStoryPageAudioJob::dispatch($page->id)
                 ->onQueue(config('story.queues.audio'));
 
@@ -76,11 +114,20 @@ class StoryPipelineDispatcher
         }
 
         if ($this->shouldQueueVideo($project)) {
+            Log::info('story.pipeline.queue_video_after_image', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+            ]);
             GenerateStoryPageVideoJob::dispatch($page->id)
                 ->onQueue(config('story.queues.video'));
 
             return;
         }
+
+        Log::info('story.pipeline.complete_after_image', [
+            'project_id' => $project->id,
+            'page_id' => $page->id,
+        ]);
 
         $this->readiness->markPagePipelineComplete($page->fresh());
     }
@@ -89,12 +136,29 @@ class StoryPipelineDispatcher
     {
         $project = $page->project->fresh(['user']);
 
+        Log::info('story.pipeline.after_audio', [
+            'project_id' => $project->id,
+            'page_id' => $page->id,
+            'page_number' => $page->page_number,
+            'include_video' => $project->include_video,
+            'user_feature_tier' => $project->user?->feature_tier?->value,
+        ]);
+
         if ($this->shouldQueueVideo($project)) {
+            Log::info('story.pipeline.queue_video_after_audio', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+            ]);
             GenerateStoryPageVideoJob::dispatch($page->id)
                 ->onQueue(config('story.queues.video'));
 
             return;
         }
+
+        Log::info('story.pipeline.complete_after_audio', [
+            'project_id' => $project->id,
+            'page_id' => $page->id,
+        ]);
 
         $this->readiness->markPagePipelineComplete($page->fresh());
     }
@@ -107,9 +171,23 @@ class StoryPipelineDispatcher
     private function shouldQueueVideo(StoryProject $project): bool
     {
         if (! $project->include_video) {
+            Log::warning('story.pipeline.video_skip_include_video_disabled', [
+                'project_id' => $project->id,
+                'user_id' => $project->user_id,
+            ]);
             return false;
         }
 
-        return $project->user->feature_tier === FeatureTier::Pro;
+        $isPro = $project->user->feature_tier === FeatureTier::Pro;
+
+        if (! $isPro) {
+            Log::warning('story.pipeline.video_skip_user_not_pro', [
+                'project_id' => $project->id,
+                'user_id' => $project->user_id,
+                'user_feature_tier' => $project->user?->feature_tier?->value,
+            ]);
+        }
+
+        return $isPro;
     }
 }

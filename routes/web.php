@@ -10,6 +10,8 @@ Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
+Route::inertia('/jv', 'Jv')->name('jv');
+
 Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('stories.public.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {

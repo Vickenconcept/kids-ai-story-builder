@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class GenerateStoryPageVideoJob implements ShouldQueue
@@ -44,6 +45,15 @@ class GenerateStoryPageVideoJob implements ShouldQueue
         $page = StoryPage::query()->with(['project.user'])->findOrFail($this->storyPageId);
         $project = $page->project;
 
+        Log::info('story.job.video.start', [
+            'project_id' => $project->id,
+            'page_id' => $page->id,
+            'page_number' => $page->page_number,
+            'queue' => config('story.queues.video'),
+            'has_image_path' => filled($page->image_path),
+            'has_audio_path' => filled($page->audio_path),
+        ]);
+
         $jobRow = $recorder->begin($project, StoryAiJobType::PageVideo, $page, ['stage' => 'video']);
 
         try {
@@ -59,11 +69,21 @@ class GenerateStoryPageVideoJob implements ShouldQueue
                 $page->update(['video_path' => $path]);
             }
             $recorder->complete($jobRow);
+            Log::info('story.job.video.success', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+                'path' => $path,
+            ]);
         } catch (Throwable $e) {
             $recorder->fail($jobRow, $e);
             $errors = $page->asset_errors ?? [];
             $errors['video'] = $e->getMessage();
             $page->update(['asset_errors' => $errors]);
+            Log::error('story.job.video.failed', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         $dispatcher->afterVideo($page->fresh());
