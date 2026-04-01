@@ -155,8 +155,26 @@ function setGameplayEnabled(checked: boolean): void {
     if (!props.storyUuid) {
         return;
     }
-    router.patch(`/stories/${props.storyUuid}`, { flip_gameplay_enabled: checked }, { preserveScroll: true });
+    gameplayEnabledLocal.value = checked;
+    gameplayToggleBusy.value = true;
+    router.patch(
+        `/stories/${props.storyUuid}`,
+        { flip_gameplay_enabled: checked },
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onError: () => {
+                gameplayEnabledLocal.value = props.gameplayEnabled;
+            },
+            onFinish: () => {
+                gameplayToggleBusy.value = false;
+            },
+        },
+    );
 }
+
+const gameplayEnabledLocal = ref(props.gameplayEnabled);
+const gameplayToggleBusy = ref(false);
 
 const FRONT_HARD_COUNT = 1;
 const BACK_HARD_COUNT = 1;
@@ -349,6 +367,13 @@ watch(
         }
     },
     { deep: true },
+);
+
+watch(
+    () => props.gameplayEnabled,
+    (enabled) => {
+        gameplayEnabledLocal.value = enabled;
+    },
 );
 
 watch(
@@ -955,14 +980,14 @@ onBeforeUnmount(() => {
 <template>
     <div class="story-flipbook-container w-full">
         <div v-if="setupMode" class="grid w-full items-start gap-5 xl:grid-cols-[320px_1fr]">
-            <aside class="border-border bg-card/90 rounded-xl border p-4 text-sm shadow-sm xl:max-h-[calc(100vh-9rem)] xl:overflow-y-auto xl:pr-2">
+            <aside class="border-border bg-card/90 relative z-30 rounded-xl border p-3 text-sm shadow-sm xl:max-h-[calc(100vh-9rem)] xl:overflow-y-auto xl:pr-2">
                 <div class="mb-4 flex items-center gap-2">
                     <Settings2 class="size-4" />
                     <p class="font-medium">Book &amp; narration settings</p>
                 </div>
 
-                <div class="space-y-4">
-                    <label class="flex cursor-pointer items-start justify-between gap-3">
+                <div class="space-y-3">
+                    <label class="hover:bg-muted/40 flex cursor-pointer items-start justify-between gap-3 rounded-lg border border-border/70 p-2.5 transition-colors">
                         <span>
                             <span class="font-medium">Play narration when pages change</span>
                             <span class="text-muted-foreground block text-xs">
@@ -991,7 +1016,7 @@ onBeforeUnmount(() => {
 
                     <label
                         v-if="includeQuiz && hasQuizPages && storyUuid && setupMode"
-                        class="flex cursor-pointer items-start justify-between gap-3"
+                        class="hover:bg-muted/40 flex cursor-pointer items-start justify-between gap-3 rounded-lg border border-border/70 p-2.5 transition-colors"
                     >
                         <span>
                             <span class="font-medium">Enable quiz gameplay pages</span>
@@ -1001,19 +1026,25 @@ onBeforeUnmount(() => {
                         </span>
                         <span class="relative mt-0.5 inline-flex">
                             <input
-                                :checked="gameplayEnabled"
+                                :checked="gameplayEnabledLocal"
+                                :disabled="gameplayToggleBusy"
                                 type="checkbox"
                                 class="peer sr-only"
                                 @change="setGameplayEnabled(($event.target as HTMLInputElement).checked)"
                             />
-                            <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                            <span class="bg-muted peer-checked:bg-primary/80 peer-disabled:opacity-60 inline-flex h-6 w-11 items-center rounded-full transition-colors">
                                 <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
                             </span>
                         </span>
                     </label>
 
-                    <div v-if="settings.audioOnFlip" class="space-y-1.5">
-                        <Label class="text-xs">Two-page spread narration</Label>
+                    <div v-if="settings.audioOnFlip" class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
+                        <div class="flex items-center gap-2">
+                            <Label class="text-xs">Two-page spread narration</Label>
+                            <span class="text-muted-foreground rounded border border-border px-1.5 py-0.5 text-[10px]" title="Visible when narration is enabled">
+                                depends on narration
+                            </span>
+                        </div>
                         <select
                             v-model="settings.spreadAudio"
                             class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
@@ -1023,8 +1054,13 @@ onBeforeUnmount(() => {
                         </select>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <Label class="text-xs">Auto-advance</Label>
+                    <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
+                        <div class="flex items-center gap-2">
+                            <Label class="text-xs">Auto-advance</Label>
+                            <span class="text-muted-foreground rounded border border-border px-1.5 py-0.5 text-[10px]" title="Timer delay appears only when Timer mode is selected. After narration appears only when narration is enabled.">
+                                has dependent options
+                            </span>
+                        </div>
                         <select
                             v-model="settings.autoAdvance"
                             class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
@@ -1035,8 +1071,13 @@ onBeforeUnmount(() => {
                         </select>
                     </div>
 
-                    <div v-if="settings.autoAdvance === 'timer'" class="space-y-1.5">
-                        <Label class="text-xs">Timer delay (seconds)</Label>
+                    <div v-if="settings.autoAdvance === 'timer'" class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
+                        <div class="flex items-center gap-2">
+                            <Label class="text-xs">Timer delay (seconds)</Label>
+                            <span class="text-muted-foreground rounded border border-border px-1.5 py-0.5 text-[10px]" title="Visible only in Timer auto-advance mode">
+                                timer mode only
+                            </span>
+                        </div>
                         <input
                             v-model.number="settings.timerDelaySec"
                             type="range"
@@ -1049,10 +1090,10 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
-                <div class="border-border mt-5 border-t pt-4">
+                <div class="border-border mt-4 border-t pt-3.5">
                     <p class="mb-3 text-xs font-medium tracking-wide uppercase">Book behavior</p>
-                    <div class="space-y-3">
-                        <div class="space-y-1.5">
+                    <div class="space-y-2.5">
+                        <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
                             <Label class="text-xs">Display mode</Label>
                             <select
                                 v-model="settings.display"
@@ -1062,7 +1103,7 @@ onBeforeUnmount(() => {
                                 <option value="single">Single page</option>
                             </select>
                         </div>
-                        <div class="space-y-1.5">
+                        <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
                             <Label class="text-xs">Flip duration (ms)</Label>
                             <input
                                 v-model.number="settings.flipDuration"
@@ -1074,7 +1115,7 @@ onBeforeUnmount(() => {
                             />
                             <span class="text-muted-foreground text-xs">{{ settings.flipDuration }} ms</span>
                         </div>
-                        <div class="space-y-1.5">
+                        <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
                             <Label class="text-xs">Page lift (elevation)</Label>
                             <input
                                 v-model.number="settings.elevation"
@@ -1086,7 +1127,7 @@ onBeforeUnmount(() => {
                             />
                             <span class="text-muted-foreground text-xs">{{ settings.elevation }} px</span>
                         </div>
-                        <div class="space-y-1.5">
+                        <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
                             <Label class="text-xs">Book zoom (%)</Label>
                             <input
                                 v-model.number="settings.bookZoomPercent"
@@ -1098,7 +1139,7 @@ onBeforeUnmount(() => {
                             />
                             <span class="text-muted-foreground text-xs">{{ settings.bookZoomPercent }}%</span>
                         </div>
-                        <label class="flex cursor-pointer items-center justify-between gap-3">
+                        <label class="hover:bg-muted/40 flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-border/60 p-2.5 transition-colors">
                             <span class="text-sm">Gradients (page curl shading)</span>
                             <span class="relative inline-flex">
                                 <input v-model="settings.gradients" type="checkbox" class="peer sr-only" />
@@ -1107,7 +1148,7 @@ onBeforeUnmount(() => {
                                 </span>
                             </span>
                         </label>
-                        <label class="flex cursor-pointer items-center justify-between gap-3">
+                        <label class="hover:bg-muted/40 flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-border/60 p-2.5 transition-colors">
                             <span class="text-sm">Hardware acceleration</span>
                             <span class="relative inline-flex">
                                 <input v-model="settings.acceleration" type="checkbox" class="peer sr-only" />
@@ -1126,7 +1167,7 @@ onBeforeUnmount(() => {
                 <slot name="setup-extra" />
             </aside>
 
-            <section class="flex min-w-0 flex-col items-center gap-4">
+            <section class="relative z-0 flex min-w-0 flex-col items-center gap-4">
                 <p class="text-muted-foreground max-w-xl text-center text-xs">
                     Drag the <strong>page corners</strong> to flip (mouse or touch). Keyboard:
                     <kbd class="bg-muted rounded px-1">←</kbd> /
@@ -1227,11 +1268,12 @@ onBeforeUnmount(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 0;
 }
 
 .book-drop-shadow {
     position: relative;
-    z-index: 1;
+    z-index: 0;
     filter: drop-shadow(0 28px 40px rgb(0 0 0 / 0.28)) drop-shadow(0 10px 16px rgb(0 0 0 / 0.12));
 }
 
@@ -1240,6 +1282,8 @@ onBeforeUnmount(() => {
 }
 
 .book-horizontal-nudge {
+    position: relative;
+    z-index: 0;
     will-change: transform;
 }
 

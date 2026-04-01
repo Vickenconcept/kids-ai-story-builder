@@ -181,8 +181,8 @@ onUnmounted(() => {
     <Head :title="project.title" />
 
     <div class="bg-background min-h-screen w-full">
-        <div class="border-border/60 sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
-            <div class="mx-auto flex w-full max-w-440 items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div class="border-border/60 sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+            <div class="mx-auto flex w-full max-w-440 items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
                 <div class="flex min-w-0 items-center gap-2">
                     <Button variant="outline" size="sm" as-child>
                         <Link href="/stories">Back</Link>
@@ -285,7 +285,7 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <div class="mx-auto w-full max-w-440 space-y-6 px-4 py-4 sm:px-6">
+        <div class="mx-auto w-full max-w-440 space-y-4 px-4 py-3 sm:px-6">
             <div
                 class="bg-muted/60 flex rounded-lg border border-border p-0.5 text-xs font-medium sm:hidden"
                 role="group"
@@ -319,16 +319,16 @@ onUnmounted(() => {
 
             <div
                 v-if="project.status === 'failed'"
-                class="rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm"
+                class="rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-2.5 text-sm"
             >
                 Story text generation failed. Credits for completed steps were charged idempotently.
                 Create a new project to retry.
             </div>
 
-            <section class="min-w-0 space-y-6">
+            <section class="min-w-0 space-y-4">
                 <div
                     v-if="viewMode === 'flip' && pages.length > 0"
-                    class="border-border bg-card/30 w-full rounded-xl border p-4 shadow-sm"
+                    class="border-border bg-card/30 w-full rounded-xl border p-3 shadow-sm"
                 >
                     <StoryFlipbook
                         :key="flipbookKey"
