@@ -1,7 +1,6 @@
 import '../../css/flipbook-realism.css';
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight, Settings2 } from 'lucide-vue-next';
-import type { JQueryStatic } from 'jquery';
 import { router } from '@inertiajs/vue3';
 import { createApp, h, computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import StoryQuizSheet, { type QuizRow } from '@/components/StoryQuizSheet.vue';
@@ -69,6 +68,7 @@ const pageAudioRef = ref<HTMLAudioElement | null>(null);
 const ready = ref(false);
 /** In double-page mode, shifts the stage so a single visible cover (closed front or closed back) sits centered. */
 const bookNudgePx = ref(0);
+type JQueryStatic = typeof import('jquery');
 let jq: JQueryStatic | null = null;
 
 const gameUnmounters: Array<() => void> = [];
@@ -194,6 +194,8 @@ function defaultFlipCore(): typeof settings {
         gradients: true,
         acceleration: true,
         elevation: 48,
+        corners: 'all',
+        pagesInDOM: 10,
         bookZoomPercent: 100,
     };
 }
@@ -298,7 +300,7 @@ function saveSettings(): void {
 
 let persistFlipTimer: ReturnType<typeof setTimeout> | null = null;
 
-function serializeFlipSettingsForServer(): Record<string, unknown> {
+function serializeFlipSettingsForServer(): Record<string, string | number | boolean> {
     return {
         audioOnFlip: settings.audioOnFlip,
         spreadAudio: settings.spreadAudio,
@@ -337,6 +339,37 @@ watch(
         schedulePersistFlipSettingsToServer();
     },
     { deep: true },
+);
+
+watch(
+    () => props.flipSettings,
+    (nextSettings) => {
+        if (nextSettings && typeof nextSettings === 'object' && !Array.isArray(nextSettings)) {
+            applyFlipPayloadFromServer(nextSettings as Record<string, unknown>);
+        }
+    },
+    { deep: true },
+);
+
+watch(
+    () => props.playAudioOnFlip,
+    (canPlayNarration) => {
+        if (!canPlayNarration) {
+            settings.audioOnFlip = false;
+            if (settings.autoAdvance === 'afterAudio') {
+                settings.autoAdvance = 'off';
+            }
+        }
+    },
+);
+
+watch(
+    () => settings.audioOnFlip,
+    (enabled) => {
+        if (!enabled && settings.autoAdvance === 'afterAudio') {
+            settings.autoAdvance = 'off';
+        }
+    },
 );
 
 let advanceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -425,7 +458,7 @@ function getTurnTotalPages(): number {
         return 0;
     }
     try {
-        return jq(flipRoot.value).turn('pages') as number;
+        return jq(flipRoot.value).turn('pages') as unknown as number;
     } catch {
         return 0;
     }
@@ -544,7 +577,7 @@ function getCurrentView(): number[] {
         return [];
     }
     try {
-        return jq(flipRoot.value).turn('view') as number[];
+        return jq(flipRoot.value).turn('view') as unknown as number[];
     } catch {
         return [];
     }
@@ -583,7 +616,7 @@ function syncBookHorizontalNudge(): void {
     const { w } = bookDimensions();
     const quarter = w / 4;
     try {
-        const view = jq(flipRoot.value).turn('view') as number[];
+        const view = jq(flipRoot.value).turn('view') as unknown as number[];
         const v0 = view[0] ?? 0;
         const v1 = view[1] ?? 0;
         /* Turn.js: closed front uses [0,1] (only right half); closed back uses [last,0] (only left half). */
@@ -614,6 +647,7 @@ async function loadTurn(): Promise<void> {
     window.jQuery = jQuery;
     window.$ = jQuery;
     jq = jQuery;
+    // @ts-expect-error turn.js is a UMD plugin that mutates jQuery at runtime.
     await import('../vendor/turn.js');
 }
 
@@ -751,7 +785,7 @@ async function initTurn(): Promise<void> {
 
     ready.value = true;
 
-    const currentView = $root.turn('view') as number[];
+    const currentView = $root.turn('view') as unknown as number[];
     playSpreadNarration(currentView);
     scheduleTimerAdvance(currentView);
 
@@ -919,72 +953,76 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="story-flipbook-container flex w-full flex-col items-center gap-4">
-        <p v-if="setupMode" class="text-muted-foreground max-w-xl text-center text-xs">
-            Drag the <strong>page corners</strong> to flip (mouse or touch). Keyboard:
-            <kbd class="bg-muted rounded px-1">←</kbd> /
-            <kbd class="bg-muted rounded px-1">→</kbd>. Powered by
-            <a href="https://github.com/blasten/turn.js" class="underline" target="_blank" rel="noreferrer"
-                >Turn.js</a
-            >
-            ·
-            <a href="http://www.turnjs.com/" class="underline" target="_blank" rel="noreferrer">turnjs.com</a>
-        </p>
-        <p v-else class="text-muted-foreground max-w-md text-center text-xs">
-            Drag the page corners or use
-            <kbd class="bg-muted rounded px-1">←</kbd>
-            /
-            <kbd class="bg-muted rounded px-1">→</kbd>
-            to turn the page.
-        </p>
+    <div class="story-flipbook-container w-full">
+        <div v-if="setupMode" class="grid w-full items-start gap-5 xl:grid-cols-[320px_1fr]">
+            <aside class="border-border bg-card/90 rounded-xl border p-4 text-sm shadow-sm xl:max-h-[calc(100vh-9rem)] xl:overflow-y-auto xl:pr-2">
+                <div class="mb-4 flex items-center gap-2">
+                    <Settings2 class="size-4" />
+                    <p class="font-medium">Book &amp; narration settings</p>
+                </div>
 
-        <details
-            v-if="setupMode"
-            class="border-border bg-card/80 w-full max-w-2xl rounded-xl border text-sm shadow-sm backdrop-blur-sm"
-        >
-            <summary
-                class="hover:bg-muted/40 flex cursor-pointer list-none items-center gap-2 rounded-xl px-4 py-3 font-medium select-none"
-            >
-                <Settings2 class="size-4" />
-                Book &amp; narration settings
-            </summary>
-            <div class="border-border space-y-5 border-t px-4 py-4">
-                <div class="grid gap-4 sm:grid-cols-2">
-                    <label class="flex cursor-pointer items-start gap-2">
-                        <input v-model="settings.audioOnFlip" type="checkbox" class="mt-1 size-4 rounded border" />
+                <div class="space-y-4">
+                    <label class="flex cursor-pointer items-start justify-between gap-3">
                         <span>
-                            <span class="font-medium">Play audio when pages change</span>
-                            <span class="text-muted-foreground block text-xs">Narration follows the open spread.</span>
-                        </span>
-                    </label>
-                    <label
-                        v-if="includeQuiz && hasQuizPages && storyUuid && setupMode"
-                        class="flex cursor-pointer items-start gap-2 sm:col-span-2"
-                    >
-                        <input
-                            :checked="gameplayEnabled"
-                            type="checkbox"
-                            class="mt-1 size-4 rounded border"
-                            @change="setGameplayEnabled(($event.target as HTMLInputElement).checked)"
-                        />
-                        <span>
-                            <span class="font-medium">Quiz pages in the flip book</span>
+                            <span class="font-medium">Play narration when pages change</span>
                             <span class="text-muted-foreground block text-xs">
-                                After each story page that has questions, adds a full page to play the quiz (content →
-                                game → content…).
+                                Narration follows the visible page spread.
+                            </span>
+                        </span>
+                        <span class="relative mt-0.5 inline-flex">
+                            <input
+                                v-model="settings.audioOnFlip"
+                                :disabled="!playAudioOnFlip"
+                                type="checkbox"
+                                class="peer sr-only"
+                            />
+                            <span
+                                class="bg-muted peer-checked:bg-primary/80 peer-disabled:bg-muted/60 inline-flex h-6 w-11 items-center rounded-full transition-colors"
+                            >
+                                <span
+                                    class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5"
+                                />
                             </span>
                         </span>
                     </label>
-                    <div class="space-y-1.5">
-                        <Label class="text-xs">Two-page spread audio</Label>
+                    <p v-if="!playAudioOnFlip" class="text-muted-foreground -mt-2 text-xs">
+                        Narration is unavailable for this story, so narration controls are disabled.
+                    </p>
+
+                    <label
+                        v-if="includeQuiz && hasQuizPages && storyUuid && setupMode"
+                        class="flex cursor-pointer items-start justify-between gap-3"
+                    >
+                        <span>
+                            <span class="font-medium">Enable quiz gameplay pages</span>
+                            <span class="text-muted-foreground block text-xs">
+                                Adds a quiz page after each story page that includes questions.
+                            </span>
+                        </span>
+                        <span class="relative mt-0.5 inline-flex">
+                            <input
+                                :checked="gameplayEnabled"
+                                type="checkbox"
+                                class="peer sr-only"
+                                @change="setGameplayEnabled(($event.target as HTMLInputElement).checked)"
+                            />
+                            <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
+                            </span>
+                        </span>
+                    </label>
+
+                    <div v-if="settings.audioOnFlip" class="space-y-1.5">
+                        <Label class="text-xs">Two-page spread narration</Label>
                         <select
                             v-model="settings.spreadAudio"
                             class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
                         >
                             <option value="first">Left page only</option>
-                            <option value="sequence">Both pages in order (storytelling)</option>
+                            <option value="sequence">Both pages in order</option>
                         </select>
                     </div>
+
                     <div class="space-y-1.5">
                         <Label class="text-xs">Auto-advance</Label>
                         <select
@@ -992,11 +1030,12 @@ onBeforeUnmount(() => {
                             class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
                         >
                             <option value="off">Off (manual flip only)</option>
-                            <option value="timer">After delay (seconds below)</option>
-                            <option value="afterAudio">After spread audio finishes</option>
+                            <option value="timer">After delay</option>
+                            <option v-if="settings.audioOnFlip" value="afterAudio">After narration finishes</option>
                         </select>
                     </div>
-                    <div class="space-y-1.5">
+
+                    <div v-if="settings.autoAdvance === 'timer'" class="space-y-1.5">
                         <Label class="text-xs">Timer delay (seconds)</Label>
                         <input
                             v-model.number="settings.timerDelaySec"
@@ -1010,11 +1049,11 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
-                <div class="border-border border-t pt-4">
-                    <p class="mb-3 text-xs font-medium tracking-wide uppercase">Turn.js options</p>
-                    <div class="grid gap-4 sm:grid-cols-2">
+                <div class="border-border mt-5 border-t pt-4">
+                    <p class="mb-3 text-xs font-medium tracking-wide uppercase">Book behavior</p>
+                    <div class="space-y-3">
                         <div class="space-y-1.5">
-                            <Label class="text-xs">Display</Label>
+                            <Label class="text-xs">Display mode</Label>
                             <select
                                 v-model="settings.display"
                                 class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
@@ -1059,47 +1098,97 @@ onBeforeUnmount(() => {
                             />
                             <span class="text-muted-foreground text-xs">{{ settings.bookZoomPercent }}%</span>
                         </div>
-                        <label class="flex cursor-pointer items-center gap-2">
-                            <input v-model="settings.gradients" type="checkbox" class="size-4 rounded border" />
+                        <label class="flex cursor-pointer items-center justify-between gap-3">
                             <span class="text-sm">Gradients (page curl shading)</span>
+                            <span class="relative inline-flex">
+                                <input v-model="settings.gradients" type="checkbox" class="peer sr-only" />
+                                <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                    <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
+                                </span>
+                            </span>
                         </label>
-                        <label class="flex cursor-pointer items-center gap-2">
-                            <input v-model="settings.acceleration" type="checkbox" class="size-4 rounded border" />
+                        <label class="flex cursor-pointer items-center justify-between gap-3">
                             <span class="text-sm">Hardware acceleration</span>
+                            <span class="relative inline-flex">
+                                <input v-model="settings.acceleration" type="checkbox" class="peer sr-only" />
+                                <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                    <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
+                                </span>
+                            </span>
                         </label>
                     </div>
                     <p class="text-muted-foreground mt-3 text-xs">
-                        Display, duration, elevation, and gradients reload the book. Turn.js v3 (open-source) does not
-                        include the commercial v4 zoom API; use book zoom above for a similar effect.
+                        Display, duration, elevation, and gradients rebuild the book preview so changes are accurately
+                        rendered.
                     </p>
                 </div>
-            </div>
-        </details>
 
-        <div class="flex flex-wrap items-center justify-center gap-2">
-            <Button type="button" variant="outline" size="sm" :disabled="!ready" @click="prevPage">
-                <ChevronLeft class="mr-1 size-4" />
-                Previous
-            </Button>
-            <Button type="button" variant="outline" size="sm" :disabled="!ready" @click="nextPage">
-                Next
-                <ChevronRight class="ml-1 size-4" />
-            </Button>
+                <slot name="setup-extra" />
+            </aside>
+
+            <section class="flex min-w-0 flex-col items-center gap-4">
+                <p class="text-muted-foreground max-w-xl text-center text-xs">
+                    Drag the <strong>page corners</strong> to flip (mouse or touch). Keyboard:
+                    <kbd class="bg-muted rounded px-1">←</kbd> /
+                    <kbd class="bg-muted rounded px-1">→</kbd>.
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <Button type="button" variant="outline" size="sm" :disabled="!ready" @click="prevPage">
+                        <ChevronLeft class="mr-1 size-4" />
+                        Previous
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" :disabled="!ready" @click="nextPage">
+                        Next
+                        <ChevronRight class="ml-1 size-4" />
+                    </Button>
+                </div>
+
+                <div class="flip-stage perspective-desk w-full max-w-[min(100%,980px)]">
+                    <div class="book-ambient" aria-hidden="true" />
+                    <div class="book-drop-shadow">
+                        <div class="book-horizontal-nudge" :style="bookNudgeStyle">
+                            <div class="book-scaler" :style="scalerStyle">
+                                <div ref="flipRoot" class="story-flipbook touch-none overflow-hidden rounded-lg" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-floor-shadow" aria-hidden="true" />
+                </div>
+            </section>
         </div>
 
-        <div class="flip-stage perspective-desk w-full max-w-[min(100%,980px)]">
-            <div class="book-ambient" aria-hidden="true" />
-            <div class="book-drop-shadow">
-                <div class="book-horizontal-nudge" :style="bookNudgeStyle">
-                    <div class="book-scaler" :style="scalerStyle">
-                        <div
-                            ref="flipRoot"
-                            class="story-flipbook touch-none overflow-hidden rounded-lg"
-                        />
+        <div v-else class="flex w-full flex-col items-center gap-4">
+            <p class="text-muted-foreground max-w-md text-center text-xs">
+                Drag the page corners or use
+                <kbd class="bg-muted rounded px-1">←</kbd>
+                /
+                <kbd class="bg-muted rounded px-1">→</kbd>
+                to turn the page.
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <Button type="button" variant="outline" size="sm" :disabled="!ready" @click="prevPage">
+                    <ChevronLeft class="mr-1 size-4" />
+                    Previous
+                </Button>
+                <Button type="button" variant="outline" size="sm" :disabled="!ready" @click="nextPage">
+                    Next
+                    <ChevronRight class="ml-1 size-4" />
+                </Button>
+            </div>
+
+            <div class="flip-stage perspective-desk w-full max-w-[min(100%,980px)]">
+                <div class="book-ambient" aria-hidden="true" />
+                <div class="book-drop-shadow">
+                    <div class="book-horizontal-nudge" :style="bookNudgeStyle">
+                        <div class="book-scaler" :style="scalerStyle">
+                            <div ref="flipRoot" class="story-flipbook touch-none overflow-hidden rounded-lg" />
+                        </div>
                     </div>
                 </div>
+                <div class="book-floor-shadow" aria-hidden="true" />
             </div>
-            <div class="book-floor-shadow" aria-hidden="true" />
         </div>
 
         <audio ref="pageAudioRef" class="hidden" playsinline />

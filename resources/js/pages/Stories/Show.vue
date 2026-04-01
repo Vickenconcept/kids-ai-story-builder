@@ -3,10 +3,16 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import StoryFlipbook, { type CoverConfigJson } from '@/components/StoryFlipbook.vue';
 import { COVER_FRAME_OPTIONS, type CoverFrameId, normalizeCoverFrame } from '@/lib/coverFrames';
-import AppLayout from '@/layouts/AppLayout.vue';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import type { BreadcrumbItem } from '@/types';
 
 type PageRow = {
     id: number;
@@ -44,11 +50,6 @@ const props = defineProps<{
 }>();
 
 const viewMode = ref<'flip' | 'scroll'>('flip');
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Stories', href: '/stories' },
-    { title: props.project.title, href: `/stories/${props.project.uuid}` },
-];
 
 const flipbookKey = computed(() =>
     [
@@ -179,29 +180,79 @@ onUnmounted(() => {
 <template>
     <Head :title="project.title" />
 
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex flex-col gap-6 p-4">
-            <div class="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-semibold tracking-tight">{{ project.title }}</h1>
-                    <p class="text-muted-foreground mt-1 text-sm">{{ project.topic }}</p>
-                    <p class="mt-2 text-sm capitalize">
-                        <span class="font-medium">Status:</span> {{ project.status }}
-                        ·
-                        <span class="font-medium">Pages:</span>
-                        {{ project.pages_completed }} / {{ project.page_count }}
-                    </p>
-                    <div class="mt-3 flex items-center gap-3">
-                        <span class="inline-flex items-center rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
-                            <svg class="mr-1 h-4 w-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="16" text-anchor="middle" font-size="10" fill="currentColor">C</text></svg>
-                            Credits: {{ props.story_credits }}
-                        </span>
-                        <span class="text-xs text-muted-foreground">Credits are required to generate new stories, covers, audio, and games. <a href="#" class="text-blue-600 underline">Buy more credits</a></span>
+    <div class="bg-background min-h-screen w-full">
+        <div class="border-border/60 sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
+            <div class="mx-auto flex w-full max-w-440 items-center justify-between gap-3 px-4 py-3 sm:px-6">
+                <div class="flex min-w-0 items-center gap-2">
+                    <Button variant="outline" size="sm" as-child>
+                        <Link href="/stories">Back</Link>
+                    </Button>
+                    <div class="min-w-0">
+                        <h1 class="truncate text-base font-semibold tracking-tight sm:text-lg">{{ project.title }}</h1>
+                        <div class="mt-1 hidden items-center gap-2 text-xs md:flex">
+                            <span class="border-border bg-muted/50 inline-flex items-center rounded-md border px-2 py-0.5 font-medium capitalize">
+                                Status: {{ project.status }}
+                            </span>
+                            <span class="border-border bg-muted/50 inline-flex items-center rounded-md border px-2 py-0.5 font-medium">
+                                Pages: {{ project.pages_completed }} / {{ project.page_count }}
+                            </span>
+                            <span class="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-amber-50 px-2 py-0.5 font-bold text-amber-800">
+                                <svg class="size-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+                                    <path d="M8.8 12h6.4M12 8.8v6.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                </svg>
+                                Credits: {{ props.story_credits }}
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                    <Dialog v-if="project.status === 'ready'">
+                        <DialogTrigger as-child>
+                            <Button variant="outline" size="sm">Share</Button>
+                        </DialogTrigger>
+                        <DialogContent class="sm:max-w-lg">
+                            <DialogHeader>
+                                <DialogTitle>Public reader link</DialogTitle>
+                                <DialogDescription>
+                                    Share this read-only story link and control whether public access is enabled.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div class="space-y-3">
+                                <label class="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-border p-3">
+                                    <span>
+                                        <span class="font-medium">Enable public access</span>
+                                        <span class="text-muted-foreground block text-xs">When off, guests see “page not found”.</span>
+                                    </span>
+                                    <span class="relative mt-0.5 inline-flex">
+                                        <input
+                                            :checked="project.sharing_enabled"
+                                            type="checkbox"
+                                            class="peer sr-only"
+                                            @change="toggleSharing"
+                                        />
+                                        <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                            <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
+                                        </span>
+                                    </span>
+                                </label>
+                                <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+                                    <input
+                                        :value="project.public_read_url"
+                                        type="text"
+                                        readonly
+                                        class="border-input bg-muted/40 text-muted-foreground min-w-0 flex-1 rounded-md border px-2.5 py-2 text-xs"
+                                    />
+                                    <Button type="button" size="sm" variant="secondary" class="shrink-0" @click="copyPublicLink">
+                                        {{ copiedPublic ? 'Copied' : 'Copy link' }}
+                                    </Button>
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+
                     <div
-                        class="bg-muted/60 flex rounded-lg border border-border p-0.5 text-xs font-medium"
+                        class="bg-muted/60 hidden rounded-lg border border-border p-0.5 text-xs font-medium sm:flex"
                         role="group"
                         aria-label="View mode"
                     >
@@ -230,10 +281,40 @@ onUnmounted(() => {
                             Scroll
                         </button>
                     </div>
-                    <Button variant="outline" as-child>
-                        <Link href="/stories">Back to list</Link>
-                    </Button>
                 </div>
+            </div>
+        </div>
+
+        <div class="mx-auto w-full max-w-440 space-y-6 px-4 py-4 sm:px-6">
+            <div
+                class="bg-muted/60 flex rounded-lg border border-border p-0.5 text-xs font-medium sm:hidden"
+                role="group"
+                aria-label="View mode"
+            >
+                <button
+                    type="button"
+                    class="flex-1 rounded-md px-3 py-1.5 transition-colors"
+                    :class="
+                        viewMode === 'flip'
+                            ? 'bg-background text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                    "
+                    @click="viewMode = 'flip'"
+                >
+                    Flip book
+                </button>
+                <button
+                    type="button"
+                    class="flex-1 rounded-md px-3 py-1.5 transition-colors"
+                    :class="
+                        viewMode === 'scroll'
+                            ? 'bg-background text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                    "
+                    @click="viewMode = 'scroll'"
+                >
+                    Scroll
+                </button>
             </div>
 
             <div
@@ -244,161 +325,129 @@ onUnmounted(() => {
                 Create a new project to retry.
             </div>
 
-            <div
-                v-if="project.status === 'ready'"
-                class="border-border bg-card/80 w-full max-w-3xl rounded-xl border p-4 text-sm shadow-sm backdrop-blur-sm"
-            >
-                <p class="font-medium">Public reader link</p>
-                <p class="text-muted-foreground mt-1 text-xs">
-                    Anyone with the link can open a read-only flip book (same covers, narration, and quiz pages you
-                    configured). You can turn this off anytime.
-                </p>
-                <label class="mt-3 flex cursor-pointer items-start gap-2">
-                    <input
-                        :checked="project.sharing_enabled"
-                        type="checkbox"
-                        class="border-input mt-1 size-4 rounded"
-                        @change="toggleSharing"
-                    />
-                    <span>
-                        <span class="font-medium">Enable public access</span>
-                        <span class="text-muted-foreground block text-xs">
-                            When off, the link below returns “page not found” for guests.
-                        </span>
-                    </span>
-                </label>
-                <div class="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <input
-                        :value="project.public_read_url"
-                        type="text"
-                        readonly
-                        class="border-input bg-muted/40 text-muted-foreground min-w-0 flex-1 rounded-md border px-3 py-2 text-xs"
-                    />
-                    <Button type="button" size="sm" variant="secondary" class="shrink-0" @click="copyPublicLink">
-                        {{ copiedPublic ? 'Copied' : 'Copy link' }}
-                    </Button>
-                </div>
-            </div>
-
-            <details
-                class="border-border bg-card/80 w-full max-w-3xl rounded-xl border text-sm shadow-sm backdrop-blur-sm"
-            >
-                <summary
-                    class="hover:bg-muted/40 flex cursor-pointer list-none items-center gap-2 rounded-xl px-4 py-3 font-medium select-none"
+            <section class="min-w-0 space-y-6">
+                <div
+                    v-if="viewMode === 'flip' && pages.length > 0"
+                    class="border-border bg-card/30 w-full rounded-xl border p-4 shadow-sm"
                 >
-                    Book covers (front &amp; back)
-                </summary>
-                <div class="border-border space-y-4 border-t px-4 py-4">
-                    <p class="text-muted-foreground text-xs">
-                        Solid color, linear gradient, image upload (JPEG, PNG, WebP, or animated GIF), or AI-generated
-                        art. Visitors who use your public reader link see the same covers and flip layout.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <Button
-                            type="button"
-                            size="sm"
-                            :variant="coverSurface === 'front' ? 'default' : 'outline'"
-                            @click="coverSurface = 'front'"
-                        >
-                            Front cover
-                        </Button>
-                        <Button
-                            type="button"
-                            size="sm"
-                            :variant="coverSurface === 'back' ? 'default' : 'outline'"
-                            @click="coverSurface = 'back'"
-                        >
-                            Back cover
-                        </Button>
-                    </div>
-                    <div class="space-y-2">
-                        <Label class="text-xs">Cover frame style</Label>
-                        <p class="text-muted-foreground text-xs">
-                            Border and embossing on the hard cover. Front and back can each use a different template.
-                        </p>
-                        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                            <button
-                                v-for="opt in COVER_FRAME_OPTIONS"
-                                :key="opt.id"
-                                type="button"
-                                class="rounded-lg border p-3 text-left transition-colors select-none"
-                                :class="
-                                    selectedCoverFrame === opt.id
-                                        ? 'border-primary bg-primary/10 ring-primary/25 ring-1'
-                                        : 'border-border hover:border-muted-foreground/40'
-                                "
-                                @click="applyCoverFrame(opt.id)"
-                            >
-                                <span class="text-sm font-medium">{{ opt.label }}</span>
-                                <span class="text-muted-foreground mt-1 block text-xs leading-snug">{{ opt.hint }}</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <div class="space-y-2">
-                            <Label class="text-xs">Solid color</Label>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <input v-model="solidColor" type="color" class="h-9 w-14 cursor-pointer rounded border" />
-                                <Button type="button" size="sm" variant="secondary" @click="applySolidCover">
-                                    Apply
-                                </Button>
-                            </div>
-                        </div>
-                        <div class="space-y-2 sm:col-span-2">
-                            <Label class="text-xs">Linear gradient</Label>
-                            <div class="flex flex-wrap items-end gap-2">
-                                <label class="text-xs">
-                                    From
-                                    <input v-model="gradFrom" type="color" class="mt-1 block h-9 w-14 rounded border" />
-                                </label>
-                                <label class="text-xs">
-                                    To
-                                    <input v-model="gradTo" type="color" class="mt-1 block h-9 w-14 rounded border" />
-                                </label>
-                                <label class="text-xs">
-                                    Angle
-                                    <input
-                                        v-model.number="gradAngle"
-                                        type="number"
-                                        min="0"
-                                        max="360"
-                                        class="border-input bg-background mt-1 block w-20 rounded-md border px-2 py-1"
-                                    />
-                                </label>
-                                <Button type="button" size="sm" variant="secondary" @click="applyGradientCover">
-                                    Apply gradient
-                                </Button>
-                            </div>
-                        </div>
-                        <div class="space-y-2">
-                            <Label class="text-xs">Upload image or GIF</Label>
-                            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" @change="onCoverFilePick" />
-                        </div>
-                        <div class="space-y-2">
-                            <Label class="text-xs">AI cover (uses your story title &amp; topic)</Label>
-                            <Button type="button" size="sm" :disabled="coverAiBusy" @click="generateAiCover">
-                                {{ coverAiBusy ? 'Generating…' : 'Generate with AI' }}
-                            </Button>
-                        </div>
-                    </div>
+                    <StoryFlipbook
+                        :key="flipbookKey"
+                        :title="project.title"
+                        :pages="pages"
+                        :play-audio-on-flip="project.include_narration"
+                        :story-uuid="project.uuid"
+                        :include-quiz="project.include_quiz"
+                        :gameplay-enabled="project.flip_gameplay_enabled"
+                        :setup-mode="true"
+                        :cover-front="project.cover_front"
+                        :cover-back="project.cover_back"
+                        :flip-settings="project.flip_settings"
+                    >
+                        <template #setup-extra>
+                            <details class="border-border bg-background/60 group rounded-lg border">
+                                <summary class="hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium">
+                                    <span>Book covers (front &amp; back)</span>
+                                    <span class="text-muted-foreground text-xs transition-transform group-open:rotate-180">▼</span>
+                                </summary>
+                                <div class="border-border space-y-4 border-t p-3">
+                                    <p class="text-muted-foreground text-xs">
+                                        Solid color, linear gradient, image upload (JPEG, PNG, WebP, or animated GIF),
+                                        or AI-generated art. Public reader visitors see the same covers.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            :variant="coverSurface === 'front' ? 'default' : 'outline'"
+                                            @click="coverSurface = 'front'"
+                                        >
+                                            Front cover
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            :variant="coverSurface === 'back' ? 'default' : 'outline'"
+                                            @click="coverSurface = 'back'"
+                                        >
+                                            Back cover
+                                        </Button>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label class="text-xs">Cover frame style</Label>
+                                        <p class="text-muted-foreground text-xs">
+                                            Border and embossing on the hard cover. Front and back can use different templates.
+                                        </p>
+                                        <div class="grid gap-2">
+                                            <button
+                                                v-for="opt in COVER_FRAME_OPTIONS"
+                                                :key="opt.id"
+                                                type="button"
+                                                class="rounded-lg border p-3 text-left transition-colors select-none"
+                                                :class="
+                                                    selectedCoverFrame === opt.id
+                                                        ? 'border-primary bg-primary/10 ring-primary/25 ring-1'
+                                                        : 'border-border hover:border-muted-foreground/40'
+                                                "
+                                                @click="applyCoverFrame(opt.id)"
+                                            >
+                                                <span class="text-sm font-medium">{{ opt.label }}</span>
+                                                <span class="text-muted-foreground mt-1 block text-xs leading-snug">{{ opt.hint }}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <div class="space-y-2">
+                                            <Label class="text-xs">Solid color</Label>
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <input v-model="solidColor" type="color" class="h-9 w-14 cursor-pointer rounded border" />
+                                                <Button type="button" size="sm" variant="secondary" @click="applySolidCover">
+                                                    Apply
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <Label class="text-xs">Linear gradient</Label>
+                                            <div class="flex flex-wrap items-end gap-2">
+                                                <label class="text-xs">
+                                                    From
+                                                    <input v-model="gradFrom" type="color" class="mt-1 block h-9 w-14 rounded border" />
+                                                </label>
+                                                <label class="text-xs">
+                                                    To
+                                                    <input v-model="gradTo" type="color" class="mt-1 block h-9 w-14 rounded border" />
+                                                </label>
+                                                <label class="text-xs">
+                                                    Angle
+                                                    <input
+                                                        v-model.number="gradAngle"
+                                                        type="number"
+                                                        min="0"
+                                                        max="360"
+                                                        class="border-input bg-background mt-1 block w-20 rounded-md border px-2 py-1"
+                                                    />
+                                                </label>
+                                                <Button type="button" size="sm" variant="secondary" @click="applyGradientCover">
+                                                    Apply gradient
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <Label class="text-xs">Upload image or GIF</Label>
+                                            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" @change="onCoverFilePick" />
+                                        </div>
+                                        <div class="space-y-2">
+                                            <Label class="text-xs">AI cover (uses your story title &amp; topic)</Label>
+                                            <Button type="button" size="sm" :disabled="coverAiBusy" @click="generateAiCover">
+                                                {{ coverAiBusy ? 'Generating…' : 'Generate with AI' }}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                        </template>
+                    </StoryFlipbook>
                 </div>
-            </details>
 
-            <div v-if="viewMode === 'flip' && pages.length > 0" class="w-full">
-                <StoryFlipbook
-                    :key="flipbookKey"
-                    :title="project.title"
-                    :pages="pages"
-                    :play-audio-on-flip="project.include_narration"
-                    :story-uuid="project.uuid"
-                    :include-quiz="project.include_quiz"
-                    :gameplay-enabled="project.flip_gameplay_enabled"
-                    :setup-mode="true"
-                    :cover-front="project.cover_front"
-                    :cover-back="project.cover_back"
-                    :flip-settings="project.flip_settings"
-                />
-            </div>
             <p
                 v-else-if="viewMode === 'flip' && pages.length === 0"
                 class="text-muted-foreground rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm"
@@ -466,6 +515,7 @@ onUnmounted(() => {
                     </div>
                 </article>
             </div>
+            </section>
         </div>
-    </AppLayout>
+    </div>
 </template>
