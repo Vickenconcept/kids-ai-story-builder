@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import StoryFlipbook from '@/components/StoryFlipbook.vue';
 import type {CoverConfigJson} from '@/components/StoryFlipbook.vue';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,40 @@ const props = defineProps<{
     pages: PageRow[];
 }>();
 
-const viewMode = ref<'flip' | 'scroll'>('flip');
+const viewMode = computed<'flip' | 'scroll'>(() =>
+    props.project.flip_settings?.readMode === 'scroll' ? 'scroll' : 'flip',
+);
+const carouselIndex = ref(0);
+
+const carouselPage = computed(() => props.pages[carouselIndex.value] ?? null);
+
+const canCarouselPrev = computed(() => carouselIndex.value > 0);
+const canCarouselNext = computed(() => carouselIndex.value < props.pages.length - 1);
+
+function goCarouselPrev(): void {
+    if (!canCarouselPrev.value) {
+        return;
+    }
+
+    carouselIndex.value -= 1;
+}
+
+function goCarouselNext(): void {
+    if (!canCarouselNext.value) {
+        return;
+    }
+
+    carouselIndex.value += 1;
+}
+
+watch(
+    () => props.pages.length,
+    () => {
+        if (carouselIndex.value > props.pages.length - 1) {
+            carouselIndex.value = Math.max(0, props.pages.length - 1);
+        }
+    },
+);
 
 const flipbookKey = computed(() =>
     [
@@ -70,42 +103,6 @@ const flipbookKey = computed(() =>
         </header>
 
         <main class="mx-auto max-w-5xl px-4 py-8">
-            <div class="mb-8 text-center">
-                <h1 class="text-3xl font-semibold tracking-tight">{{ project.title }}</h1>
-                <p class="text-muted-foreground mt-2 text-sm">{{ project.topic }}</p>
-            </div>
-
-            <div
-                class="bg-muted/40 mx-auto mb-6 flex max-w-md rounded-lg border border-border p-0.5 text-xs font-medium"
-                role="group"
-                aria-label="View mode"
-            >
-                <button
-                    type="button"
-                    class="flex-1 rounded-md px-3 py-2 transition-colors"
-                    :class="
-                        viewMode === 'flip'
-                            ? 'bg-background text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                    "
-                    @click="viewMode = 'flip'"
-                >
-                    Flip book
-                </button>
-                <button
-                    type="button"
-                    class="flex-1 rounded-md px-3 py-2 transition-colors"
-                    :class="
-                        viewMode === 'scroll'
-                            ? 'bg-background text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                    "
-                    @click="viewMode = 'scroll'"
-                >
-                    Scroll
-                </button>
-            </div>
-
             <div v-if="viewMode === 'flip' && pages.length > 0" class="w-full">
                 <StoryFlipbook
                     :key="flipbookKey"
@@ -128,26 +125,43 @@ const flipbookKey = computed(() =>
                 This story has no pages yet.
             </p>
 
-            <div v-if="viewMode === 'scroll'" class="flex flex-col gap-8">
+            <div v-if="viewMode === 'scroll'" class="space-y-4">
+                <div class="flex items-center justify-center gap-2">
+                    <Button type="button" variant="outline" size="sm" :disabled="!canCarouselPrev" @click="goCarouselPrev">
+                        Previous
+                    </Button>
+                    <p class="text-muted-foreground text-xs">
+                        <span v-if="carouselPage">Page {{ carouselPage.page_number }} of {{ pages.length }}</span>
+                        <span v-else>No pages yet</span>
+                    </p>
+                    <Button type="button" variant="outline" size="sm" :disabled="!canCarouselNext" @click="goCarouselNext">
+                        Next
+                    </Button>
+                </div>
+
                 <article
-                    v-for="page in pages"
-                    :key="page.uuid"
-                    class="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border"
+                    v-if="carouselPage"
+                    :key="carouselPage.uuid"
+                    class="mx-auto rounded-xl border border-sidebar-border/70 p-4 transition-all duration-300 dark:border-sidebar-border"
                 >
-                    <h2 class="mb-3 text-lg font-medium">Page {{ page.page_number }}</h2>
+                    <h2 class="mb-3 text-lg font-medium">Page {{ carouselPage.page_number }}</h2>
                     <div class="grid gap-6 lg:grid-cols-2">
-                        <p class="text-sm leading-relaxed">{{ page.text_content }}</p>
-                        <div v-if="page.image_url" class="overflow-hidden rounded-lg border">
+                        <p class="text-sm leading-relaxed">{{ carouselPage.text_content }}</p>
+                        <div v-if="carouselPage.image_url" class="overflow-hidden rounded-lg border">
                             <img
-                                :src="page.image_url"
-                                :alt="`Illustration page ${page.page_number}`"
+                                :src="carouselPage.image_url"
+                                :alt="`Illustration page ${carouselPage.page_number}`"
                                 draggable="false"
                                 class="max-h-80 w-full select-none object-contain [-webkit-user-drag:none]"
                             />
                         </div>
                     </div>
-                    <audio v-if="page.audio_url" :src="page.audio_url" controls class="mt-4 w-full" />
+                    <audio v-if="carouselPage.audio_url" :src="carouselPage.audio_url" controls class="mt-4 w-full" />
                 </article>
+
+                <p v-else class="text-muted-foreground text-center text-sm">
+                    This story has no pages yet.
+                </p>
             </div>
         </main>
     </div>

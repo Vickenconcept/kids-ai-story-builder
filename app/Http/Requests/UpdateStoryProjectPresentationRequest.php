@@ -63,6 +63,7 @@ class UpdateStoryProjectPresentationRequest extends FormRequest
             'flip_settings.acceleration' => ['sometimes', 'boolean'],
             'flip_settings.elevation' => ['sometimes', 'integer', 'min:0', 'max:120'],
             'flip_settings.bookZoomPercent' => ['sometimes', 'integer', 'min:70', 'max:130'],
+            'flip_settings.readMode' => ['sometimes', Rule::in(['flip', 'scroll'])],
         ];
     }
 }

@@ -41,6 +41,7 @@
 
         @vite(['resources/js/app.ts'])
         @inertiaHead
+        <x-seo::meta />
     </head>
     <body class="font-sans antialiased">
         @inertia

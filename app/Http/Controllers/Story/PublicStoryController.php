@@ -18,6 +18,23 @@ class PublicStoryController extends Controller
         }
 
         $story->load('pages');
+        $firstPage = $story->pages->sortBy('page_number')->first();
+        $coverImage = is_array($story->cover_front) && isset($story->cover_front['path']) && is_string($story->cover_front['path'])
+            ? StoryMediaUrl::resolve($story->cover_front['path'])
+            : null;
+        $seoImage = $coverImage ?: ($firstPage ? StoryMediaUrl::resolve($firstPage->image_path) : null);
+
+        seo()
+            ->title($story->title)
+            ->description($story->topic)
+            ->url(route('stories.public.show', $story, absolute: true))
+            ->type('article')
+            ->twitterTitle($story->title)
+            ->twitterDescription($story->topic);
+
+        if (is_string($seoImage) && $seoImage !== '') {
+            seo()->image($seoImage)->twitterImage($seoImage);
+        }
 
         $pages = $story->pages->map(fn ($page) => [
             'id' => $page->id,

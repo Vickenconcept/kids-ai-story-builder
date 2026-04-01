@@ -51,55 +51,8 @@ import { Head } from '@inertiajs/vue3';
                 class="flex items-center gap-8 font-medium max-md:absolute max-md:top-0 max-md:left-0 max-md:h-full max-md:w-0 max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-white/50 max-md:backdrop-blur max-md:transition-all max-md:duration-300"
             >
                 <a href="#" class="hover:text-gray-600"> JV Home </a>
-                <div
-                    class="group relative flex cursor-pointer items-center gap-1"
-                >
-                    <span>Affiliate Tools</span>
-                    <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2"
-                            stroke="#050040"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                    </svg>
-                    <div
-                        class="absolute top-36 left-0 flex w-max -translate-y-full flex-col gap-2 rounded-lg bg-white p-4 font-normal opacity-0 transition-all duration-300 group-hover:top-44 group-hover:opacity-100"
-                    >
-                        <a
-                            href="#"
-                            class="transition-all hover:translate-x-1 hover:text-slate-500"
-                        >
-                            Demo Video
-                        </a>
-                        <a
-                            href="#"
-                            class="transition-all hover:translate-x-1 hover:text-slate-500"
-                        >
-                            Email Swipes
-                        </a>
-                        <a
-                            href="#"
-                            class="transition-all hover:translate-x-1 hover:text-slate-500"
-                        >
-                            Ad Creatives
-                        </a>
-                        <a
-                            href="#"
-                            class="transition-all hover:translate-x-1 hover:text-slate-500"
-                        >
-                            Bonus Ideas
-                        </a>
-                    </div>
-                </div>
-                <a href="#" class="hover:text-gray-600"> Funnel </a>
+                   
+                <a href="#email-swipes" class="hover:text-gray-600"> Email Swipes </a>
                 <a href="#" class="hover:text-gray-600"> Commissions </a>
                 <!-- <a href="#" class="hover:text-gray-600">
                 Docs
@@ -178,7 +131,7 @@ import { Head } from '@inertiajs/vue3';
         <h5
             class="mx-auto mt-8 max-w-[850px] text-center text-4xl font-medium md:text-7xl"
         >
-            New AI Story to Video App Built for JVZoo Profits
+            NEW AI APP TURNS 1 CLICK INTO STORY VIDEOS THAT SELL
         </h5>
 
         <p
@@ -186,7 +139,7 @@ import { Head } from '@inertiajs/vue3';
         >
             Turn one click into fully illustrated, narrated and animated story
             content. Low frontend, strong upsell stack, visual demo advantage,
-            and up to 75% commissions for affiliates who move fast.
+            and up to 50% commissions for affiliates who move fast.
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3">
@@ -198,7 +151,7 @@ import { Head } from '@inertiajs/vue3';
             <button
                 class="flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3 hover:bg-slate-200/30"
             >
-                <span>Watch 2-Minute Demo</span>
+                <span>Watch The 2-Minute Demo That Sells This For You</span>
                 <svg
                     width="6"
                     height="8"
@@ -216,6 +169,11 @@ import { Head } from '@inertiajs/vue3';
                 </svg>
             </button>
         </div>
+
+        <p class="mx-auto mt-4 max-w-2xl px-2 text-center text-sm text-slate-700">
+            No long explanation needed. Show the transformation once and buyers
+            instantly understand. Click, watch, promote.
+        </p>
     </section>
 
     <section class="mx-auto -mt-28 max-w-6xl px-4 pb-10 md:px-8">
@@ -225,11 +183,11 @@ import { Head } from '@inertiajs/vue3';
                     Affiliate Earnings Angle
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    Earn Up To 75% Per Sale
+                    Earn Up To 50% Per Sale
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    High-converting emotional niche, low-friction frontend, and
-                    upsells built to increase EPC.
+                    High-converting emotional niche and strong upsell stack to
+                    increase EPC potential for volume affiliates during launch.
                 </p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -237,11 +195,12 @@ import { Head } from '@inertiajs/vue3';
                     Launch Urgency
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    Early Window = Higher EPC
+                    Launch Window Open Now
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    Fresh launch momentum, lower affiliate competition, and
-                    faster conversions during the opening push.
+                    Early affiliates get higher EPC potential, fresher traffic
+                    response and lower competition. This is when most launch
+                    revenue is made.
                 </p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -249,7 +208,8 @@ import { Head } from '@inertiajs/vue3';
                     Core Positioning
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    AI Story to Video Content Machine
+                    AI Story to Video Content Engine (Built for Fast
+                    Conversions)
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
                     This is not another generic AI tool. It is a visual
@@ -269,7 +229,7 @@ import { Head } from '@inertiajs/vue3';
                         <div
                             class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
                             style="
-                                background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97');
+                                background-image: url('/images/banner-childern-image.png');
                             "
                         ></div>
                     </div>
@@ -307,7 +267,7 @@ import { Head } from '@inertiajs/vue3';
                         <div
                             class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
                             style="
-                                background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97');
+                                background-image: url('/images/card-kids-image.png');
                             "
                         ></div>
                     </div>
@@ -319,7 +279,8 @@ import { Head } from '@inertiajs/vue3';
                             <span class="text-indigo-600">Easy to Promote</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            AI plus kids plus content is a strong JVZoo angle.
+                            AI + kids + content = high emotional engagement and
+                            easy conversions.
                             The transformation is visual, emotional and simple:
                             idea to finished story video. Affiliates can explain
                             it in seconds and demo it in under two minutes.
@@ -345,7 +306,7 @@ import { Head } from '@inertiajs/vue3';
                         <div
                             class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
                             style="
-                                background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97');
+                                background-image: url('/images/banner-childern-image.png');
                             "
                         ></div>
                     </div>
@@ -406,7 +367,11 @@ import { Head } from '@inertiajs/vue3';
                     <p>5. Close the sale with clear pricing and bonus stack.</p>
                 </div>
                 <p class="mt-4 text-sm font-medium text-zinc-900">
-                    Simple, visual, emotional. No complex explanation needed.
+                    Simple. Visual. Emotional. Built to convert fast.
+                </p>
+                <p class="mt-3 text-sm font-semibold text-zinc-900">
+                    This is the kind of product that turns curiosity clicks into
+                    buyers because the value is seen, not explained.
                 </p>
             </div>
 
@@ -665,8 +630,8 @@ import { Head } from '@inertiajs/vue3';
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Position commission at 50% to 75% to attract active
-                        affiliates who can send volume immediately.
+                        Position commission at 50% to attract active affiliates
+                        who can send volume immediately.
                     </p>
                 </div>
 
@@ -745,6 +710,18 @@ import { Head } from '@inertiajs/vue3';
         </section>
 
         <section>
+            <div class="mx-auto mt-4 max-w-5xl px-4 text-center md:mt-10 md:px-8">
+                <h2 class="text-2xl font-bold text-gray-800 md:text-3xl">
+                    This Offer Is Perfect For
+                </h2>
+                <p class="mt-3 text-sm text-gray-600 md:text-base">
+                    Email marketers, YouTube reviewers, Facebook and TikTok
+                    traffic affiliates, and beginner affiliates who need a
+                    simple visual offer. If you can show a 2-minute demo, you
+                    can sell this.
+                </p>
+            </div>
+
             <div class="flex flex-col items-center md:flex-row">
                 <img
                     class="w-full max-w-2xl"
@@ -875,7 +852,7 @@ import { Head } from '@inertiajs/vue3';
                         <div
                             class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
                             style="
-                                background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97');
+                                background-image: url('/images/card-kids-image.png');
                             "
                         ></div>
                     </div>
@@ -892,7 +869,7 @@ import { Head } from '@inertiajs/vue3';
                             limits. Upsell 3: done-for-you packs.
                         </p>
                         <p class="mt-3 text-sm text-gray-700">
-                            Commission structure: frontend 50% to 75%, upsells
+                            Commission structure: frontend 50%, upsells
                             included, built to reward volume affiliates.
                         </p>
                         <div class="mt-8">
@@ -914,7 +891,7 @@ import { Head } from '@inertiajs/vue3';
                         <div
                             class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
                             style="
-                                background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97');
+                                background-image: url('/images/banner-childern-image.png');
                             "
                         ></div>
                     </div>
@@ -936,7 +913,7 @@ import { Head } from '@inertiajs/vue3';
                         </p>
                         <div class="mt-8">
                             <a
-                                href="#"
+                                href="#email-swipes"
                                 class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
                                 >View Asset Checklist</a
                             >
@@ -980,6 +957,50 @@ import { Head } from '@inertiajs/vue3';
                 </div>
             </div>
             <!-- cards -->
+        </section>
+
+        <section id="email-swipes" class="bg-slate-50 px-4 py-16 md:px-8">
+            <div class="mx-auto max-w-6xl">
+                <div class="mb-6 flex items-center justify-between gap-3">
+                    <h2 class="text-3xl font-bold text-slate-900">Email Swipes</h2>
+                    <span class="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-700">Affiliate Promo Pack</span>
+                </div>
+                <p class="mb-6 max-w-3xl text-sm text-slate-600">
+                    Copy these ready-to-send email swipes, personalize your affiliate link and bonus angle, then launch fast.
+                </p>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <p class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">Swipe 1: Curiosity</p>
+                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: New AI App Turns 1 Prompt Into Story Videos</h3>
+                        <p class="mt-3 text-sm leading-relaxed text-slate-700">
+                            Quick heads up. I just tested a new AI app that turns one prompt into illustrated story pages,
+                            narration, and even page videos. It is visual, easy to demo, and converts fast in kid-content
+                            niches. Watch the 2-minute demo here and see why this is getting strong launch traction.
+                        </p>
+                    </article>
+
+                    <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <p class="text-xs font-semibold tracking-wide text-emerald-600 uppercase">Swipe 2: Problem/Solution</p>
+                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: Most AI Story Tools Stop at Text. This One Doesn't.</h3>
+                        <p class="mt-3 text-sm leading-relaxed text-slate-700">
+                            Most tools generate text and leave the hard part to you. This app handles the full flow:
+                            story pages, images, voice, and optional video output. If your audience wants fast content they
+                            can publish or sell, this is a strong fit. Check the offer and launch details now.
+                        </p>
+                    </article>
+
+                    <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
+                        <p class="text-xs font-semibold tracking-wide text-amber-600 uppercase">Swipe 3: Launch Urgency</p>
+                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: Launch Window Open - Early Affiliates Usually Win Bigger</h3>
+                        <p class="mt-3 text-sm leading-relaxed text-slate-700">
+                            Launch window is open now. Early promotions usually benefit from stronger EPC, fresher traffic,
+                            and less competition. If you can run a quick demo-first campaign, this offer is positioned for
+                            speed. Grab your link, pick your angle, and start mailing today.
+                        </p>
+                    </article>
+                </div>
+            </div>
         </section>
     </main>
 

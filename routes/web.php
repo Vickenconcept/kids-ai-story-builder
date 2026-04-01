@@ -11,6 +11,7 @@ Route::inertia('/', 'Welcome', [
 ])->name('home');
 
 Route::inertia('/jv', 'Jv')->name('jv');
+Route::inertia('/sales', 'Sales')->name('sales');
 
 Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('stories.public.show');
 
@@ -28,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{story:uuid}/cover-upload', [StoryProjectController::class, 'uploadCover'])->name('cover.upload');
         Route::post('/{story:uuid}/cover-ai', [StoryProjectController::class, 'generateCoverAi'])->name('cover.ai');
         Route::post('/{story:uuid}/start-media', [StoryProjectController::class, 'startMediaGeneration'])->name('start-media');
+        Route::get('/{story:uuid}/export/kdp', [StoryProjectController::class, 'exportKdpPackage'])->name('export.kdp');
         Route::post('/{story:uuid}/pages/{page:uuid}/generate-video', [StoryProjectController::class, 'generatePageVideo'])->name('pages.video');
         Route::patch('/{story:uuid}/pages/{page:uuid}', [StoryPageController::class, 'update'])->name('pages.update');
     });

@@ -86,6 +86,7 @@ const emit = defineEmits<{
 const flipRoot = ref<HTMLElement | null>(null);
 const pageAudioRef = ref<HTMLAudioElement | null>(null);
 const ready = ref(false);
+const currentContentPageNumbers = ref<number[]>([]);
 /** In double-page mode, shifts the stage so a single visible cover (closed front or closed back) sits centered. */
 const bookNudgePx = ref(0);
 let jq: JQueryStatic | null = null;
@@ -208,7 +209,8 @@ function setGameplayEnabled(checked: boolean): void {
 const gameplayEnabledLocal = ref(props.gameplayEnabled);
 const gameplayToggleBusy = ref(false);
 
-const FRONT_HARD_COUNT = 1;
+/** Turn.js sheet order before content starts: front hard cover + front endpaper. */
+const FRONT_FIXED_SHEETS = 2;
 
 type SpreadAudioMode = 'first' | 'sequence';
 type AutoAdvanceMode = 'off' | 'timer' | 'afterAudio';
@@ -476,7 +478,7 @@ function clearNarrationStartTimer(): void {
 }
 
 function contentPageRange(): { start: number; end: number } {
-    const start = FRONT_HARD_COUNT + 1;
+    const start = FRONT_FIXED_SHEETS + 1;
     const mid = middleSlots();
     const end = start + mid.length - 1;
 
@@ -517,6 +519,13 @@ function storyIndicesInView(view: number[]): number[] {
     }
 
     return ordered;
+}
+
+function updateCurrentContentPageNumbers(view: number[]): void {
+    const indices = storyIndicesInView(view);
+    currentContentPageNumbers.value = indices
+        .map((idx) => props.pages[idx]?.page_number)
+        .filter((num): num is number => typeof num === 'number');
 }
 
 function isPlayableAudioUrl(url: string | null | undefined): boolean {
@@ -709,6 +718,7 @@ function onTurning(): void {
 
 function onTurned(_e: unknown, pageOrView?: unknown, viewMaybe?: unknown): void {
     const view = resolveSpreadViewFromTurnEvent(pageOrView ?? [], viewMaybe ?? []);
+    updateCurrentContentPageNumbers(view);
     emitVisiblePageUuid(view);
     playSpreadNarration(view);
     scheduleTimerAdvance(view);
@@ -776,6 +786,20 @@ const scalerStyle = computed(() => ({
     transform: `scale(${settings.bookZoomPercent / 100})`,
     transformOrigin: 'center center',
 }));
+
+const currentPageLabel = computed(() => {
+    const nums = currentContentPageNumbers.value;
+
+    if (nums.length === 0) {
+        return 'Viewing cover or quiz sheet';
+    }
+
+    if (nums.length === 1) {
+        return `Viewing story page ${nums[0]}`;
+    }
+
+    return `Viewing story pages ${nums.join(' and ')}`;
+});
 
 const bookNudgeStyle = computed(() => ({
     transform: `translateX(${bookNudgePx.value}px)`,
@@ -850,7 +874,7 @@ async function initTurn(): Promise<void> {
             const inner = jq(
                 '<div class="page-inner page-sheet page-sheet-realistic flex h-full flex-col overflow-hidden bg-card" />',
             );
-            const turnPageNumber = FRONT_HARD_COUNT + 1 + slotIndex;
+            const turnPageNumber = FRONT_FIXED_SHEETS + 1 + slotIndex;
             const buttonSideClass = turnPageNumber % 2 === 0 ? 'left-2' : 'right-2';
             const pageBusy = Boolean(props.pageVideoBusy?.[p.uuid]);
             const canGenerateThisPage =
@@ -986,6 +1010,7 @@ async function initTurn(): Promise<void> {
     });
 
     const currentView = $root.turn('view') as unknown as number[];
+    updateCurrentContentPageNumbers(currentView);
     emitVisiblePageUuid(currentView);
     playSpreadNarration(currentView);
     scheduleTimerAdvance(currentView);
@@ -1221,6 +1246,10 @@ onBeforeUnmount(() => {
                     </div>
                     <div class="book-floor-shadow" aria-hidden="true" />
                 </div>
+
+                <p class="text-muted-foreground text-xs">
+                    {{ currentPageLabel }}
+                </p>
             </section>
         </div>
 
@@ -1258,6 +1287,10 @@ onBeforeUnmount(() => {
                 </div>
                 <div class="book-floor-shadow" aria-hidden="true" />
             </div>
+
+            <p class="text-muted-foreground text-xs">
+                {{ currentPageLabel }}
+            </p>
         </div>
 
         <audio ref="pageAudioRef" class="hidden" playsinline />

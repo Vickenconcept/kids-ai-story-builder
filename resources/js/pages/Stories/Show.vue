@@ -63,7 +63,9 @@ const props = defineProps<{
     video_credit_cost: number;
 }>();
 
-const viewMode = ref<'flip' | 'scroll'>('flip');
+const initialReadMode = props.project.flip_settings?.readMode === 'scroll' ? 'scroll' : 'flip';
+const viewMode = ref<'flip' | 'scroll'>(initialReadMode);
+const scrollCarouselIndex = ref(0);
 const creditsOverlayDismissed = ref(false);
 const generationSuccessTransition = ref(false);
 const flipbookSectionRef = ref<HTMLElement | null>(null);
@@ -142,6 +144,26 @@ const showGenerationOverlay = computed(
         generationSuccessTransition.value ||
         (creditsExhausted.value && !creditsOverlayDismissed.value),
 );
+
+const currentScrollPage = computed(() => props.pages[scrollCarouselIndex.value] ?? null);
+const canScrollPrev = computed(() => scrollCarouselIndex.value > 0);
+const canScrollNext = computed(() => scrollCarouselIndex.value < props.pages.length - 1);
+
+function goScrollPrev(): void {
+    if (!canScrollPrev.value) {
+        return;
+    }
+
+    scrollCarouselIndex.value -= 1;
+}
+
+function goScrollNext(): void {
+    if (!canScrollNext.value) {
+        return;
+    }
+
+    scrollCarouselIndex.value += 1;
+}
 
 const etaSeconds = computed<number | null>(() => {
     if (!isGenerating.value) {
@@ -470,6 +492,29 @@ function onFlipbookGeneratePageVideo(pageUuid: string): void {
     generateVideoForPage(page);
 }
 
+function setViewMode(mode: 'flip' | 'scroll'): void {
+    if (viewMode.value === mode) {
+        return;
+    }
+
+    viewMode.value = mode;
+
+    const current = props.project.flip_settings ?? {};
+    router.patch(
+        `/stories/${props.project.uuid}`,
+        {
+            flip_settings: {
+                ...current,
+                readMode: mode,
+            },
+        },
+        {
+            preserveScroll: true,
+            preserveState: true,
+        },
+    );
+}
+
 function saveAdvancedSettings(): Promise<boolean> {
     if (!advancedDirty.value) {
         return Promise.resolve(true);
@@ -549,6 +594,10 @@ watch(
 watch(
     () => props.pages,
     (pages) => {
+        if (scrollCarouselIndex.value > pages.length - 1) {
+            scrollCarouselIndex.value = Math.max(0, pages.length - 1);
+        }
+
         if (pages.length > 0 && !currentFlipPageUuid.value) {
             currentFlipPageUuid.value = pages[0].uuid;
         }
@@ -621,7 +670,7 @@ onUnmounted(() => {
             :story-credits="props.story_credits"
             :view-mode="viewMode"
             :show-view-mode="!isDraftReviewStage"
-            @update:view-mode="viewMode = $event"
+            @update:view-mode="setViewMode($event)"
         />
 
         <div class="mx-auto w-full max-w-440 space-y-4 px-4 py-3 sm:px-6">
@@ -639,7 +688,7 @@ onUnmounted(() => {
                             ? 'bg-background text-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground'
                     "
-                    @click="viewMode = 'flip'"
+                    @click="setViewMode('flip')"
                 >
                     Flip book
                 </button>
@@ -651,7 +700,7 @@ onUnmounted(() => {
                             ? 'bg-background text-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground'
                     "
-                    @click="viewMode = 'scroll'"
+                    @click="setViewMode('scroll')"
                 >
                     Scroll
                 </button>
@@ -923,72 +972,83 @@ onUnmounted(() => {
                 Pages are not ready yet. Switch to Scroll or wait — the flip book appears once story text exists.
             </p>
 
-            <div v-if="!isDraftReviewStage && viewMode === 'scroll'" class="flex flex-col gap-8">
+            <div v-if="!isDraftReviewStage && viewMode === 'scroll'" class="flex flex-col gap-4">
                 <p v-if="pages.length === 0" class="text-muted-foreground text-sm">
                     No pages yet — generation may still be running. This view will fill in when text and assets are
                     ready.
                 </p>
+                <div v-else class="flex items-center justify-center gap-2">
+                    <Button type="button" size="sm" variant="outline" :disabled="!canScrollPrev" @click="goScrollPrev">
+                        Previous
+                    </Button>
+                    <p class="text-muted-foreground text-xs">
+                        Page {{ currentScrollPage?.page_number }} of {{ pages.length }}
+                    </p>
+                    <Button type="button" size="sm" variant="outline" :disabled="!canScrollNext" @click="goScrollNext">
+                        Next
+                    </Button>
+                </div>
                 <article
-                    v-for="page in pages"
-                    :key="page.uuid"
+                    v-if="currentScrollPage"
+                    :key="currentScrollPage.uuid"
                     class="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border"
                 >
                     <div class="mb-3 flex items-center justify-between gap-2">
-                        <h2 class="text-lg font-medium">Page {{ page.page_number }}</h2>
+                        <h2 class="text-lg font-medium">Page {{ currentScrollPage.page_number }}</h2>
                         <Button
                             type="button"
                             size="sm"
                             variant="outline"
-                            :disabled="!canGenerateVideoForPage(page)"
-                            @click="generateVideoForPage(page)"
+                            :disabled="!canGenerateVideoForPage(currentScrollPage)"
+                            @click="generateVideoForPage(currentScrollPage)"
                         >
                             <Clapperboard class="mr-1 size-4" />
-                            {{ page.video_url ? 'Regenerate video' : 'Generate video' }}
+                            {{ currentScrollPage.video_url ? 'Regenerate video' : 'Generate video' }}
                         </Button>
                     </div>
                     <p class="mb-3 text-xs text-muted-foreground">Per-page video costs {{ props.video_credit_cost }} credits.</p>
 
                     <div class="grid gap-6 lg:grid-cols-2">
                         <div class="space-y-3 text-sm leading-relaxed">
-                            <p>{{ page.text_content }}</p>
+                            <p>{{ currentScrollPage.text_content }}</p>
                             <div
-                                v-if="project.include_quiz && page.quiz_questions"
+                                v-if="project.include_quiz && currentScrollPage.quiz_questions"
                                 class="bg-muted/40 rounded-lg p-3 text-xs"
                             >
                                 <p class="font-medium">Quiz</p>
                                 <pre class="mt-1 overflow-x-auto whitespace-pre-wrap">{{
-                                    JSON.stringify(page.quiz_questions, null, 2)
+                                    JSON.stringify(currentScrollPage.quiz_questions, null, 2)
                                 }}</pre>
                             </div>
                             <div
-                                v-if="page.asset_errors && Object.keys(page.asset_errors).length"
+                                v-if="currentScrollPage.asset_errors && Object.keys(currentScrollPage.asset_errors).length"
                                 class="text-destructive text-xs"
                             >
                                 <p class="font-medium">Asset errors</p>
                                 <ul class="list-inside list-disc">
-                                    <li v-for="(msg, key) in page.asset_errors" :key="key">
+                                    <li v-for="(msg, key) in currentScrollPage.asset_errors" :key="key">
                                         {{ key }}: {{ msg }}
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="flex flex-col gap-3">
-                            <div v-if="page.image_url" class="overflow-hidden rounded-lg border">
+                            <div v-if="currentScrollPage.image_url" class="overflow-hidden rounded-lg border">
                                 <img
-                                    :src="page.image_url"
-                                    :alt="`Illustration page ${page.page_number}`"
+                                    :src="currentScrollPage.image_url"
+                                    :alt="`Illustration page ${currentScrollPage.page_number}`"
                                     draggable="false"
                                     class="max-h-80 w-full select-none object-contain [-webkit-user-drag:none]"
                                 />
                             </div>
                             <div v-else class="text-muted-foreground text-sm">Image pending…</div>
-                            <audio v-if="page.audio_url" :src="page.audio_url" controls class="w-full" />
+                            <audio v-if="currentScrollPage.audio_url" :src="currentScrollPage.audio_url" controls class="w-full" />
                             <p v-else-if="project.include_narration" class="text-muted-foreground text-sm">
                                 Audio pending…
                             </p>
                             <video
-                                v-if="page.video_url"
-                                :src="page.video_url"
+                                v-if="currentScrollPage.video_url"
+                                :src="currentScrollPage.video_url"
                                 controls
                                 class="w-full max-w-md rounded-lg"
                             />

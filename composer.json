@@ -10,7 +10,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "archtechx/laravel-seo": "^0.10.4",
         "cloudinary/cloudinary_php": "^3.1",
+        "dompdf/dompdf": "3.1",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.34",
         "laravel/framework": "^13.0",
