@@ -66,6 +66,10 @@ const props = withDefaults(
     },
 );
 
+const emit = defineEmits<{
+    'view-page-change': [pageUuid: string | null];
+}>();
+
 const flipRoot = ref<HTMLElement | null>(null);
 const pageAudioRef = ref<HTMLAudioElement | null>(null);
 const ready = ref(false);
@@ -692,11 +696,25 @@ function onTurning(): void {
 
 function onTurned(_e: unknown, pageOrView?: unknown, viewMaybe?: unknown): void {
     const view = resolveSpreadViewFromTurnEvent(pageOrView ?? [], viewMaybe ?? []);
+    emitVisiblePageUuid(view);
     playSpreadNarration(view);
     scheduleTimerAdvance(view);
     syncBookHorizontalNudge();
     // Re-mount quiz/game sheets after each page turn
     mountGameApps();
+}
+
+function emitVisiblePageUuid(view: number[]): void {
+    const indices = storyIndicesInView(view);
+    const first = indices.length > 0 ? indices[0] : -1;
+
+    if (first < 0 || first >= props.pages.length) {
+        emit('view-page-change', null);
+
+        return;
+    }
+
+    emit('view-page-change', props.pages[first]?.uuid ?? null);
 }
 
 function bookDimensions() {
@@ -903,6 +921,7 @@ async function initTurn(): Promise<void> {
     ready.value = true;
 
     const currentView = $root.turn('view') as unknown as number[];
+    emitVisiblePageUuid(currentView);
     playSpreadNarration(currentView);
     scheduleTimerAdvance(currentView);
 

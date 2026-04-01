@@ -81,6 +81,7 @@ const pageSaveState = ref<Record<string, 'idle' | 'unsaved' | 'saving' | 'saved'
 const advancedSaveBusy = ref(false);
 const advancedDirty = ref(false);
 const pageVideoBusy = ref<Record<string, boolean>>({});
+const currentFlipPageUuid = ref<string | null>(null);
 
 type ProgressSample = {
     at: number;
@@ -113,6 +114,13 @@ const unsavedPagesCount = computed(() => {
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
 const isPro = computed(() => props.feature_tier === 'pro');
 const canAffordSingleVideo = computed(() => props.story_credits >= props.video_credit_cost);
+const currentFlipPage = computed(() => {
+    if (!currentFlipPageUuid.value) {
+        return null;
+    }
+
+    return props.pages.find((p) => p.uuid === currentFlipPageUuid.value) ?? null;
+});
 
 const creditsExhausted = computed(() => {
     if (props.project.status !== 'failed') {
@@ -442,6 +450,10 @@ function generateVideoForPage(page: PageRow): void {
     );
 }
 
+function onFlipViewPageChange(pageUuid: string | null): void {
+    currentFlipPageUuid.value = pageUuid;
+}
+
 function saveAdvancedSettings(): Promise<boolean> {
     if (!advancedDirty.value) {
         return Promise.resolve(true);
@@ -521,6 +533,10 @@ watch(
 watch(
     () => props.pages,
     (pages) => {
+        if (pages.length > 0 && !currentFlipPageUuid.value) {
+            currentFlipPageUuid.value = pages[0].uuid;
+        }
+
         pages.forEach((p) => {
             if (!pageDirtyText.value[p.uuid]) {
                 pageDraftText.value = { ...pageDraftText.value, [p.uuid]: p.text_content ?? '' };
@@ -851,8 +867,21 @@ onUnmounted(() => {
                     v-if="!isDraftReviewStage && viewMode === 'flip' && pages.length > 0"
                     ref="flipbookSectionRef"
                     tabindex="-1"
-                    class="border-border bg-card/30 w-full rounded-xl border p-3 shadow-sm"
+                    class="border-border bg-card/30 relative w-full rounded-xl border p-3 shadow-sm"
                 >
+                    <div class="absolute top-3 left-3 z-20">
+                        <Button
+                            v-if="currentFlipPage"
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            :disabled="!canGenerateVideoForPage(currentFlipPage)"
+                            @click="generateVideoForPage(currentFlipPage)"
+                        >
+                            <Clapperboard class="mr-1 size-4" />
+                            {{ currentFlipPage.video_url ? 'Regenerate video' : `Generate video (Page ${currentFlipPage.page_number})` }}
+                        </Button>
+                    </div>
                     <StoryFlipbook
                         :key="flipbookKey"
                         :title="project.title"
@@ -865,6 +894,7 @@ onUnmounted(() => {
                         :cover-front="project.cover_front"
                         :cover-back="project.cover_back"
                         :flip-settings="project.flip_settings"
+                        @view-page-change="onFlipViewPageChange"
                     >
                         <template #setup-extra>
                             <StoryCoverSettingsAccordion
