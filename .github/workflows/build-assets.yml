@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: build-assets-${{ github.ref }}
@@ -58,3 +58,21 @@ jobs:
         run: |
           test -f public/build/manifest.json
           grep -q '"resources/js/app.ts"' public/build/manifest.json
+
+      - name: Publish deploy branch with built assets
+        env:
+          DEPLOY_BRANCH: deploy
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git checkout -B "${DEPLOY_BRANCH}"
+          git add -f public/build
+
+          if git diff --cached --quiet; then
+            echo "No deploy-asset changes to commit"
+          else
+            git commit -m "chore(deploy): build assets for ${GITHUB_SHA}"
+          fi
+
+          git push --force-with-lease origin "${DEPLOY_BRANCH}"
