@@ -54,20 +54,15 @@ jobs:
       - name: Build frontend assets
         run: NODE_ENV=production npm run build
 
-      - name: Publish deploy branch (with built assets)
+      - name: Commit built assets to source branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          SOURCE_SHA="$(git rev-parse --short HEAD)"
-
           test -f public/build/manifest.json
           grep -q '"resources/js/app.ts"' public/build/manifest.json
 
-          # Build artifacts are published to deploy branch, so main stays source-only.
-          git checkout -B deploy
-          git add -A
           git add -f public/build
           git diff --cached --quiet && exit 0
-          git commit -m "chore(ci): deploy build from ${SOURCE_SHA} [skip ci]"
-          git push --force-with-lease origin deploy
+          git commit -m "chore(ci): build frontend assets [skip ci]"
+          git push origin HEAD:"${GITHUB_REF_NAME}"
