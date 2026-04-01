@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Story;
 use App\Contracts\Story\PageImageGenerator;
 use App\Data\Story\PageImageInput;
 use App\Enums\FeatureTier;
+use App\Enums\StoryAiJobStatus;
 use App\Enums\StoryProjectStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStoryProjectRequest;
@@ -109,6 +110,16 @@ class StoryProjectController extends Controller
 
         $story->load('pages');
 
+        $jobCounts = $story->aiJobs()
+            ->selectRaw('status, count(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
+
+        $latestFailedError = $story->aiJobs()
+            ->where('status', StoryAiJobStatus::Failed->value)
+            ->latest('id')
+            ->value('error_message');
+
         $pages = $story->pages->map(fn ($page) => [
             'id' => $page->id,
             'uuid' => $page->uuid,
@@ -139,6 +150,14 @@ class StoryProjectController extends Controller
                 'sharing_enabled' => $story->sharing_enabled,
                 'public_read_url' => route('stories.public.show', $story, absolute: true),
                 'flip_settings' => $story->flip_settings,
+                'queue' => [
+                    'total' => (int) $jobCounts->sum(),
+                    'pending' => (int) ($jobCounts[StoryAiJobStatus::Pending->value] ?? 0),
+                    'running' => (int) ($jobCounts[StoryAiJobStatus::Running->value] ?? 0),
+                    'succeeded' => (int) ($jobCounts[StoryAiJobStatus::Succeeded->value] ?? 0),
+                    'failed' => (int) ($jobCounts[StoryAiJobStatus::Failed->value] ?? 0),
+                    'last_error' => $latestFailedError,
+                ],
             ],
             'pages' => $pages,
             'story_credits' => $request->user()->story_credits,
