@@ -13,9 +13,11 @@ use App\Http\Requests\UpdateStoryProjectPresentationRequest;
 use App\Models\StoryProject;
 use App\Services\Media\StoryMediaStorage;
 use App\Services\Story\StoryPipelineDispatcher;
+use App\Services\Story\StoryCreditService;
 use App\Support\StoryMediaUrl;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -71,18 +73,40 @@ class StoryProjectController extends Controller
     {
         $this->authorize('create', StoryProject::class);
 
+        $user = $request->user();
+
         return Inertia::render('Stories/Create', [
-            'featureTier' => $request->user()->feature_tier?->value ?? FeatureTier::Basic->value,
+            'featureTier' => $user->feature_tier?->value ?? FeatureTier::Basic->value,
+            'storyCredits' => (int) $user->story_credits,
+            'creditCosts' => [
+                'text' => (int) config('story.credit_costs.text', 0),
+                'image' => (int) config('story.credit_costs.image', 0),
+                'audio' => (int) config('story.credit_costs.audio', 0),
+                'video' => (int) config('story.credit_costs.video', 0),
+            ],
         ]);
     }
 
-    public function store(StoreStoryProjectRequest $request, StoryPipelineDispatcher $dispatcher): \Illuminate\Http\RedirectResponse
+    public function store(
+        StoreStoryProjectRequest $request,
+        StoryPipelineDispatcher $dispatcher,
+        StoryCreditService $credits,
+    ): \Illuminate\Http\RedirectResponse
     {
         $this->authorize('create', StoryProject::class);
 
         $user = $request->user();
         $includeVideo = $request->boolean('include_video')
             && $user->feature_tier === FeatureTier::Pro;
+        $includeNarration = $request->boolean('include_narration');
+        $pageCount = $request->integer('page_count');
+
+        $estimate = $credits->estimateForProject($pageCount, true, $includeNarration, $includeVideo, includeText: true);
+        if ((int) $user->story_credits < $estimate['total']) {
+            throw ValidationException::withMessages([
+                'page_count' => 'Not enough credits for this setup. Required: '.$estimate['total'].' credits.',
+            ]);
+        }
 
         $project = StoryProject::query()->create([
             'user_id' => $user->id,
@@ -90,10 +114,10 @@ class StoryProjectController extends Controller
             'topic' => $request->string('topic')->toString(),
             'lesson_type' => $request->string('lesson_type')->toString(),
             'age_group' => $request->string('age_group')->toString(),
-            'page_count' => $request->integer('page_count'),
+            'page_count' => $pageCount,
             'illustration_style' => $request->string('illustration_style')->toString(),
             'include_quiz' => $request->boolean('include_quiz'),
-            'include_narration' => $request->boolean('include_narration'),
+            'include_narration' => $includeNarration,
             'include_video' => $includeVideo,
             'status' => StoryProjectStatus::Processing,
             'pages_completed' => 0,
@@ -167,7 +191,12 @@ class StoryProjectController extends Controller
         ]);
     }
 
-    public function startMediaGeneration(Request $request, StoryProject $story, StoryPipelineDispatcher $dispatcher): RedirectResponse
+    public function startMediaGeneration(
+        Request $request,
+        StoryProject $story,
+        StoryPipelineDispatcher $dispatcher,
+        StoryCreditService $credits,
+    ): RedirectResponse
     {
         $this->authorize('update', $story);
 
@@ -198,6 +227,18 @@ class StoryProjectController extends Controller
         $isPro = $request->user()?->feature_tier === FeatureTier::Pro;
         if (! $isPro) {
             $generateVideo = false;
+        }
+
+        $estimate = $credits->estimateForProject(
+            $story->page_count,
+            $generateImages,
+            $generateAudio,
+            $generateVideo,
+            includeText: false,
+        );
+
+        if ((int) $request->user()->story_credits < $estimate['total']) {
+            return back()->with('error', 'Not enough credits to start selected media. Required: '.$estimate['total'].' credits.');
         }
 
         $story->update([

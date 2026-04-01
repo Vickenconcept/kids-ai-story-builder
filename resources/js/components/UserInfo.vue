@@ -15,6 +15,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { getInitials } = useInitials();
 
+const storyCredits = computed(() => {
+    const value = props.user?.story_credits;
+
+    return typeof value === 'number' ? value : null;
+});
+
 // Compute whether we should show the avatar image
 const showAvatar = computed(
     () => props.user.avatar && props.user.avatar !== '',
@@ -31,6 +37,12 @@ const showAvatar = computed(
 
     <div class="grid flex-1 text-left text-sm leading-tight">
         <span class="truncate font-medium">{{ user.name }}</span>
+        <span
+            v-if="storyCredits !== null"
+            class="truncate text-[11px] font-semibold text-amber-700 dark:text-amber-300"
+        >
+            Credits: {{ storyCredits }}
+        </span>
         <span v-if="showEmail" class="truncate text-xs text-muted-foreground">{{
             user.email
         }}</span>
