@@ -39,6 +39,7 @@ const progressPercent = computed(() => {
     if (props.pageCount <= 0) {
         return 0;
     }
+
     return Math.max(0, Math.min(100, Math.round((props.pagesCompleted / props.pageCount) * 100)));
 });
 
@@ -48,11 +49,14 @@ const formattedEta = computed(() => {
     if (!props.etaSeconds || props.etaSeconds <= 0) {
         return null;
     }
+
     if (props.etaSeconds < 60) {
         return `~${props.etaSeconds}s remaining`;
     }
+
     const mins = Math.floor(props.etaSeconds / 60);
     const secs = props.etaSeconds % 60;
+
     return `~${mins}m ${secs}s remaining`;
 });
 
@@ -76,12 +80,15 @@ const stageLabel = computed(() => {
     if (props.successTransition) {
         return 'Done';
     }
+
     if (progressPercent.value < 34) {
         return 'Writing story';
     }
+
     if (progressPercent.value < 84) {
         return 'Preparing media';
     }
+
     return 'Finishing up';
 });
 

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-import StoryFlipbook, { type CoverConfigJson } from '@/components/StoryFlipbook.vue';
-import { dashboard, home, login } from '@/routes';
+import StoryFlipbook from '@/components/StoryFlipbook.vue';
+import type {CoverConfigJson} from '@/components/StoryFlipbook.vue';
 import { Button } from '@/components/ui/button';
+import { dashboard, home, login } from '@/routes';
 
 type PageRow = {
     id: number;

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { COVER_FRAME_OPTIONS, type CoverFrameId, normalizeCoverFrame } from '@/lib/coverFrames';
+import { COVER_FRAME_OPTIONS,  normalizeCoverFrame } from '@/lib/coverFrames';
+import type {CoverFrameId} from '@/lib/coverFrames';
 
 type CoverConfigJson = {
     kind: string;
@@ -74,9 +75,11 @@ function onCoverFilePick(e: Event): void {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = '';
+
     if (!file) {
         return;
     }
+
     const fd = new FormData();
     fd.append('surface', coverSurface.value);
     fd.append('file', file);

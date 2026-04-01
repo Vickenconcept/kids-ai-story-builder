@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props */
 import { Settings2 } from 'lucide-vue-next';
 import { Label } from '@/components/ui/label';
 

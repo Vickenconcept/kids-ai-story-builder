@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { router } from '@inertiajs/vue3';
 import { CheckCircle2, Pencil, Save, XCircle } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
-import { router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 
 export type QuizRow = {
@@ -44,17 +44,21 @@ const playRows = computed(() => (props.editable ? local.value : props.questions)
 
 function addChoice(qi: number): void {
     const row = local.value[qi];
+
     if (!row) {
         return;
     }
+
     row.choices.push('');
 }
 
 function removeChoice(qi: number, ci: number): void {
     const row = local.value[qi];
+
     if (!row || row.choices.length <= 2) {
         return;
     }
+
     row.choices.splice(ci, 1);
 }
 
@@ -64,9 +68,11 @@ function pickAnswer(qi: number, choice: string): void {
 
 function isCorrect(qi: number, choice: string): boolean {
     const row = playRows.value[qi];
+
     if (!row) {
         return false;
     }
+
     return choice.trim().toLowerCase() === row.answer.trim().toLowerCase();
 }
 
@@ -74,6 +80,7 @@ function saveEdits(): void {
     if (!props.storyUuid || !props.pageUuid) {
         return;
     }
+
     const payload = local.value.map((row) => ({
         question: row.question.trim(),
         choices: row.choices.map((c) => c.trim()).filter(Boolean),
@@ -94,12 +101,15 @@ function saveEdits(): void {
 
 function optionClass(qi: number, opt: string): string {
     const p = picked.value[qi];
+
     if (p === undefined || p === null) {
         return 'border-border/80 bg-background hover:border-primary/40 hover:bg-primary/5';
     }
+
     if (p !== opt) {
         return 'border-border/40 bg-muted/30 opacity-60';
     }
+
     return isCorrect(qi, opt) ? 'border-emerald-500 bg-emerald-500/10' : 'border-amber-500 bg-amber-500/10';
 }
 </script>

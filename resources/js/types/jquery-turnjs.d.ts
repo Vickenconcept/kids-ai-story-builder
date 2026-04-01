@@ -1,7 +1,9 @@
+import type { JQueryStatic } from 'jquery';
+
 declare global {
     interface Window {
-        jQuery: import('jquery').JQueryStatic;
-        $: import('jquery').JQueryStatic;
+        jQuery: JQueryStatic;
+        $: JQueryStatic;
     }
 
     interface JQuery {

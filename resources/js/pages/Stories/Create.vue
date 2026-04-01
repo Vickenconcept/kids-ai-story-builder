@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 
 const props = defineProps<{
@@ -35,6 +35,7 @@ function normalizePageCount(): void {
     if (typeof form.page_count !== 'number' || Number.isNaN(form.page_count)) {
         return;
     }
+
     if (form.page_count > 15) {
         form.page_count = 15;
     }

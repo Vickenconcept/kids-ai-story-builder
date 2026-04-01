@@ -1,10 +1,13 @@
 import '../../css/flipbook-realism.css';
 <script setup lang="ts">
-import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { router } from '@inertiajs/vue3';
+import type { JQueryStatic } from 'jquery';
+import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { createApp, h, computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
-import StoryQuizSheet, { type QuizRow } from '@/components/StoryQuizSheet.vue';
-import StoryFlipbookSetupPanel, { type FlipbookSetupSettings } from '@/components/StoryFlipbookSetupPanel.vue';
+import StoryFlipbookSetupPanel from '@/components/StoryFlipbookSetupPanel.vue';
+import type {FlipbookSetupSettings} from '@/components/StoryFlipbookSetupPanel.vue';
+import StoryQuizSheet from '@/components/StoryQuizSheet.vue';
+import type {QuizRow} from '@/components/StoryQuizSheet.vue';
 import { Button } from '@/components/ui/button';
 import { coverFrameRootClass } from '@/lib/coverFrames';
 
@@ -68,7 +71,6 @@ const pageAudioRef = ref<HTMLAudioElement | null>(null);
 const ready = ref(false);
 /** In double-page mode, shifts the stage so a single visible cover (closed front or closed back) sits centered. */
 const bookNudgePx = ref(0);
-type JQueryStatic = typeof import('jquery');
 let jq: JQueryStatic | null = null;
 
 const gameUnmounters: Array<() => void> = [];
@@ -81,11 +83,13 @@ function unmountGameApps(): void {
 
 function normalizeQuiz(raw: unknown): QuizRow[] {
     let arr: unknown[] = [];
+
     if (Array.isArray(raw)) {
         arr = raw;
     } else if (typeof raw === 'string') {
         try {
             const parsed = JSON.parse(raw);
+
             if (Array.isArray(parsed)) {
                 arr = parsed;
             }
@@ -93,12 +97,15 @@ function normalizeQuiz(raw: unknown): QuizRow[] {
             // ignore
         }
     }
+
     return arr.map((item) => {
         if (!item || typeof item !== 'object') {
             return { question: '', choices: ['', ''], answer: '' };
         }
+
         const o = item as Record<string, unknown>;
         const choices = Array.isArray(o.choices) ? o.choices.map((c) => String(c)) : [];
+
         return {
             question: String(o.question ?? ''),
             choices: choices.length > 0 ? choices : ['A', 'B'],
@@ -121,10 +128,12 @@ function middleSlots(): MiddleSlot[] {
     const out: MiddleSlot[] = [];
     props.pages.forEach((p, idx) => {
         out.push({ type: 'content', page: p, idx });
+
         if (props.gameplayEnabled && props.includeQuiz && pageHasQuiz(p)) {
             out.push({ type: 'game', page: p, idx });
         }
     });
+
     return out;
 }
 
@@ -132,15 +141,19 @@ function coverHardStyle(cfg: CoverConfigJson): Record<string, string> {
     if (!cfg?.kind) {
         return {};
     }
+
     if (cfg.kind === 'solid' && cfg.color) {
         return { background: cfg.color };
     }
+
     if (cfg.kind === 'gradient') {
         const a = cfg.angle ?? 135;
         const from = cfg.from ?? '#6366f1';
         const to = cfg.to ?? '#ec4899';
+
         return { background: `linear-gradient(${a}deg, ${from}, ${to})` };
     }
+
     if ((cfg.kind === 'image' || cfg.kind === 'gif' || cfg.kind === 'ai_image') && cfg.url) {
         return {
             backgroundImage: `url("${cfg.url.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")`,
@@ -148,6 +161,7 @@ function coverHardStyle(cfg: CoverConfigJson): Record<string, string> {
             backgroundPosition: 'center',
         };
     }
+
     return {};
 }
 
@@ -155,6 +169,7 @@ function setGameplayEnabled(checked: boolean): void {
     if (!props.storyUuid) {
         return;
     }
+
     gameplayEnabledLocal.value = checked;
     gameplayToggleBusy.value = true;
     router.patch(
@@ -177,7 +192,6 @@ const gameplayEnabledLocal = ref(props.gameplayEnabled);
 const gameplayToggleBusy = ref(false);
 
 const FRONT_HARD_COUNT = 1;
-const BACK_HARD_COUNT = 1;
 
 type SpreadAudioMode = 'first' | 'sequence';
 type AutoAdvanceMode = 'off' | 'timer' | 'afterAudio';
@@ -222,30 +236,39 @@ function applyFlipPayloadFromServer(o: Record<string, unknown>): void {
     if (typeof o.audioOnFlip === 'boolean') {
         settings.audioOnFlip = o.audioOnFlip;
     }
+
     if (o.spreadAudio === 'first' || o.spreadAudio === 'sequence') {
         settings.spreadAudio = o.spreadAudio;
     }
+
     if (o.autoAdvance === 'off' || o.autoAdvance === 'timer' || o.autoAdvance === 'afterAudio') {
         settings.autoAdvance = o.autoAdvance;
     }
+
     if (typeof o.timerDelaySec === 'number' && o.timerDelaySec >= 2 && o.timerDelaySec <= 30) {
         settings.timerDelaySec = o.timerDelaySec;
     }
+
     if (typeof o.flipDuration === 'number' && o.flipDuration >= 250 && o.flipDuration <= 1500) {
         settings.flipDuration = o.flipDuration;
     }
+
     if (o.display === 'single' || o.display === 'double') {
         settings.display = o.display;
     }
+
     if (typeof o.gradients === 'boolean') {
         settings.gradients = o.gradients;
     }
+
     if (typeof o.acceleration === 'boolean') {
         settings.acceleration = o.acceleration;
     }
+
     if (typeof o.elevation === 'number' && o.elevation >= 0 && o.elevation <= 120) {
         settings.elevation = o.elevation;
     }
+
     if (typeof o.bookZoomPercent === 'number' && o.bookZoomPercent >= 70 && o.bookZoomPercent <= 130) {
         settings.bookZoomPercent = o.bookZoomPercent;
     }
@@ -254,10 +277,13 @@ function applyFlipPayloadFromServer(o: Record<string, unknown>): void {
 /** Defaults → optional per-story localStorage (author only) → server flip_settings (author & public). */
 function initializeFlipUiSettings(): void {
     Object.assign(settings, defaultFlipCore());
+
     if (props.setupMode) {
         loadSettings();
     }
+
     const fs = props.flipSettings;
+
     if (fs && typeof fs === 'object' && !Array.isArray(fs) && Object.keys(fs).length > 0) {
         applyFlipPayloadFromServer(fs as Record<string, unknown>);
     }
@@ -266,37 +292,49 @@ function initializeFlipUiSettings(): void {
 function loadSettings(): void {
     try {
         const raw = localStorage.getItem(localStorageKey());
+
         if (!raw) {
             return;
         }
+
         const o = JSON.parse(raw) as Partial<typeof settings>;
+
         if (typeof o.audioOnFlip === 'boolean') {
             settings.audioOnFlip = o.audioOnFlip;
         }
+
         if (o.spreadAudio === 'first' || o.spreadAudio === 'sequence') {
             settings.spreadAudio = o.spreadAudio;
         }
+
         if (o.autoAdvance === 'off' || o.autoAdvance === 'timer' || o.autoAdvance === 'afterAudio') {
             settings.autoAdvance = o.autoAdvance;
         }
+
         if (typeof o.timerDelaySec === 'number' && o.timerDelaySec >= 2 && o.timerDelaySec <= 30) {
             settings.timerDelaySec = o.timerDelaySec;
         }
+
         if (typeof o.flipDuration === 'number' && o.flipDuration >= 250 && o.flipDuration <= 1500) {
             settings.flipDuration = o.flipDuration;
         }
+
         if (o.display === 'single' || o.display === 'double') {
             settings.display = o.display;
         }
+
         if (typeof o.gradients === 'boolean') {
             settings.gradients = o.gradients;
         }
+
         if (typeof o.acceleration === 'boolean') {
             settings.acceleration = o.acceleration;
         }
+
         if (typeof o.elevation === 'number' && o.elevation >= 0 && o.elevation <= 120) {
             settings.elevation = o.elevation;
         }
+
         if (typeof o.bookZoomPercent === 'number' && o.bookZoomPercent >= 70 && o.bookZoomPercent <= 130) {
             settings.bookZoomPercent = o.bookZoomPercent;
         }
@@ -309,6 +347,7 @@ function saveSettings(): void {
     if (!props.setupMode) {
         return;
     }
+
     try {
         localStorage.setItem(localStorageKey(), JSON.stringify({ ...settings }));
     } catch {
@@ -337,9 +376,11 @@ function schedulePersistFlipSettingsToServer(): void {
     if (!props.setupMode || !props.storyUuid) {
         return;
     }
+
     if (persistFlipTimer !== null) {
         clearTimeout(persistFlipTimer);
     }
+
     persistFlipTimer = window.setTimeout(() => {
         persistFlipTimer = null;
         router.patch(
@@ -381,6 +422,7 @@ watch(
     (canPlayNarration) => {
         if (!canPlayNarration) {
             settings.audioOnFlip = false;
+
             if (settings.autoAdvance === 'afterAudio') {
                 settings.autoAdvance = 'off';
             }
@@ -420,6 +462,7 @@ function contentPageRange(): { start: number; end: number } {
     const start = FRONT_HARD_COUNT + 1;
     const mid = middleSlots();
     const end = start + mid.length - 1;
+
     return { start, end };
 }
 
@@ -428,9 +471,11 @@ function viewIsOnlyGameSheets(view: number[]): boolean {
     const { start, end } = contentPageRange();
     const mid = middleSlots();
     const inMiddle = view.filter((tp) => tp >= start && tp <= end);
+
     if (inMiddle.length === 0) {
         return false;
     }
+
     return inMiddle.every((tp) => mid[tp - start]?.type === 'game');
 }
 
@@ -440,16 +485,20 @@ function storyIndicesInView(view: number[]): number[] {
     const mid = middleSlots();
     const seen = new Set<number>();
     const ordered: number[] = [];
+
     for (const p of [...view].filter((n) => n > 0).sort((a, b) => a - b)) {
         if (p < start || p > end) {
             continue;
         }
+
         const slot = mid[p - start];
+
         if (slot?.type === 'content' && !seen.has(slot.idx)) {
             seen.add(slot.idx);
             ordered.push(slot.idx);
         }
     }
+
     return ordered;
 }
 
@@ -460,9 +509,11 @@ function isPlayableAudioUrl(url: string | null | undefined): boolean {
 function pauseNarration(): void {
     clearNarrationStartTimer();
     const el = pageAudioRef.value;
+
     if (!el) {
         return;
     }
+
     el.onended = null;
     el.pause();
 }
@@ -472,9 +523,11 @@ function resolveSpreadViewFromTurnEvent(a: unknown, b: unknown): number[] {
     if (Array.isArray(b) && b.length > 0) {
         return b as number[];
     }
+
     if (Array.isArray(a) && a.length > 0 && typeof (a as number[])[0] === 'number') {
         return a as number[];
     }
+
     return getCurrentView();
 }
 
@@ -482,6 +535,7 @@ function getTurnTotalPages(): number {
     if (!flipRoot.value || !jq) {
         return 0;
     }
+
     try {
         return jq(flipRoot.value).turn('pages') as unknown as number;
     } catch {
@@ -491,20 +545,25 @@ function getTurnTotalPages(): number {
 
 function viewShowsEndOfBook(view: number[]): boolean {
     const total = getTurnTotalPages();
+
     if (total < 1 || view.length === 0) {
         return true;
     }
+
     return Math.max(...view) >= total;
 }
 
 function scheduleTimerAdvance(view: number[]): void {
     clearAdvanceTimer();
+
     if (settings.autoAdvance !== 'timer' || !ready.value) {
         return;
     }
+
     if (viewShowsEndOfBook(view)) {
         return;
     }
+
     const delay = Math.max(2, settings.timerDelaySec) * 1000;
     advanceTimer = window.setTimeout(() => {
         advanceTimer = null;
@@ -516,10 +575,13 @@ function maybeAdvanceAfterAudio(): void {
     if (settings.autoAdvance !== 'afterAudio' || !ready.value) {
         return;
     }
+
     const view = getCurrentView();
+
     if (viewShowsEndOfBook(view)) {
         return;
     }
+
     window.setTimeout(() => nextPage(), 280);
 }
 
@@ -528,17 +590,23 @@ function playStoryIndex(idx: number, onDone?: () => void): void {
     const notifyDone = (): void => {
         window.setTimeout(() => onDone?.(), 0);
     };
+
     if (!el || idx < 0 || idx >= props.pages.length) {
         notifyDone();
+
         return;
     }
+
     const url = props.pages[idx]?.audio_url;
     clearNarrationStartTimer();
     el.onended = null;
+
     if (!isPlayableAudioUrl(url)) {
         notifyDone();
+
         return;
     }
+
     const urlStr = url as string;
     /* Defer so we are off the prior `ended` stack; load() helps the next clip; micro-delay aids chained autoplay. */
     narrationStartTimer = window.setTimeout(() => {
@@ -571,24 +639,32 @@ function playSpreadNarration(view: number[]): void {
     if (!props.playAudioOnFlip || !settings.audioOnFlip) {
         return;
     }
+
     if (viewIsOnlyGameSheets(view)) {
         return;
     }
+
     pauseNarration();
     const indices = storyIndicesInView(view);
+
     if (indices.length === 0) {
         return;
     }
+
     if (settings.spreadAudio === 'first') {
         playStoryIndex(indices[0], () => maybeAdvanceAfterAudio());
+
         return;
     }
+
     let i = 0;
     const step = (): void => {
         if (i >= indices.length) {
             maybeAdvanceAfterAudio();
+
             return;
         }
+
         playStoryIndex(indices[i], () => {
             i += 1;
             step();
@@ -601,6 +677,7 @@ function getCurrentView(): number[] {
     if (!flipRoot.value || !jq) {
         return [];
     }
+
     try {
         return jq(flipRoot.value).turn('view') as unknown as number[];
     } catch {
@@ -626,24 +703,31 @@ function bookDimensions() {
     const maxW = Math.min(920, typeof window !== 'undefined' ? window.innerWidth - 40 : 920);
     const w = Math.max(320, maxW);
     const h = Math.round(w * 0.62);
+
     return { w, h };
 }
 
 function syncBookHorizontalNudge(): void {
     if (!flipRoot.value || !jq || !ready.value) {
         bookNudgePx.value = 0;
+
         return;
     }
+
     if (settings.display !== 'double') {
         bookNudgePx.value = 0;
+
         return;
     }
+
     const { w } = bookDimensions();
     const quarter = w / 4;
+
     try {
         const view = jq(flipRoot.value).turn('view') as unknown as number[];
         const v0 = view[0] ?? 0;
         const v1 = view[1] ?? 0;
+
         /* Turn.js: closed front uses [0,1] (only right half); closed back uses [last,0] (only left half). */
         if (v0 === 0 && v1 > 0) {
             bookNudgePx.value = -quarter;
@@ -692,6 +776,7 @@ async function initTurn(): Promise<void> {
     } catch {
         /* */
     }
+
     unmountGameApps();
     $root.empty();
     await nextTick();
@@ -702,9 +787,11 @@ async function initTurn(): Promise<void> {
     const frontWrap = jq('<div class="hard cover-front cover-hard-realistic" />')
         .css(frontStyle)
         .addClass(coverFrameRootClass(props.coverFront?.frame));
+
     if (Object.keys(frontStyle).length === 0) {
         frontWrap.addClass('cover-hard-default-leather');
     }
+
     const frontStack = jq(
         '<div class="cover-hard-stack relative flex h-full min-h-0 flex-col overflow-hidden" />',
     );
@@ -724,12 +811,14 @@ async function initTurn(): Promise<void> {
     $root.append(jq('<div class="hard hard-inside hard-endpaper" aria-hidden="true" />'));
 
     const slots = middleSlots();
+
     for (const slot of slots) {
         if (slot.type === 'content') {
             const p = slot.page;
             const inner = jq(
                 '<div class="page-inner page-sheet page-sheet-realistic flex h-full flex-col overflow-hidden bg-card" />',
             );
+
             if (p.image_url) {
                 inner.append(
                     jq('<div class="relative min-h-0 flex-1 bg-muted/30" />').append(
@@ -746,6 +835,7 @@ async function initTurn(): Promise<void> {
                     ),
                 );
             }
+
             inner.append(
                 jq(
                     '<div class="page-sheet-foot shrink-0 border-t border-border/55 p-3 text-xs leading-snug sm:p-4 sm:text-sm" />',
@@ -770,9 +860,11 @@ async function initTurn(): Promise<void> {
     const backWrap = jq('<div class="hard cover-back cover-hard-realistic" />')
         .css(backStyle)
         .addClass(coverFrameRootClass(props.coverBack?.frame));
+
     if (Object.keys(backStyle).length === 0) {
         backWrap.addClass('cover-hard-default-leather');
     }
+
     const backStack = jq(
         '<div class="cover-hard-stack relative flex h-full min-h-0 flex-col overflow-hidden" />',
     );
@@ -821,16 +913,20 @@ async function initTurn(): Promise<void> {
 
 function mountGameApps(): void {
     unmountGameApps();
+
     if (!flipRoot.value) {
         return;
     }
+
     const nodes = flipRoot.value.querySelectorAll('.game-sheet-mount');
     nodes.forEach((el) => {
         const uuid = el.getAttribute('data-page-uuid');
         const page = props.pages.find((p) => p.uuid === uuid);
+
         if (!uuid || !page) {
             return;
         }
+
         const app = createApp({
             setup() {
                 return () =>
@@ -853,7 +949,9 @@ function resizeTurn(): void {
     if (!flipRoot.value || !jq || !ready.value) {
         return;
     }
+
     const { w, h } = bookDimensions();
+
     try {
         jq(flipRoot.value).turn('size', w, h);
     } catch {
@@ -865,6 +963,7 @@ function prevPage(): void {
     if (!flipRoot.value || !jq) {
         return;
     }
+
     try {
         jq(flipRoot.value).turn('previous');
     } catch {
@@ -876,6 +975,7 @@ function nextPage(): void {
     if (!flipRoot.value || !jq) {
         return;
     }
+
     try {
         jq(flipRoot.value).turn('next');
     } catch {
@@ -894,6 +994,7 @@ function scheduleRebuildTurn(): void {
     if (rebuildTimer !== null) {
         clearTimeout(rebuildTimer);
     }
+
     rebuildTimer = window.setTimeout(() => {
         rebuildTimer = null;
         ready.value = false;
@@ -913,6 +1014,7 @@ watch(
         if (!jq || !flipRoot.value) {
             return;
         }
+
         scheduleRebuildTurn();
     },
 );
@@ -923,6 +1025,7 @@ watch(
         if (!jq || !flipRoot.value) {
             return;
         }
+
         scheduleRebuildTurn();
     },
     { deep: true },
@@ -932,10 +1035,13 @@ function onKeyDown(e: KeyboardEvent): void {
     if (!ready.value) {
         return;
     }
+
     const target = e.target as HTMLElement | null;
+
     if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
         return;
     }
+
     if (e.key === 'ArrowLeft') {
         e.preventDefault();
         prevPage();
@@ -959,13 +1065,17 @@ onBeforeUnmount(() => {
     window.removeEventListener('keydown', onKeyDown);
     clearAdvanceTimer();
     unmountGameApps();
+
     if (rebuildTimer !== null) {
         clearTimeout(rebuildTimer);
     }
+
     if (persistFlipTimer !== null) {
         clearTimeout(persistFlipTimer);
     }
+
     pauseNarration();
+
     if (flipRoot.value && jq) {
         try {
             jq(flipRoot.value).turn('disable', true);
@@ -973,6 +1083,7 @@ onBeforeUnmount(() => {
             /* */
         }
     }
+
     ready.value = false;
 });
 </script>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
-import StoryFlipbook, { type CoverConfigJson } from '@/components/StoryFlipbook.vue';
 import StoryCoverSettingsAccordion from '@/components/StoryCoverSettingsAccordion.vue';
+import StoryFlipbook from '@/components/StoryFlipbook.vue';
+import type {CoverConfigJson} from '@/components/StoryFlipbook.vue';
 import StoryGenerationOverlay from '@/components/StoryGenerationOverlay.vue';
 import StorySetupTopBar from '@/components/StorySetupTopBar.vue';
 import { Button } from '@/components/ui/button';
@@ -102,6 +103,7 @@ const isGenerating = computed(() => props.project.status === 'processing');
 const isDraftReviewStage = computed(() => props.project.can_start_media);
 const unsavedPagesCount = computed(() => {
     const uuids = Object.keys(pageSaveState.value);
+
     return uuids.filter((uuid) => pageSaveState.value[uuid] === 'unsaved' || pageSaveState.value[uuid] === 'error').length;
 });
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
@@ -110,7 +112,9 @@ const creditsExhausted = computed(() => {
     if (props.project.status !== 'failed') {
         return false;
     }
+
     const err = queueState.value.last_error ?? '';
+
     return /insufficient story credits/i.test(err) || /credits/i.test(err);
 });
 
@@ -125,6 +129,7 @@ const etaSeconds = computed<number | null>(() => {
     if (!isGenerating.value) {
         return null;
     }
+
     if (progressSamples.value.length < 2) {
         return null;
     }
@@ -132,6 +137,7 @@ const etaSeconds = computed<number | null>(() => {
     const first = progressSamples.value[0];
     const last = progressSamples.value[progressSamples.value.length - 1];
     const elapsedSec = (last.at - first.at) / 1000;
+
     if (elapsedSec < 8) {
         return null;
     }
@@ -145,9 +151,11 @@ const etaSeconds = computed<number | null>(() => {
     const remainingQueue = Math.max(0, queueState.value.pending + queueState.value.running);
 
     const estimates: number[] = [];
+
     if (pageVelocity > 0 && remainingPages > 0) {
         estimates.push(remainingPages / pageVelocity);
     }
+
     if (queueVelocity > 0 && remainingQueue > 0) {
         estimates.push(remainingQueue / queueVelocity);
     }
@@ -196,11 +204,13 @@ const ttsVoiceOptions = [
 
 function normalizeQuiz(raw: unknown): QuizDraftRow[] {
     let arr: unknown[] = [];
+
     if (Array.isArray(raw)) {
         arr = raw;
     } else if (typeof raw === 'string') {
         try {
             const parsed = JSON.parse(raw);
+
             if (Array.isArray(parsed)) {
                 arr = parsed;
             }
@@ -208,12 +218,15 @@ function normalizeQuiz(raw: unknown): QuizDraftRow[] {
             arr = [];
         }
     }
+
     return arr
         .map((item) => {
             if (!item || typeof item !== 'object') {
                 return null;
             }
+
             const o = item as Record<string, unknown>;
+
             return {
                 question: String(o.question ?? '').trim(),
                 choices: Array.isArray(o.choices) ? o.choices.map((c) => String(c)) : [],
@@ -248,9 +261,11 @@ function removeQuizQuestion(pageUuid: string, idx: number): void {
 function addQuizChoice(pageUuid: string, qIdx: number): void {
     const rows = [...(pageDraftQuiz.value[pageUuid] ?? [])];
     const row = rows[qIdx];
+
     if (!row) {
         return;
     }
+
     row.choices = [...(row.choices ?? []), ''];
     rows[qIdx] = row;
     pageDraftQuiz.value = { ...pageDraftQuiz.value, [pageUuid]: rows };
@@ -260,9 +275,11 @@ function addQuizChoice(pageUuid: string, qIdx: number): void {
 function removeQuizChoice(pageUuid: string, qIdx: number, cIdx: number): void {
     const rows = [...(pageDraftQuiz.value[pageUuid] ?? [])];
     const row = rows[qIdx];
+
     if (!row) {
         return;
     }
+
     row.choices = (row.choices ?? []).filter((_, i) => i !== cIdx);
     rows[qIdx] = row;
     pageDraftQuiz.value = { ...pageDraftQuiz.value, [pageUuid]: rows };
@@ -281,15 +298,19 @@ function markPageQuizDirty(pageUuid: string): void {
 
 function saveLabelFor(pageUuid: string): string {
     const state = pageSaveState.value[pageUuid] ?? 'idle';
+
     if (state === 'saving') {
         return 'Saving...';
     }
+
     if (state === 'saved') {
         return 'Saved';
     }
+
     if (state === 'error') {
         return 'Save failed';
     }
+
     if (state === 'unsaved') {
         return 'Save changes';
     }
@@ -299,6 +320,7 @@ function saveLabelFor(pageUuid: string): string {
 
 function sanitizedQuiz(pageUuid: string): QuizDraftRow[] {
     const rows = pageDraftQuiz.value[pageUuid] ?? [];
+
     return rows
         .map((q) => ({
             question: q.question.trim(),
@@ -326,12 +348,14 @@ async function startMediaGeneration(): Promise<void> {
         const confirmed = window.confirm(
             `You still have unsaved changes on ${unsavedPagesCount.value} page(s). Continue without saving those edits?`,
         );
+
         if (!confirmed) {
             return;
         }
     }
 
     const advancedSaved = await saveAdvancedSettings();
+
     if (!advancedSaved) {
         return;
     }
@@ -349,9 +373,11 @@ async function startMediaGeneration(): Promise<void> {
 
 function savePageText(pageUuid: string): void {
     const page = props.pages.find((p) => p.uuid === pageUuid);
+
     if (!page) {
         return;
     }
+
     pageSaveBusy.value = { ...pageSaveBusy.value, [pageUuid]: true };
     pageSaveState.value = { ...pageSaveState.value, [pageUuid]: 'saving' };
     const quizPayload = sanitizedQuiz(pageUuid);
@@ -430,9 +456,11 @@ watch(
                 flipbookSectionRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 1100);
         }
+
         if (next !== 'failed') {
             creditsOverlayDismissed.value = false;
         }
+
         if (next === 'ready' || next === 'failed') {
             progressSamples.value = [];
         }
@@ -460,9 +488,11 @@ watch(
             if (!pageDirtyText.value[p.uuid]) {
                 pageDraftText.value = { ...pageDraftText.value, [p.uuid]: p.text_content ?? '' };
             }
+
             if (!pageDirtyQuiz.value[p.uuid]) {
                 pageDraftQuiz.value = { ...pageDraftQuiz.value, [p.uuid]: quizRowsFor(p) };
             }
+
             if (!pageSaveState.value[p.uuid]) {
                 pageSaveState.value = { ...pageSaveState.value, [p.uuid]: 'idle' };
             }

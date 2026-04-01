@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { BookOpen, Plus } from 'lucide-vue-next';
-import AppLayout from '@/layouts/AppLayout.vue';
+import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 
 type ProjectRow = {
@@ -16,10 +18,6 @@ type ProjectRow = {
     created_at: string;
     updated_at: string;
 };
-
-
-import { ref } from 'vue';
-import { router } from '@inertiajs/vue3';
 
 const props = defineProps<{ projects: ProjectRow[] }>();
 
@@ -48,7 +46,10 @@ function deleteStory(uuid: string) {
 }
 
 function bulkDelete() {
-    if (selected.value.length === 0) return;
+    if (selected.value.length === 0) {
+return;
+}
+
     if (confirm(`Delete ${selected.value.length} stories?`)) {
         router.post('/stories/bulk-destroy', { ids: selected.value });
     }

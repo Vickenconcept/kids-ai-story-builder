@@ -37,6 +37,7 @@ export function normalizeCoverFrame(f: unknown): CoverFrameId {
     if (typeof f === 'string' && COVER_FRAME_ID_SET.has(f)) {
         return f as CoverFrameId;
     }
+
     return DEFAULT_COVER_FRAME;
 }
 

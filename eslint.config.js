@@ -84,6 +84,7 @@ export default defineConfigWithVueTs(
             'vite.config.ts',
             'resources/js/actions/**',
             'resources/js/components/ui/*',
+            'resources/js/vendor/**',
             'resources/js/routes/**',
             'resources/js/wayfinder/**',
         ],
