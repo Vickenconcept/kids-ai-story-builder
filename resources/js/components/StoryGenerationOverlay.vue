@@ -24,6 +24,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     close: [];
+    buyCredits: [];
 }>();
 
 const processingLines = [
@@ -147,7 +148,8 @@ onBeforeUnmount(() => {
                     {{ queue.last_error }}
                 </p>
 
-                <div v-if="haltedByCredits" class="flex justify-end">
+                <div v-if="haltedByCredits" class="flex justify-end gap-2">
+                    <Button type="button" variant="outline" @click="emit('buyCredits')">Buy Credits</Button>
                     <Button type="button" variant="secondary" @click="emit('close')">Continue</Button>
                 </div>
             </div>

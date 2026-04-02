@@ -18,6 +18,17 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             auth: Auth;
+            billing?: {
+                paypalClientId?: string;
+                creditPacks?: Array<{
+                    id: number;
+                    name: string;
+                    description: string | null;
+                    credits: number;
+                    price_cents: number;
+                    currency: string;
+                }>;
+            };
             sidebarOpen: boolean;
             [key: string]: unknown;
         };

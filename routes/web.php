@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\CreditPackController;
+use App\Http\Controllers\Billing\CreditPurchaseController;
 use App\Http\Controllers\Story\PublicStoryController;
 use App\Http\Controllers\Story\StoryPageController;
 use App\Http\Controllers\Story\StoryProjectController;
@@ -20,6 +22,12 @@ Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 
+    Route::prefix('credits')->name('credits.')->group(function () {
+        Route::get('/', [CreditPurchaseController::class, 'index'])->name('index');
+        Route::post('/paypal/order', [CreditPurchaseController::class, 'createPayPalOrder'])->name('paypal.order');
+        Route::post('/paypal/capture', [CreditPurchaseController::class, 'capturePayPalOrder'])->name('paypal.capture');
+    });
+
     Route::prefix('stories')->name('stories.')->group(function () {
         Route::get('/', [StoryProjectController::class, 'index'])->name('index');
         Route::get('/create', [StoryProjectController::class, 'create'])->name('create');
@@ -34,6 +42,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{story:uuid}/export/kdp', [StoryProjectController::class, 'exportKdpPackage'])->name('export.kdp');
         Route::post('/{story:uuid}/pages/{page:uuid}/generate-video', [StoryProjectController::class, 'generatePageVideo'])->name('pages.video');
         Route::patch('/{story:uuid}/pages/{page:uuid}', [StoryPageController::class, 'update'])->name('pages.update');
+    });
+
+    Route::middleware('can:manage-credit-packs')->prefix('admin/credit-packs')->name('admin.credit-packs.')->group(function () {
+        Route::get('/', [CreditPackController::class, 'index'])->name('index');
+        Route::post('/', [CreditPackController::class, 'store'])->name('store');
+        Route::patch('/{pack}', [CreditPackController::class, 'update'])->name('update');
+        Route::delete('/{pack}', [CreditPackController::class, 'destroy'])->name('destroy');
     });
 });
 

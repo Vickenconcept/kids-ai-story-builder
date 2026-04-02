@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, onMounted, ref, watch } from 'vue';
+import { useCreditsModal } from '@/composables/useCreditsModal';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -152,6 +153,7 @@ const canSubmit = computed(() => props.storyCredits >= breakdown.value.total);
 const remainingCredits = computed(() => props.storyCredits - breakdown.value.total);
 const hasSelectedTemplateWhenNeeded = computed(() => creationMode.value !== 'template' || selectedTemplate.value !== null);
 const canGenerate = computed(() => canSubmit.value && hasSelectedTemplateWhenNeeded.value);
+const creditsModal = useCreditsModal();
 
 const nicheOptions = computed(() => {
     const set = new Set<string>();
@@ -561,6 +563,11 @@ const illustrationStyleOptions = [
                 <p v-if="!canSubmit" class="text-destructive text-sm">
                     Insufficient credits for this setup. Required: {{ breakdown.total }}, available: {{ props.storyCredits }}.
                 </p>
+                <div v-if="!canSubmit">
+                    <Button type="button" variant="outline" @click="creditsModal.open()">
+                        Buy Credits
+                    </Button>
+                </div>
             </form>
 
             <Dialog v-if="isElite" v-model:open="isTemplateDialogOpen">
@@ -617,7 +624,7 @@ const illustrationStyleOptions = [
                         No templates match your filters.
                     </p>
 
-                    <div v-else class="max-h-[420px] overflow-y-auto pr-1">
+                    <div v-else class="max-h-105 overflow-y-auto pr-1">
                         <div class="grid gap-3 md:grid-cols-3">
                             <button
                                 v-for="template in filteredTemplates"

@@ -276,6 +276,14 @@ import { Head } from '@inertiajs/vue3';
         </div>
     </section>
 
+    <!-- CREDIT USAGE NOTE -->
+    <section class="bg-slate-50 px-4 py-8 md:px-8">
+        <div class="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            <p class="font-semibold text-slate-700">About Usage &amp; Credits</p>
+            <p class="mt-2">This pack provides done-for-you assets and guides. Your AI Storybook Studio account includes usage credits to generate and publish stories. Additional credits can be purchased inside the app whenever you need to create more — no recurring billing required.</p>
+        </div>
+    </section>
+
     <!-- DISCLAIMER -->
     <section class="bg-slate-100 px-4 py-8 md:px-8">
         <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-2">

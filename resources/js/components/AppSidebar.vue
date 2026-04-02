@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { BookMarked, BookOpen, FolderGit2, LayoutGrid } from 'lucide-vue-next';
+import { Link, usePage } from '@inertiajs/vue3';
+import { BookMarked, BookOpen, Coins, FolderGit2, LayoutGrid, ShieldCheck } from 'lucide-vue-next';
+import { computed } from 'vue';
+import { Button } from '@/components/ui/button';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
+import { useCreditsModal } from '@/composables/useCreditsModal';
 import {
     Sidebar,
     SidebarContent,
@@ -17,18 +20,38 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Stories',
-        href: '/stories',
-        icon: BookMarked,
-    },
-];
+const page = usePage<any>();
+const creditsModal = useCreditsModal();
+
+const mainNavItems = computed<NavItem[]>(() => {
+    const items: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
+        {
+            title: 'Stories',
+            href: '/stories',
+            icon: BookMarked,
+        },
+        {
+            title: 'Buy Credits',
+            href: '/credits',
+            icon: Coins,
+        },
+    ];
+
+    if (page.props.auth?.canManageCreditPacks) {
+        items.push({
+            title: 'Credit Packs',
+            href: '/admin/credit-packs',
+            icon: ShieldCheck,
+        });
+    }
+
+    return items;
+});
 
 const footerNavItems: NavItem[] = [
     {
@@ -60,6 +83,12 @@ const footerNavItems: NavItem[] = [
 
         <SidebarContent>
             <NavMain :items="mainNavItems" />
+            <div class="px-2 pb-2">
+                <Button class="w-full" type="button" variant="outline" @click="creditsModal.open()">
+                    <Coins class="mr-2 size-4" />
+                    Instant Top-Up
+                </Button>
+            </div>
         </SidebarContent>
 
         <SidebarFooter>

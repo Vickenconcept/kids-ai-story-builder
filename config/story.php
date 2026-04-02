@@ -49,4 +49,9 @@ return [
         'video' => (int) env('STORY_CREDIT_VIDEO', 10),
     ],
 
+    'admin_emails' => array_values(array_filter(array_map(
+        static fn (string $email): string => strtolower(trim($email)),
+        explode(',', (string) env('STORY_ADMIN_EMAILS', '')),
+    ))),
+
 ];

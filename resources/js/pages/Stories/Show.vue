@@ -7,6 +7,7 @@ import StoryFlipbook from '@/components/StoryFlipbook.vue';
 import type {CoverConfigJson} from '@/components/StoryFlipbook.vue';
 import StoryGenerationOverlay from '@/components/StoryGenerationOverlay.vue';
 import StorySetupTopBar from '@/components/StorySetupTopBar.vue';
+import { useCreditsModal } from '@/composables/useCreditsModal';
 import { Button } from '@/components/ui/button';
 
 type PageRow = {
@@ -84,6 +85,7 @@ const advancedSaveBusy = ref(false);
 const advancedDirty = ref(false);
 const pageVideoBusy = ref<Record<string, boolean>>({});
 const currentFlipPageUuid = ref<string | null>(null);
+const creditsModal = useCreditsModal();
 
 type ProgressSample = {
     at: number;
@@ -163,6 +165,10 @@ function goScrollNext(): void {
     }
 
     scrollCarouselIndex.value += 1;
+}
+
+function openCreditsModal(): void {
+    creditsModal.open();
 }
 
 const etaSeconds = computed<number | null>(() => {
@@ -662,6 +668,7 @@ onUnmounted(() => {
         :eta-seconds="etaSeconds"
         :queue="queueState"
         @close="creditsOverlayDismissed = true"
+        @buy-credits="openCreditsModal"
     />
 
     <div class="bg-background min-h-screen w-full">
@@ -754,6 +761,16 @@ onUnmounted(() => {
                         <p v-else-if="!canAffordSingleVideo" class="mb-2 text-xs text-destructive">
                             Not enough credits for a page video.
                         </p>
+                        <Button
+                            v-if="!canAffordSingleVideo"
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            class="mb-2"
+                            @click="openCreditsModal"
+                        >
+                            Buy Credits
+                        </Button>
                         <p
                             v-if="pageSaveState[page.uuid] === 'saved'"
                             class="mb-2 text-xs text-emerald-600"

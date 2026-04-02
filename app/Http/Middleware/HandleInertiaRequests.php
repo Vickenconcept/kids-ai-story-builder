@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\CreditPack;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,11 +36,30 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
+                'canManageCreditPacks' => $user?->can('manage-credit-packs') ?? false,
+            ],
+            'billing' => [
+                'paypalClientId' => config('services.paypal.client_id'),
+                'creditPacks' => $user
+                    ? CreditPack::query()
+                        ->active()
+                        ->ordered()
+                        ->get([
+                            'id',
+                            'name',
+                            'description',
+                            'credits',
+                            'price_cents',
+                            'currency',
+                        ])
+                    : [],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

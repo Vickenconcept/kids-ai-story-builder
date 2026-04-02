@@ -1170,6 +1170,52 @@ import { Head } from '@inertiajs/vue3';
                 <p class="mt-6 text-xs text-slate-400">Earn 50% on frontend + all upsells. Commission paid via JVZoo.</p>
             </div>
         </section>
+
+        <!-- Funnel links + credit policy -->
+        <section class="bg-slate-50 px-4 py-14 md:px-8">
+            <div class="mx-auto max-w-5xl space-y-6">
+                <div class="text-center">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">Offer Structure</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Live Funnel URLs & Usage Policy</h2>
+                    <p class="mx-auto mt-3 max-w-2xl text-sm text-slate-600">
+                        Use these links in your launch setup and affiliate onboarding. Keep this section visible for clarity and trust.
+                    </p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    <article class="rounded-xl border border-slate-200 bg-white p-5">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Frontend Offer</p>
+                        <p class="mt-1 font-semibold text-slate-900">/sales</p>
+                        <p class="mt-2 text-sm text-slate-600">Main JVZoo destination. Entry offer includes app access + starter credits.</p>
+                    </article>
+                    <article class="rounded-xl border border-slate-200 bg-white p-5">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">OTO 1 - PRO Video</p>
+                        <p class="mt-1 font-semibold text-slate-900">/oto1</p>
+                        <p class="mt-2 text-sm text-slate-600">Immediate post-purchase upsell focused on video output and social content scale.</p>
+                    </article>
+                    <article class="rounded-xl border border-slate-200 bg-white p-5">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">OTO 2 - DFY Monetization</p>
+                        <p class="mt-1 font-semibold text-slate-900">/oto2</p>
+                        <p class="mt-2 text-sm text-slate-600">Shown after OTO 1 accept/decline. Focused on KDP and monetization systems.</p>
+                    </article>
+                    <article class="rounded-xl border border-slate-200 bg-white p-5">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">JV Partner Page</p>
+                        <p class="mt-1 font-semibold text-slate-900">/jv</p>
+                        <p class="mt-2 text-sm text-slate-600">Affiliate-facing page with launch assets, angles, and support details.</p>
+                    </article>
+                </div>
+
+                <div class="rounded-2xl border border-amber-300 bg-amber-50 p-6">
+                    <p class="text-sm font-semibold text-amber-900">Credit Usage Policy (Customer Clarity)</p>
+                    <ul class="mt-3 space-y-2 text-sm text-amber-900/90">
+                        <li>Frontend purchase includes <span class="font-semibold">500 usage credits</span> to start creating immediately.</li>
+                        <li>Credits are consumed based on generated media (text, images, narration, optional video).</li>
+                        <li>When credits run out, users buy additional credit packs <span class="font-semibold">inside the app</span> via PayPal.</li>
+                        <li>Users do <span class="font-semibold">not</span> re-buy the main product through JVZoo for top-ups.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer

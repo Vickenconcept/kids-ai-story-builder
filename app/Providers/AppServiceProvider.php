@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +32,16 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureDefaults(): void
     {
+        Gate::define('manage-credit-packs', function ($user): bool {
+            $adminEmails = collect((array) config('story.admin_emails', []))
+                ->map(fn ($email) => strtolower(trim((string) $email)))
+                ->filter()
+                ->values()
+                ->all();
+
+            return in_array(strtolower((string) $user->email), $adminEmails, true);
+        });
+
         Date::use(CarbonImmutable::class);
 
         DB::prohibitDestructiveCommands(

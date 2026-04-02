@@ -323,6 +323,14 @@ import { Head } from '@inertiajs/vue3';
         </a>
     </section>
 
+    <!-- CREDIT USAGE NOTE -->
+    <section class="bg-slate-50 px-4 py-8 md:px-8">
+        <div class="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            <p class="font-semibold text-slate-700">About Your Included Usage Credits</p>
+            <p class="mt-2">Your purchase includes usage credits to generate stories, AI illustrations, and voice narration. These credits are enough to create your first complete storybooks and start publishing immediately. Additional credits can be purchased anytime inside the app if you want to create more — there are no forced recurring charges.</p>
+        </div>
+    </section>
+
     <!-- DISCLAIMER -->
     <section class="bg-slate-100 px-4 py-10 md:px-8">
         <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-2">

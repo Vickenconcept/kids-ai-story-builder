@@ -40,4 +40,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(StoryProject::class);
     }
+
+    public function creditPurchases(): HasMany
+    {
+        return $this->hasMany(CreditPurchase::class);
+    }
 }

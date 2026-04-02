@@ -64,4 +64,10 @@ return [
         'upload_preset' => env('CLOUDINARY_UPLOAD_PRESET'),
     ],
 
+    'paypal' => [
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+        'sandbox' => filter_var(env('PAYPAL_SANDBOX', true), FILTER_VALIDATE_BOOL),
+    ],
+
 ];
