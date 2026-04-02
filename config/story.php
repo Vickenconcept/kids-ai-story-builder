@@ -4,7 +4,6 @@ $dedicated = filter_var(env('STORY_DEDICATED_QUEUES', false), FILTER_VALIDATE_BO
 $fallback = env('STORY_QUEUE_FALLBACK', 'default');
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Development: deterministic fake AI (no API calls)
