@@ -9,9 +9,6 @@ on:
       - 'public/build/**'
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 concurrency:
   group: build-assets-${{ github.ref }}
   cancel-in-progress: true
@@ -54,15 +51,7 @@ jobs:
       - name: Build frontend assets
         run: NODE_ENV=production npm run build
 
-      - name: Commit built assets to source branch
+      - name: Verify built assets
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           test -f public/build/manifest.json
           grep -q '"resources/js/app.ts"' public/build/manifest.json
-
-          git add -f public/build
-          git diff --cached --quiet && exit 0
-          git commit -m "chore(ci): build frontend assets [skip ci]"
-          git push origin HEAD:"${GITHUB_REF_NAME}"
