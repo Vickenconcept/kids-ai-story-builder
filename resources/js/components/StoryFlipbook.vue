@@ -91,12 +91,21 @@ const currentContentPageNumbers = ref<number[]>([]);
 const bookNudgePx = ref(0);
 let jq: JQueryStatic | null = null;
 
-const gameUnmounters: Array<() => void> = [];
+/** uuid → Vue app, so we never double-mount and can unmount individually when Turn removes nodes. */
+const gameMountedApps = new Map<string, ReturnType<typeof createApp>>();
+let gameMountObserver: MutationObserver | null = null;
 
 function unmountGameApps(): void {
-    while (gameUnmounters.length > 0) {
-        gameUnmounters.pop()?.();
-    }
+    gameMountObserver?.disconnect();
+    gameMountObserver = null;
+    gameMountedApps.forEach((app) => {
+        try {
+            app.unmount();
+        } catch {
+            /* already detached */
+        }
+    });
+    gameMountedApps.clear();
 }
 
 function normalizeQuiz(raw: unknown): QuizRow[] {
@@ -1020,38 +1029,79 @@ async function initTurn(): Promise<void> {
     syncBookHorizontalNudge();
 }
 
-function mountGameApps(): void {
-    unmountGameApps();
+function mountOneGameApp(el: Element): void {
+    const uuid = el.getAttribute('data-page-uuid');
+    if (!uuid || gameMountedApps.has(uuid)) {
+        return;
+    }
+    const page = props.pages.find((p) => p.uuid === uuid);
+    if (!page) {
+        return;
+    }
+    /* Ensure the element is still connected to the live DOM before mounting */
+    if (!el.isConnected) {
+        return;
+    }
+    const app = createApp({
+        setup() {
+            return () =>
+                h(StoryQuizSheet, {
+                    storyUuid: props.storyUuid,
+                    pageUuid: uuid,
+                    questions: normalizeQuiz(page.quiz_questions),
+                    editable: props.setupMode,
+                });
+        },
+    });
+    app.mount(el);
+    gameMountedApps.set(uuid, app);
+}
 
+function unmountGameAppByUuid(uuid: string): void {
+    const app = gameMountedApps.get(uuid);
+    if (!app) {
+        return;
+    }
+    try {
+        app.unmount();
+    } catch {
+        /* already detached */
+    }
+    gameMountedApps.delete(uuid);
+}
+
+function mountGameApps(): void {
     if (!flipRoot.value) {
         return;
     }
 
-    const nodes = flipRoot.value.querySelectorAll('.game-sheet-mount');
-    nodes.forEach((el) => {
-        const uuid = el.getAttribute('data-page-uuid');
-        const page = props.pages.find((p) => p.uuid === uuid);
+    /* Mount any game-sheet-mount nodes now in the DOM */
+    flipRoot.value.querySelectorAll('.game-sheet-mount').forEach((el) => mountOneGameApp(el));
 
-        if (!uuid || !page) {
-            return;
+    /* Un-mount apps whose elements have been removed by Turn.js's sliding DOM window */
+    gameMountedApps.forEach((_app, uuid) => {
+        const still = flipRoot.value?.querySelector(`.game-sheet-mount[data-page-uuid="${uuid}"]`);
+        if (!still || !still.isConnected) {
+            unmountGameAppByUuid(uuid);
         }
-
-        const app = createApp({
-            setup() {
-                return () =>
-                    h(StoryQuizSheet, {
-                        storyUuid: props.storyUuid,
-                        pageUuid: uuid,
-                        questions: normalizeQuiz(page.quiz_questions),
-                        editable: props.setupMode,
-                    });
-            },
-        });
-        app.mount(el);
-        gameUnmounters.push(() => {
-            app.unmount();
-        });
     });
+
+    /* Watch for Turn.js adding new game-sheet-mount nodes (lazy DOM window) */
+    if (!gameMountObserver && flipRoot.value) {
+        gameMountObserver = new MutationObserver(() => {
+            if (!flipRoot.value) {
+                return;
+            }
+            flipRoot.value.querySelectorAll('.game-sheet-mount').forEach((el) => mountOneGameApp(el));
+            gameMountedApps.forEach((_app, uuid) => {
+                const still = flipRoot.value?.querySelector(`.game-sheet-mount[data-page-uuid="${uuid}"]`);
+                if (!still || !still.isConnected) {
+                    unmountGameAppByUuid(uuid);
+                }
+            });
+        });
+        gameMountObserver.observe(flipRoot.value, { childList: true, subtree: true });
+    }
 }
 
 function resizeTurn(): void {

@@ -106,7 +106,7 @@ class StoryProjectController extends Controller
 
         $user = $request->user();
         $includeVideo = $request->boolean('include_video')
-            && $user->feature_tier === FeatureTier::Pro;
+            && $user->feature_tier?->isPro();
         $includeNarration = $request->boolean('include_narration');
         $pageCount = $request->integer('page_count');
 
@@ -215,8 +215,8 @@ class StoryProjectController extends Controller
         }
 
         $user = $request->user();
-        if ($user->feature_tier !== FeatureTier::Pro) {
-            return back()->with('error', 'Page video generation requires Pro tier.');
+        if (! $user->feature_tier?->isPro()) {
+            return back()->with('error', 'Page video generation requires Pro tier or above.');
         }
 
         if (! filled($page->image_path)) {
@@ -267,7 +267,7 @@ class StoryProjectController extends Controller
             $generateImages = true;
         }
 
-        $isPro = $request->user()?->feature_tier === FeatureTier::Pro;
+        $isPro = $request->user()?->feature_tier?->isPro();
         if (! $isPro) {
             $generateVideo = false;
         }

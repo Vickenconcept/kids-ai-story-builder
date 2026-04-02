@@ -12,6 +12,8 @@ Route::inertia('/', 'Welcome', [
 
 Route::inertia('/jv', 'Jv')->name('jv');
 Route::inertia('/sales', 'Sales')->name('sales');
+Route::inertia('/oto1', 'Oto1')->name('oto1');
+Route::inertia('/oto2', 'Oto2')->name('oto2');
 
 Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('stories.public.show');
 

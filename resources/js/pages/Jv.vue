@@ -137,57 +137,71 @@ import { Head } from '@inertiajs/vue3';
         <p
             class="mx-auto mt-6 max-w-2xl text-center text-sm max-md:px-2 md:text-base"
         >
-            Turn one click into fully illustrated, narrated and animated story
-            content. Low frontend, strong upsell stack, visual demo advantage,
-            and up to 50% commissions for affiliates who move fast.
+            A visual transformation product — not just another AI writer. Turn one prompt into a full illustrated,
+            narrated storybook. <strong>Earn 50% across the entire funnel — frontend + all upsells included.</strong>
         </p>
 
-        <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3">
+        <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3 flex-wrap">
             <button
                 class="rounded-full bg-slate-800 px-6 py-3 font-medium text-white transition hover:bg-black"
             >
                 Request JV Approval
             </button>
             <button
-                class="flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3 hover:bg-slate-200/30"
+                class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-6 py-3 hover:bg-white"
             >
-                <span>Watch The 2-Minute Demo That Sells This For You</span>
-                <svg
-                    width="6"
-                    height="8"
-                    viewBox="0 0 6 8"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M1.25.5 4.75 4l-3.5 3.5"
-                        stroke="#050040"
-                        stroke-opacity=".4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
+                <span>🎬 Watch The 2-Minute Demo That Sells This For You</span>
+                <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.25.5 4.75 4l-3.5 3.5" stroke="#050040" stroke-opacity=".4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
         </div>
 
-        <p class="mx-auto mt-4 max-w-2xl px-2 text-center text-sm text-slate-700">
-            No long explanation needed. Show the transformation once and buyers
-            instantly understand. Click, watch, promote.
-        </p>
+        <!-- Demo hook callout -->
+        <div class="mx-auto mt-6 max-w-xl rounded-2xl border border-slate-200 bg-white/80 px-6 py-5 text-sm backdrop-blur-sm text-center">
+            <p class="font-semibold text-slate-800 mb-3">See a blank idea turn into:</p>
+            <div class="grid grid-cols-2 gap-2 text-left max-w-sm mx-auto">
+                <p class="text-slate-700">✔ Full story pages</p>
+                <p class="text-slate-700">✔ Matching illustrations</p>
+                <p class="text-slate-700">✔ Read-aloud narration</p>
+                <p class="text-slate-700">✔ Animated video output</p>
+            </div>
+            <p class="mt-3 font-semibold text-indigo-600">👉 This is what converts the sale.</p>
+        </div>
+
+        <!-- Launch quick-stats bar -->
+        <div class="mx-auto mt-10 flex w-full max-w-3xl flex-wrap justify-center gap-3 px-4">
+            <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
+                <span class="font-semibold text-slate-900">Launch Date:</span>
+                <span class="text-slate-600">TBA — Early access open now</span>
+            </div>
+            <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
+                <span class="font-semibold text-slate-900">FE Price:</span>
+                <span class="text-slate-600">$20</span>
+            </div>
+            <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
+                <span class="font-semibold text-slate-900">Commission:</span>
+                <span class="text-emerald-700 font-semibold">50% Across The Entire Funnel</span>
+            </div>
+            <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
+                <span class="font-semibold text-slate-900">Network:</span>
+                <span class="text-slate-600">JVZoo</span>
+            </div>
+        </div>
     </section>
 
     <section class="mx-auto -mt-28 max-w-6xl px-4 pb-10 md:px-8">
         <div class="grid gap-4 md:grid-cols-3">
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                 <p class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">
-                    Affiliate Earnings Angle
+                    Commission Structure
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    Earn Up To 50% Per Sale
+                    Earn 50% Across The Entire Funnel
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    High-converting emotional niche and strong upsell stack to
-                    increase EPC potential for volume affiliates during launch.
+                    Frontend + all upsells included. No splits, no caps.
+                    High-converting emotional niche means strong EPC for volume affiliates.
                 </p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -195,12 +209,11 @@ import { Head } from '@inertiajs/vue3';
                     Launch Urgency
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    Launch Window Open Now
+                    Early Affiliates Win The Most
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    Early affiliates get higher EPC potential, fresher traffic
-                    response and lower competition. This is when most launch
-                    revenue is made.
+                    Fresher traffic, less competition, higher EPC. The launch
+                    window is open now — request your link before the crowd arrives.
                 </p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -208,133 +221,227 @@ import { Head } from '@inertiajs/vue3';
                     Core Positioning
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    AI Story to Video Content Engine (Built for Fast
-                    Conversions)
+                    A Visual Transformation Product — Not Just Another AI Writer
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    This is not another generic AI tool. It is a visual
-                    transformation product that sells itself in under 2 minutes.
+                    AI + kids + visual content = high engagement and fast conversions.
+                    The demo sells it before the copy finishes loading.
                 </p>
             </div>
         </div>
     </section>
 
     <main>
-        <section>
-            <div class="flex w-full justify-center px-2 py-20">
-                <div
-                    class="rounded-lg bg-white lg:mx-8 lg:flex lg:max-w-5xl lg:shadow-lg"
-                >
-                    <div class="lg:w-1/2">
-                        <div
-                            class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
-                            style="
-                                background-image: url('/images/banner-childern-image.png');
-                            "
-                        ></div>
+        <!-- Pain & Solution section (affiliate pitch) -->
+        <section class="bg-white px-4 py-16 md:px-8">
+            <div class="mx-auto max-w-5xl">
+                <div class="mb-10 text-center">
+                    <p class="text-xs font-semibold tracking-widest text-indigo-600 uppercase">Why Your Audience Will Buy</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Most parents, creators and educators want this output category. Here is the gap you bridge.</h2>
+                </div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="rounded-2xl border border-red-100 bg-red-50 p-6">
+                        <p class="mb-4 text-sm font-bold uppercase tracking-wide text-red-600">❌ The Pains They Feel Right Now</p>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Spending hours writing and illustrating a story from scratch with no design skills</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Paying expensive freelancers $50–$200+ per story with no guarantee of quality</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> AI tools that only generate raw text, leaving images, narration and video to figure out manually</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Kids content creators stuck at bottleneck: content takes longer to produce than to consume</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Educators wanting custom stories for each lesson but lack the tools or budget to create them</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Digital sellers who want high-perceived-value products but have no art or voice-over skills</li>
+                        </ul>
                     </div>
-                    <div
-                        class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
-                    >
-                        <h2 class="text-3xl font-bold text-gray-800">
-                            Buyer-Facing Core Promise
-                            <span class="text-indigo-600">Story to Video in Minutes</span>
-                        </h2>
-                        <p class="mt-4 text-gray-600">
-                            Turn any prompt into a fully illustrated,
-                            narrated and animated storybook. This gives buyers
-                            fast output with high perceived value and gives your
-                            sales page an immediate show-don't-tell advantage.
-                            This product demonstrates value visually before the
-                            buyer reads long copy.
-                        </p>
-                        <div class="mt-8">
-                            <a
-                                href="#"
-                                class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >See Buyer Hook</a
-                            >
-                        </div>
+                    <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
+                        <p class="mb-4 text-sm font-bold uppercase tracking-wide text-emerald-600">✅ What This App Solves Instantly</p>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Type a prompt → full illustrated storybook in minutes, zero design skills needed</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> AI generates unique illustrations for every page, matched to the story mood and age group</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Built-in narration engine adds a read-aloud voice track automatically</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Flipbook reader built in — share a link, buyers see it the same day they purchase</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Quiz / interactive layers for educators — turns a passive story into an engaging lesson</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Download as PDF and publish on <strong>Amazon KDP</strong> — turn one story into a passive income product</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> PRO upgrade: animated page videos buyers can publish to YouTube, Reels, TikTok, or sell</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <!-- cards -->
-            <div class="flex w-full justify-center px-2 py-20">
-                <div
-                    class="rounded-lg bg-white lg:mx-8 lg:flex lg:max-w-5xl lg:shadow-lg"
-                >
-                    <div class="lg:w-1/2">
-                        <div
-                            class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
-                            style="
-                                background-image: url('/images/card-kids-image.png');
-                            "
-                        ></div>
-                    </div>
-                    <div
-                        class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
-                    >
-                        <h2 class="text-3xl font-bold text-gray-800">
-                            Affiliate-Facing Core Promise
-                            <span class="text-indigo-600">Easy to Promote</span>
-                        </h2>
-                        <p class="mt-4 text-gray-600">
-                            AI + kids + content = high emotional engagement and
-                            easy conversions.
-                            The transformation is visual, emotional and simple:
-                            idea to finished story video. Affiliates can explain
-                            it in seconds and demo it in under two minutes.
-                            The sales story is straightforward and beginner
-                            affiliates can still run this effectively.
-                        </p>
-                        <div class="mt-8">
-                            <a
-                                href="#"
-                                class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >See Promo Angles</a
-                            >
-                        </div>
+        </section>
+
+        <!-- Amazon KDP callout -->
+        <section class="bg-amber-50 border-y border-amber-200 px-4 py-12 md:px-8">
+            <div class="mx-auto max-w-4xl flex flex-col md:flex-row items-center gap-8">
+                <div class="text-5xl shrink-0">📦</div>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-amber-700">Passive Income Angle — Huge Selling Hook</p>
+                    <h2 class="mt-2 text-xl font-bold text-slate-900 md:text-2xl">
+                        Buyers Can Publish Their Stories on Amazon KDP and Sell Them
+                    </h2>
+                    <p class="mt-3 text-sm text-slate-700 max-w-2xl">
+                        The app generates a fully illustrated, narrated storybook — and buyers can
+                        <strong>download it as a print-ready PDF</strong> and list it on Amazon Kindle Direct Publishing (KDP),
+                        Etsy, or Gumroad. That means your audience is not just buying a tool —
+                        they are buying a <strong>business asset</strong> that can generate royalties passively.
+                        This angle converts strongly to side-hustle seekers, parents and digital product creators.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-3 text-sm">
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">📚 Amazon KDP</span>
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">🛍 Etsy</span>
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">💻 Gumroad</span>
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">👩‍💼 Client Work</span>
                     </div>
                 </div>
             </div>
-            <!-- cards -->
-            <div class="flex w-full justify-center px-2 py-20">
-                <div
-                    class="rounded-lg bg-white lg:mx-8 lg:flex lg:max-w-5xl lg:shadow-lg"
-                >
-                    <div class="lg:w-1/2">
-                        <div
-                            class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
-                            style="
-                                background-image: url('/images/banner-childern-image.png');
-                            "
-                        ></div>
+        </section>
+
+        <!-- Funnel map + pricing -->
+        <section class="bg-slate-50 px-4 py-16 md:px-8">
+            <div class="mx-auto max-w-5xl">
+                <div class="mb-8 text-center">
+                    <p class="text-xs font-semibold tracking-widest text-indigo-600 uppercase">Full Funnel Map</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Your earnings per customer at every stage</h2>
+                    <p class="mt-2 text-sm text-slate-500">50% commission across the funnel. Every upsell is a natural next step — easier to close, higher EPC for you.</p>
+                </div>
+                <div class="grid gap-4 md:grid-cols-3">
+                    <div class="rounded-2xl border-2 border-indigo-300 bg-white p-6 text-center shadow-sm">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500">Front End</p>
+                        <p class="mt-2 text-3xl font-extrabold text-slate-900">$20</p>
+                        <p class="mt-1 text-sm font-semibold text-emerald-600">You earn $10</p>
+                        <p class="mt-3 text-xs text-slate-500 leading-relaxed">Full story creation: text, illustrations, narration, flipbook reader &amp; quiz. One-time payment.</p>
                     </div>
-                    <div
-                        class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
-                    >
-                        <h2 class="text-3xl font-bold text-gray-800">
-                            Revenue-Focused Funnel Positioning
-                            <span class="text-indigo-600">For Launch Day</span>
-                        </h2>
-                        <p class="mt-4 text-gray-600">
-                            Use a low-friction frontend, then stack clear value:
-                            PRO video credits, higher limits, and done-for-you
-                            packs. This supports both conversion volume and
-                            strong EPC for affiliates. Keep front-end friction
-                            low, then monetize with value-first upgrades.
+                    <div class="rounded-2xl border-2 border-amber-300 bg-white p-6 text-center shadow-sm">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-amber-500">OTO 1 — PRO Video</p>
+                        <p class="mt-2 text-3xl font-extrabold text-slate-900">TBA</p>
+                        <p class="mt-1 text-sm font-semibold text-emerald-600">50% comm.</p>
+                        <p class="mt-3 text-xs text-slate-500 leading-relaxed">
+                            <strong class="text-slate-700">Unlock The Most Valuable Feature In The Funnel.</strong><br/>
+                            Turn story pages into engaging videos for YouTube, Shorts &amp; Reels.
+                            This is the "wow factor" buyers upgrade for.
                         </p>
-                        <div class="mt-8">
-                            <a
-                                href="#"
-                                class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >See Revenue Stack</a
-                            >
-                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-rose-500">OTO 2 — DFY Pack</p>
+                        <p class="mt-2 text-3xl font-extrabold text-slate-900">TBA</p>
+                        <p class="mt-1 text-sm font-semibold text-emerald-600">50% comm.</p>
+                        <p class="mt-3 text-xs text-slate-500 leading-relaxed">100 ready-to-publish story prompts, KDP publishing guide, kids channel blueprint &amp; monetization playbook.</p>
+                    </div>
+                </div>
+                <p class="mt-6 text-center text-xs text-slate-500">All OTO prices finalised before launch. Affiliates notified by email. Reach out to reserve your link early.</p>
+            </div>
+        </section>
+
+        <!-- JV Contest -->
+        <section class="bg-linear-to-r from-indigo-600 to-violet-600 px-4 py-14 text-white md:px-8">
+            <div class="mx-auto max-w-4xl text-center">
+                <p class="text-xs font-semibold uppercase tracking-widest text-indigo-200">JV Prize Contest</p>
+                <h2 class="mt-2 text-2xl font-bold md:text-3xl">Top affiliates win cash prizes on launch week</h2>
+                <p class="mx-auto mt-4 max-w-2xl text-sm text-indigo-100">
+                    We are finalising the prize pool. Affiliates who request approval early and confirm participation
+                    will be added to the leaderboard. Cash prizes for top 3 by sales volume during the launch window.
+                    Message us now to lock your spot.
+                </p>
+                <div class="mt-6 flex flex-wrap justify-center gap-3">
+                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">🥇 1st Place — Cash Prize</div>
+                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">🥈 2nd Place — Cash Prize</div>
+                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">🥉 3rd Place — Cash Prize</div>
+                </div>
+                <p class="mt-4 text-xs text-indigo-200">Prize amounts confirmed on registration. Get in touch to qualify.</p>
+            </div>
+        </section>
+
+        <!-- 💰 Why Buyers Pull Out Their Card -->
+        <section class="bg-white px-4 py-16 md:px-8">
+            <div class="mx-auto max-w-4xl">
+                <div class="mb-8 text-center">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-amber-600">Money Angle</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">💰 Why Buyers Pull Out Their Card Fast</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">This is not just a tool — it creates something buyers can actually use, share, and profit from.</p>
+                </div>
+                <div class="grid gap-4 md:grid-cols-3">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center">
+                        <p class="text-3xl mb-3">📖</p>
+                        <h3 class="font-bold text-slate-900">Use It</h3>
+                        <p class="mt-2 text-sm text-slate-600">Bedtime stories, classroom reads, personal projects — immediate real-world utility on day one.</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center">
+                        <p class="text-3xl mb-3">📣</p>
+                        <h3 class="font-bold text-slate-900">Share It</h3>
+                        <p class="mt-2 text-sm text-slate-600">Story videos ready for YouTube, Shorts, Reels and TikTok — built-in social content machine.</p>
+                    </div>
+                    <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6 text-center">
+                        <p class="text-3xl mb-3">💵</p>
+                        <h3 class="font-bold text-slate-900">Sell It</h3>
+                        <p class="mt-2 text-sm text-slate-600">
+                            Download as a print-ready PDF and publish on <strong class="text-slate-800">Amazon KDP</strong>,
+                            Etsy, Gumroad, or as client deliverables.
+                            One story = a real passive income asset.
+                        </p>
+                    </div>
+                </div>
+                <p class="mt-6 text-center text-sm font-semibold text-indigo-700">That combination increases perceived value and conversion rate — automatically.</p>
+            </div>
+        </section>
+
+        <!-- 🎯 Why This Is Easy To Sell -->
+        <section class="bg-slate-50 px-4 py-16 md:px-8">
+            <div class="mx-auto max-w-4xl">
+                <div class="mb-8 text-center">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">For Affiliates</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">🎯 Why This Is Easy To Promote</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">Affiliates think: "Will this convert for ME?" — here's the answer.</p>
+                </div>
+                <div class="grid gap-3 md:grid-cols-2 max-w-2xl mx-auto">
+                    <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
+                        <p class="text-sm text-slate-700">No complex explanation needed — the output speaks for itself</p>
+                    </div>
+                    <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
+                        <p class="text-sm text-slate-700">Visual transformation sells itself — see it, get it, want it</p>
+                    </div>
+                    <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
+                        <p class="text-sm text-slate-700">The demo does most of the selling before the copy even loads</p>
+                    </div>
+                    <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
+                        <p class="text-sm text-slate-700">Works across multiple audiences: parents, educators, creators, agencies</p>
+                    </div>
+                </div>
+                <p class="mt-6 text-center text-sm font-semibold text-slate-700">If they see it, they get it. If they get it, they buy it.</p>
+            </div>
+        </section>
+
+        <!-- 🔥 Quick Promo Plan -->
+        <section class="bg-white px-4 py-16 md:px-8">
+            <div class="mx-auto max-w-3xl">
+                <div class="mb-8 text-center">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">Promo Strategy</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">🔥 Simple Promo Plan (Copy This)</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">This is enough to start generating commissions from day one. No complicated funnels needed.</p>
+                </div>
+                <div class="grid gap-4 md:grid-cols-4">
+                    <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
+                        <p class="text-2xl font-extrabold text-violet-600 mb-2">1</p>
+                        <h3 class="font-bold text-slate-900 text-sm">Send Curiosity Email</h3>
+                        <p class="mt-2 text-xs text-slate-500">Tease the transformation. Don't reveal the product name — let the demo do the work.</p>
+                    </div>
+                    <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
+                        <p class="text-2xl font-extrabold text-violet-600 mb-2">2</p>
+                        <h3 class="font-bold text-slate-900 text-sm">Link to Demo</h3>
+                        <p class="mt-2 text-xs text-slate-500">The 2-minute demo is your closer. Direct traffic straight to it.</p>
+                    </div>
+                    <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
+                        <p class="text-2xl font-extrabold text-violet-600 mb-2">3</p>
+                        <h3 class="font-bold text-slate-900 text-sm">Add a Bonus</h3>
+                        <p class="mt-2 text-xs text-slate-500">Stack a small complementary bonus to tip fence-sitters into buyers.</p>
+                    </div>
+                    <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
+                        <p class="text-2xl font-extrabold text-violet-600 mb-2">4</p>
+                        <h3 class="font-bold text-slate-900 text-sm">Close with Urgency</h3>
+                        <p class="mt-2 text-xs text-slate-500">Launch window + price increase after X hours. That's enough to start commissions.</p>
                     </div>
                 </div>
             </div>
-            <!-- cards -->
         </section>
 
         <section
@@ -864,13 +971,11 @@ import { Head } from '@inertiajs/vue3';
                             <span class="text-indigo-600">JVZoo-Friendly</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            Frontend at $7 to $19 for volume. Upsell 1: PRO
-                            video features. Upsell 2: expanded or unlimited
-                            limits. Upsell 3: done-for-you packs.
+                            Frontend at $20. Upsell 1: PRO
+                                video features at $69.
                         </p>
                         <p class="mt-3 text-sm text-gray-700">
-                            Commission structure: frontend 50%, upsells
-                            included, built to reward volume affiliates.
+                            Commission structure: frontend 50%, upsell 1 50%.
                         </p>
                         <div class="mt-8">
                             <a
@@ -959,6 +1064,37 @@ import { Head } from '@inertiajs/vue3';
             <!-- cards -->
         </section>
 
+        <!-- Contact & support -->
+        <section class="bg-white px-4 py-16 md:px-8">
+            <div class="mx-auto max-w-3xl text-center">
+                <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">Get In Touch</p>
+                <h2 class="mt-2 text-2xl font-bold text-slate-900">Questions? Need custom bonuses or a higher commission tier?</h2>
+                <p class="mx-auto mt-4 max-w-xl text-sm text-slate-600">
+                    We want every affiliate to succeed. Reach out before the launch and we will set you up with custom
+                    review access, bonus ideas, and tailored assets for your audience.
+                </p>
+                <div class="mt-8 flex flex-wrap justify-center gap-4">
+                    <a
+                        href="mailto:jv@aistorybook.com"
+                        class="flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-black"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        Email Us
+                    </a>
+                    <a
+                        href="https://facebook.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        Message on Facebook
+                    </a>
+                </div>
+                <p class="mt-4 text-xs text-slate-400">We reply within 24 hours and respond to all serious affiliates personally.</p>
+            </div>
+        </section>
+
         <section id="email-swipes" class="bg-slate-50 px-4 py-16 md:px-8">
             <div class="mx-auto max-w-6xl">
                 <div class="mb-6 flex items-center justify-between gap-3">
@@ -1000,6 +1136,38 @@ import { Head } from '@inertiajs/vue3';
                         </p>
                     </article>
                 </div>
+            </div>
+        </section>
+
+        <!-- 🚀 Final Push CTA -->
+        <section class="bg-linear-to-br from-slate-900 to-indigo-950 px-4 py-20 text-white md:px-8">
+            <div class="mx-auto max-w-3xl text-center">
+                <p class="text-xs font-semibold uppercase tracking-widest text-indigo-300">You're One Click Away</p>
+                <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🚀 Ready To Promote?</h2>
+                <p class="mx-auto mt-4 max-w-xl text-base text-slate-300">Early affiliates usually win the most. Request your link, grab the assets, and start sending traffic today.</p>
+                <div class="mt-8 grid gap-4 max-w-sm mx-auto text-left">
+                    <div class="flex items-start gap-3">
+                        <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-sm font-bold">1</span>
+                        <p class="text-sm text-slate-200 pt-1">Request your affiliate link — approved same day</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-sm font-bold">2</span>
+                        <p class="text-sm text-slate-200 pt-1">Download promo assets — swipes, banners, scripts</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-sm font-bold">3</span>
+                        <p class="text-sm text-slate-200 pt-1">Start sending traffic today — commissions stack fast</p>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-wrap justify-center gap-4">
+                    <a href="#" class="rounded-full bg-white px-8 py-3 font-bold text-slate-900 transition hover:bg-indigo-50 text-sm">
+                        Request JV Approval Now →
+                    </a>
+                    <a href="mailto:jv@aistorybook.com" class="rounded-full border border-white/30 px-8 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                        Contact Us Directly
+                    </a>
+                </div>
+                <p class="mt-6 text-xs text-slate-400">Earn 50% on frontend + all upsells. Commission paid via JVZoo.</p>
             </div>
         </section>
     </main>

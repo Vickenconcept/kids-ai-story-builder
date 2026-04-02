@@ -114,7 +114,7 @@ const unsavedPagesCount = computed(() => {
     return uuids.filter((uuid) => pageSaveState.value[uuid] === 'unsaved' || pageSaveState.value[uuid] === 'error').length;
 });
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
-const isPro = computed(() => props.feature_tier === 'pro');
+const isPro = computed(() => props.feature_tier === 'pro' || props.feature_tier === 'elite');
 const canAffordSingleVideo = computed(() => props.story_credits >= props.video_credit_cost);
 const canGeneratePageVideoInFlipbook = computed(() => isPro.value && canAffordSingleVideo.value);
 const pageVideoActionHint = computed(() => {

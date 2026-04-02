@@ -63,7 +63,10 @@ const form = useForm({
     include_video: false,
 });
 
-const creationMode = ref<'none' | 'manual' | 'template'>('none');
+const isPro = props.featureTier === 'pro' || props.featureTier === 'elite';
+const isElite = props.featureTier === 'elite';
+
+const creationMode = ref<'none' | 'manual' | 'template'>(isElite ? 'none' : 'manual');
 const isTemplateDialogOpen = ref(false);
 const templates = ref<StoryTemplate[]>([]);
 const templatesLoading = ref(false);
@@ -99,8 +102,6 @@ function normalizePageCount(): void {
         form.page_count = 15;
     }
 }
-
-const isPro = props.featureTier === 'pro';
 
 const selectedTemplate = computed(() =>
     templates.value.find((template) => template.id === selectedTemplateId.value) ?? null,
@@ -369,6 +370,7 @@ const illustrationStyleOptions = [
             </div>
 
             <div
+                v-if="isElite"
                 class="grid gap-4 sm:grid-cols-2"
                 :class="creationMode === 'none' ? 'mx-auto w-full max-w-3xl' : ''"
             >
@@ -385,6 +387,7 @@ const illustrationStyleOptions = [
                 </button>
 
                 <button
+                    v-if="isElite"
                     type="button"
                     class="rounded-xl border p-6 text-left transition-colors md:min-h-40"
                     :class="creationMode === 'template' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/30'"
@@ -397,11 +400,11 @@ const illustrationStyleOptions = [
                 </button>
             </div>
 
-            <p v-if="creationMode === 'none'" class="text-muted-foreground text-center text-sm">
+            <p v-if="isElite && creationMode === 'none'" class="text-muted-foreground text-center text-sm">
                 Choose how you want to start: manual prompt or template.
             </p>
 
-            <div v-if="creationMode === 'template'" class="rounded-lg border p-4">
+            <div v-if="isElite && creationMode === 'template'" class="rounded-lg border p-4">
                 <p class="text-sm font-semibold">Template mode selected</p>
                 <p v-if="selectedTemplate" class="text-muted-foreground mt-1 text-xs">
                     Using template: <span class="font-medium text-foreground">{{ selectedTemplate.name }}</span>
@@ -560,7 +563,7 @@ const illustrationStyleOptions = [
                 </p>
             </form>
 
-            <Dialog v-model:open="isTemplateDialogOpen">
+            <Dialog v-if="isElite" v-model:open="isTemplateDialogOpen">
                 <DialogContent class="sm:max-w-5xl">
                     <DialogHeader>
                         <DialogTitle>Choose a Story Template</DialogTitle>

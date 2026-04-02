@@ -3,469 +3,332 @@ import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Sales" />
+    <Head title="Create Storybooks in Minutes — AI Storybook Studio" />
 
-    <section class="bg-slate-950 text-white">
-        <div class="mx-auto max-w-6xl px-4 py-14 md:px-8 md:py-20">
-            <p
-                class="inline-flex rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1 text-xs tracking-wide uppercase"
-            >
-                AI Storybook Studio
+    <!-- HERO -->
+    <section class="bg-slate-950 text-white overflow-hidden">
+        <div class="mx-auto max-w-5xl px-4 pt-16 pb-10 md:px-8 md:pt-24 text-center">
+            <p class="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-300">
+                🚀 Now Live — Special Launch Price
             </p>
-
-            <div class="mt-6 grid items-center gap-6 md:grid-cols-2">
-                <div class="space-y-4">
-                    <h1
-                        class="max-w-3xl text-4xl leading-tight font-bold md:text-6xl"
-                    >
-                        Create Beautiful Storybooks With Images, Voice, and
-                        Video-Ready Pages
-                    </h1>
-                    <p class="max-w-2xl text-base text-slate-300 md:text-lg">
-                        Turn one idea into a complete story experience. Generate
-                        page text, matching illustrations, optional narration,
-                        and video-ready pages in one workflow designed for
-                        creators, parents, teachers, and digital publishers.
-                    </p>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <a
-                            href="#pricing"
-                            class="rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-cyan-300"
-                        >
-                            Get Instant Access
-                        </a>
-                        <a
-                            href="#proof"
-                            class="rounded-full border border-white/25 px-6 py-3 text-sm font-semibold transition hover:bg-white/10"
-                        >
-                            See Why It Converts
-                        </a>
-                    </div>
-                </div>
-
-                <div class="grid gap-4">
-                    <div
-                        class="overflow-hidden rounded-2xl border border-white/10"
-                    >
-                        <img
-                            src="/images/3d-book%20image.png"
-                            alt="3D book product preview"
-                            class="h-52 w-full object-cover md:h-60"
-                        />
-                    </div>
-                    <div
-                        class="overflow-hidden rounded-2xl border border-white/10"
-                    >
-                        <img
-                            src="/images/3d-book2.png"
-                            alt="3D product information preview"
-                            class="h-52 w-full object-cover md:h-60"
-                        />
-                    </div>
-                </div>
+            <h1 class="mt-6 text-4xl font-extrabold leading-tight md:text-6xl lg:text-7xl">
+                Turn One Idea Into a Fully<br class="hidden md:block"/>
+                <span class="text-cyan-400">Illustrated, Narrated Storybook</span><br class="hidden md:block"/>
+                in Minutes
+            </h1>
+            <p class="mx-auto mt-6 max-w-2xl text-base text-slate-300 md:text-lg">
+                No writing skills. No design skills. No tech knowledge.<br/>
+                Just enter an idea — and your complete story comes to life.
+            </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <a href="#pricing" class="rounded-full bg-cyan-400 px-8 py-4 text-base font-bold text-slate-900 transition hover:bg-cyan-300 shadow-lg shadow-cyan-400/30">
+                    👉 Create Your First Storybook Now
+                </a>
+                <a href="#demo" class="flex items-center gap-2 rounded-full border border-white/25 px-7 py-4 text-sm font-semibold transition hover:bg-white/10">
+                    🎬 Watch 2-Min Demo
+                </a>
             </div>
+            <p class="mt-4 text-xs text-slate-500">One-time payment · No monthly fees · Instant access</p>
+        </div>
 
-            <div class="mt-10 grid gap-3 text-sm text-slate-300 md:grid-cols-3">
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                    Prompt to full storybook flow in minutes
-                </div>
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                    Built-in visuals, narration, and page-level video support
-                </div>
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                    Export-ready output for content publishing and KDP workflows
-                </div>
+        <!-- Trust bar -->
+        <div class="border-t border-white/10 bg-white/5">
+            <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-4 py-5 text-xs font-medium text-slate-400">
+                <span>✔ Full illustrated story pages</span>
+                <span>✔ AI-generated visuals per page</span>
+                <span>✔ Built-in voice narration</span>
+                <span>✔ Flipbook reader included</span>
+                <span>✔ KDP-ready export</span>
+                <span>✔ Interactive quiz layers</span>
             </div>
         </div>
     </section>
 
-    <section id="proof" class="bg-white">
-        <div
-            class="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2 md:px-8"
-        >
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-                <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">
-                    Why Users Love This App
-                </h2>
-                <ul class="mt-4 space-y-2 text-sm text-slate-700">
-                    <li>
-                        Clear workflow from idea to finished pages with less
-                        manual work
-                    </li>
-                    <li>Consistent story structure across pages and scenes</li>
-                    <li>
-                        Visual output that makes stories feel like finished
-                        products
-                    </li>
-                    <li>
-                        Flexible use across education, bedtime content, and
-                        creator channels
-                    </li>
-                </ul>
-                <p class="mt-4 text-sm font-semibold text-slate-900">
-                    You are not just generating text. You are building complete
-                    story experiences.
-                </p>
+    <!-- DEMO SECTION -->
+    <section id="demo" class="bg-slate-900 text-white px-4 py-16 md:px-8">
+        <div class="mx-auto max-w-4xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400">The Most Important 2 Minutes You'll Spend Today</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🎬 Watch This: From One Prompt → Complete Storybook in Minutes</h2>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">This is what makes people buy instantly. No explaining needed — they see it, they want it.</p>
+
+            <!-- Video placeholder -->
+            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-cyan-400/40 bg-slate-800 aspect-video flex items-center justify-center cursor-pointer group hover:border-cyan-400 transition">
+                <div class="text-center">
+                    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-cyan-400 text-slate-900 text-3xl shadow-lg shadow-cyan-400/40 group-hover:scale-110 transition">▶</div>
+                    <p class="text-sm font-semibold text-slate-300">Click to watch demo</p>
+                    <p class="text-xs text-slate-500 mt-1">~2 minutes</p>
+                </div>
             </div>
 
-            <div class="overflow-hidden rounded-2xl border border-slate-200">
-                <img
-                    src="/images/banner-childern-image.png"
-                    alt="Children's story product banner"
-                    class="h-full w-full object-cover"
-                />
+            <!-- Transformation checklist -->
+            <div class="mt-8 grid grid-cols-2 gap-3 max-w-lg mx-auto text-sm text-left md:grid-cols-4">
+                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                    <p class="text-2xl mb-1">✍️</p>
+                    <p class="font-semibold">Prompt</p>
+                    <p class="text-xs text-slate-400 mt-1">Type your idea</p>
+                </div>
+                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                    <p class="text-2xl mb-1">📖</p>
+                    <p class="font-semibold">Story Pages</p>
+                    <p class="text-xs text-slate-400 mt-1">Full structured story</p>
+                </div>
+                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                    <p class="text-2xl mb-1">🎨</p>
+                    <p class="font-semibold">Illustrations</p>
+                    <p class="text-xs text-slate-400 mt-1">Matched to each page</p>
+                </div>
+                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                    <p class="text-2xl mb-1">🎙️</p>
+                    <p class="font-semibold">Narration</p>
+                    <p class="text-xs text-slate-400 mt-1">Read-aloud voice</p>
+                </div>
             </div>
+            <p class="mt-6 text-sm font-bold text-cyan-400">👉 This is what converts the sale.</p>
         </div>
     </section>
 
-    <section class="bg-slate-100">
-        <div class="mx-auto max-w-6xl px-4 py-16 md:px-8">
-            <h2 class="text-3xl font-bold text-slate-900 md:text-4xl">
-                What You Can Do Inside the App
+    <!-- BIG PROMISE -->
+    <section class="bg-white px-4 py-16 md:px-8">
+        <div class="mx-auto max-w-4xl text-center">
+            <h2 class="text-3xl font-extrabold text-slate-900 md:text-4xl">
+                Imagine This…
             </h2>
-            <p class="mt-3 max-w-3xl text-sm text-slate-600 md:text-base">
-                Everything is built around one goal: help you create
-                high-quality children stories faster with less friction.
+            <p class="mx-auto mt-5 max-w-2xl text-base text-slate-600 leading-relaxed">
+                You type a simple idea like <em>"A brave rabbit learns to share"</em>…<br/>
+                And in minutes, you have a <strong>complete multi-page storybook</strong> — with matching illustrations on every page, a read-aloud voice your kids will love, and a flipbook reader you can share with one link.
             </p>
+            <p class="mt-5 text-lg font-bold text-slate-900">No writing stress. No hiring illustrators. No tech headaches.</p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3 text-sm">
+                <span class="rounded-full bg-slate-100 border border-slate-200 px-4 py-2">Just enter an idea →</span>
+                <span class="rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 px-4 py-2">Your story comes to life →</span>
+                <span class="rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-2">Share it today ✔</span>
+            </div>
+        </div>
+    </section>
 
-            <div class="mt-8 grid gap-4 md:grid-cols-4">
-                <div class="rounded-xl border border-slate-200 bg-white p-5">
-                    <p class="text-xs tracking-wide text-cyan-700 uppercase">
-                        Feature 1
-                    </p>
-                    <h3 class="mt-2 text-lg font-semibold text-slate-900">
-                        Smart Story Generation
-                    </h3>
-                    <p class="mt-2 text-sm text-slate-600">
-                        Generate complete multi-page stories from one prompt
-                        with lesson type and age targeting.
-                    </p>
+    <!-- PROBLEM -->
+    <section class="bg-slate-50 px-4 py-16 md:px-8">
+        <div class="mx-auto max-w-4xl">
+            <div class="text-center mb-10">
+                <p class="text-xs font-semibold uppercase tracking-widest text-red-500">Sound Familiar?</p>
+                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">Creating Story Content Is Frustrating</h2>
+            </div>
+            <div class="grid gap-3 md:grid-cols-2">
+                <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
+                    <p class="text-sm text-slate-700">Writing a good story from scratch takes hours — and most people give up after the first page</p>
                 </div>
-                <div class="rounded-xl border-2 border-cyan-500 bg-white p-5">
-                    <p class="text-xs tracking-wide text-cyan-700 uppercase">
-                        Feature 2
-                    </p>
-                    <h3 class="mt-2 text-lg font-semibold text-slate-900">
-                        Illustrations Per Page
-                    </h3>
-                    <p class="mt-2 text-sm text-slate-600">
-                        Create matching page images so every part of the story
-                        feels visually complete and engaging.
-                    </p>
+                <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
+                    <p class="text-sm text-slate-700">Hiring illustrators costs $50–$200+ per story with zero guarantee of quality or speed</p>
                 </div>
-                <div class="rounded-xl border border-slate-200 bg-white p-5">
-                    <p class="text-xs tracking-wide text-cyan-700 uppercase">
-                        Feature 3
-                    </p>
-                    <h3 class="mt-2 text-lg font-semibold text-slate-900">
-                        Narration and Audio
-                    </h3>
-                    <p class="mt-2 text-sm text-slate-600">
-                        Add voice narration to make stories more immersive for
-                        children and easier to consume.
-                    </p>
+                <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
+                    <p class="text-sm text-slate-700">Other AI tools give you raw text only — you still have to figure out images, voice, and layout yourself</p>
                 </div>
-                <div class="rounded-xl border border-slate-200 bg-white p-5">
-                    <p class="text-xs tracking-wide text-cyan-700 uppercase">
-                        Feature 4
-                    </p>
-                    <h3 class="mt-2 text-lg font-semibold text-slate-900">
-                        Video-Ready Story Pages
-                    </h3>
-                    <p class="mt-2 text-sm text-slate-600">
-                        Turn story pages into dynamic video output for stronger
-                        presentation and richer content formats.
-                    </p>
+                <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
+                    <p class="text-sm text-slate-700">Great story ideas stay stuck in your head because producing them feels too complicated and expensive</p>
+                </div>
+            </div>
+            <p class="mt-8 text-center text-base font-semibold text-slate-800">You end up with ideas… but no finished product.</p>
+            <p class="mt-2 text-center text-lg font-bold text-cyan-600">Until now.</p>
+        </div>
+    </section>
+
+    <!-- SOLUTION -->
+    <section class="bg-slate-900 text-white px-4 py-16 md:px-8">
+        <div class="mx-auto max-w-4xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400">The Solution</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Introducing: AI Storybook Studio</h2>
+            <p class="mx-auto mt-5 max-w-xl text-base text-slate-300">
+                The first AI app that turns <strong class="text-white">one prompt</strong> into a complete story experience —
+                pages, illustrations, voice narration, and a shareable flipbook — <strong class="text-cyan-400">all in minutes</strong>.
+            </p>
+            <div class="mt-10 grid gap-4 md:grid-cols-3 text-left">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <p class="text-3xl mb-3">📖</p>
+                    <h3 class="font-bold text-white">Every Page Comes Alive</h3>
+                    <p class="mt-2 text-sm text-slate-400">Your story gets structured pages with matching AI illustrations — so it feels like a <em>finished book</em>, not raw text.</p>
+                </div>
+                <div class="rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-6">
+                    <p class="text-3xl mb-3">🎙️</p>
+                    <h3 class="font-bold text-white">Voice That Reads It For You</h3>
+                    <p class="mt-2 text-sm text-slate-400">Built-in narration turns your story into a read-along audio experience kids actually sit down and listen to.</p>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <p class="text-3xl mb-3">📤</p>
+                    <h3 class="font-bold text-white">Ready to Share in One Click</h3>
+                    <p class="mt-2 text-sm text-slate-400">Share a flipbook link, download as PDF, or publish. You go from prompt to published the same day.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="bg-white">
-        <div
-            class="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2 md:px-8"
-        >
-            <div>
-                <h2 class="text-3xl font-bold text-slate-900 md:text-4xl">
-                    Who This App Is Perfect For
-                </h2>
-                <ul class="mt-4 space-y-2 text-sm text-slate-700">
-                    <li>Parents wanting personalized bedtime content</li>
-                    <li>
-                        Teachers and tutors creating educational story material
-                    </li>
-                    <li>Creators building kids-channel content libraries</li>
-                    <li>
-                        Authors and digital publishers producing story assets
-                        faster
-                    </li>
+    <!-- HOW IT WORKS -->
+    <section class="bg-white px-4 py-16 md:px-8">
+        <div class="mx-auto max-w-4xl">
+            <div class="text-center mb-12">
+                <p class="text-xs font-semibold uppercase tracking-widest text-cyan-600">So Simple Anyone Can Do It</p>
+                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">From Blank Page to Finished Story in 4 Steps</h2>
+            </div>
+            <div class="relative grid gap-6 md:grid-cols-4">
+                <div class="text-center">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">1</div>
+                    <h3 class="font-bold text-slate-900">Enter Your Idea</h3>
+                    <p class="mt-2 text-xs text-slate-500">Choose your topic, tone, and age group — or pick from a template</p>
+                </div>
+                <div class="text-center">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">2</div>
+                    <h3 class="font-bold text-slate-900">Generate Your Story</h3>
+                    <p class="mt-2 text-xs text-slate-500">Full structured pages with logical flow — done in seconds</p>
+                </div>
+                <div class="text-center">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">3</div>
+                    <h3 class="font-bold text-slate-900">Add Visuals &amp; Voice</h3>
+                    <p class="mt-2 text-xs text-slate-500">Generate matching page illustrations and add read-aloud narration</p>
+                </div>
+                <div class="text-center">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">4</div>
+                    <h3 class="font-bold text-slate-900">Export &amp; Share</h3>
+                    <p class="mt-2 text-xs text-slate-500">Share a link, download PDF, or publish — your story is ready today</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT YOU GET -->
+    <section class="bg-slate-50 px-4 py-16 md:px-8">
+        <div class="mx-auto max-w-5xl">
+            <div class="text-center mb-10">
+                <p class="text-xs font-semibold uppercase tracking-widest text-cyan-600">Everything Included</p>
+                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">What You Get With AI Storybook Studio</h2>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <p class="text-2xl mb-3">📝</p>
+                    <h3 class="font-bold text-slate-900">Complete Story Generation</h3>
+                    <p class="mt-2 text-sm text-slate-600">Multi-page stories with structured flow — created from one prompt in minutes, not hours.</p>
+                </div>
+                <div class="rounded-2xl border-2 border-cyan-400 bg-white p-6">
+                    <p class="text-2xl mb-3">🎨</p>
+                    <h3 class="font-bold text-slate-900">Matching Illustrations Per Page</h3>
+                    <p class="mt-2 text-sm text-slate-600">Every page comes with AI-generated visuals matched to your scene — so your story feels like a real published book.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <p class="text-2xl mb-3">🎙️</p>
+                    <h3 class="font-bold text-slate-900">Built-In Voice Narration</h3>
+                    <p class="mt-2 text-sm text-slate-600">Add read-aloud narration with one click. Kids hear the story as they follow along — no extra tools needed.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <p class="text-2xl mb-3">📚</p>
+                    <h3 class="font-bold text-slate-900">Beautiful Flipbook Reader</h3>
+                    <p class="mt-2 text-sm text-slate-600">Share a link and anyone can read your story in a realistic page-flip reader. Professional quality instantly.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <p class="text-2xl mb-3">🧩</p>
+                    <h3 class="font-bold text-slate-900">Interactive Quiz Pages</h3>
+                    <p class="mt-2 text-sm text-slate-600">Add quiz and game pages inside your story — perfect for teachers and educators building engaging lessons.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <p class="text-2xl mb-3">📤</p>
+                    <h3 class="font-bold text-slate-900">Export &amp; Publish Ready</h3>
+                    <p class="mt-2 text-sm text-slate-600">Download as PDF and publish anywhere — share a link, sell digitally, or prepare for print. <em>Video upgrade available.</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHO IT'S FOR -->
+    <section class="bg-white px-4 py-16 md:px-8">
+        <div class="mx-auto max-w-4xl">
+            <div class="text-center mb-10">
+                <p class="text-xs font-semibold uppercase tracking-widest text-cyan-600">This Is For You If…</p>
+                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">Who AI Storybook Studio Is Perfect For</h2>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                    <span class="text-3xl shrink-0">👨‍👩‍👧</span>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Parents</h3>
+                        <p class="mt-1 text-sm text-slate-600">Create personalised bedtime stories with your child's name and favourite themes — in minutes, not weeks.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                    <span class="text-3xl shrink-0">👩‍🏫</span>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Teachers &amp; Educators</h3>
+                        <p class="mt-1 text-sm text-slate-600">Build custom story-based lessons with quiz pages and illustrations — tailored to your class topic and age group.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                    <span class="text-3xl shrink-0">🎬</span>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Content Creators</h3>
+                        <p class="mt-1 text-sm text-slate-600">Produce kids' story content faster than ever. Build a library, run a channel, and publish consistently without burnout.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                    <span class="text-3xl shrink-0">💰</span>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Digital Sellers</h3>
+                        <p class="mt-1 text-sm text-slate-600">Create high-perceived-value storybook products to sell on Etsy, Gumroad, or Amazon KDP. One tool, real income potential.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="bg-slate-950 text-white px-4 py-20 md:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400">Special Launch Pricing</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Get Instant Access Today</h2>
+            <p class="mt-3 text-slate-400 text-sm">One-time payment. No monthly fees. Price increases after launch.</p>
+
+            <div class="mt-10 rounded-2xl border-2 border-cyan-400/50 bg-white/5 p-8">
+                <p class="text-sm font-semibold text-slate-400 line-through">Regular price: $97</p>
+                <p class="mt-2 text-7xl font-extrabold text-cyan-400">$20</p>
+                <p class="mt-1 text-sm text-slate-400">One-time · Instant access · No recurring charges</p>
+
+                <ul class="mt-6 space-y-2 text-left text-sm text-slate-300">
+                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Full story generation from prompts</li>
+                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> AI illustrations matched to every page</li>
+                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Built-in voice narration</li>
+                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Flipbook reader with shareable link</li>
+                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Interactive quiz &amp; game pages</li>
+                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> PDF export ready for KDP &amp; publishing</li>
+                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Custom cover art &amp; branding</li>
                 </ul>
-                <p class="mt-4 text-sm text-slate-700">
-                    If you need engaging story content with less production
-                    effort, this app gives you a practical workflow.
-                </p>
+
+                <a href="#" class="mt-8 block w-full rounded-full bg-cyan-400 py-4 text-center text-base font-bold text-slate-900 shadow-lg shadow-cyan-400/30 transition hover:bg-cyan-300">
+                    👉 Get Instant Access &amp; Create Your First Story Today
+                </a>
+                <p class="mt-3 text-xs text-slate-500">⚠️ Launch pricing is temporary — price increases after window closes</p>
             </div>
-            <div class="overflow-hidden rounded-2xl border border-slate-200">
-                <img
-                    src="/images/card-kids-image.png"
-                    alt="Kids marketing card visual"
-                    class="h-full w-full object-cover"
-                />
-            </div>
-        </div>
-    </section>
 
-    <section id="pricing" class="bg-slate-50">
-        <div class="mx-auto max-w-6xl px-4 py-16 md:px-8">
-            <div
-                class="rounded-2xl border border-slate-200 bg-white p-8 md:p-10"
-            >
-                <h2 class="text-3xl font-bold text-slate-900 md:text-4xl">
-                    How It Works (Step by Step)
-                </h2>
-                <p class="mt-4 max-w-3xl text-sm text-slate-600 md:text-base">
-                    The workflow is simple enough for beginners but powerful
-                    enough for content teams.
-                </p>
-
-                <div class="mt-7 grid gap-4 md:grid-cols-2">
-                    <div
-                        class="rounded-xl border border-slate-200 bg-slate-50 p-5"
-                    >
-                        <h3 class="text-lg font-semibold text-slate-900">
-                            Creation Workflow
-                        </h3>
-                        <ul class="mt-3 space-y-2 text-sm text-slate-700">
-                            <li>
-                                1. Enter your story prompt or choose a template
-                            </li>
-                            <li>
-                                2. Generate pages with matching illustrations
-                            </li>
-                            <li>
-                                3. Add narration and optional page-level video
-                            </li>
-                            <li>
-                                4. Review, edit, and export your final story
-                                package
-                            </li>
-                        </ul>
-                    </div>
-                    <div
-                        class="rounded-xl border border-slate-200 bg-slate-50 p-5"
-                    >
-                        <h3 class="text-lg font-semibold text-slate-900">
-                            Publishing and Monetization Options
-                        </h3>
-                        <p class="mt-3 text-sm text-slate-700">
-                            Export your stories for digital products, creator
-                            channels, client projects, and Amazon KDP-ready
-                            workflows. You control quality, style, and output
-                            format from one dashboard.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a
-                        href="#"
-                        class="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-black"
-                    >
-                        Start Creating Your Storybook
-                    </a>
-                    <a
-                        href="#"
-                        class="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-200/50"
-                    >
-                        See Feature Demo
-                    </a>
-                </div>
+            <div class="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-slate-400 text-left">
+                <p class="font-semibold text-white mb-2">🔒 Satisfaction Guarantee</p>
+                <p>Try AI Storybook Studio risk-free. If you're not completely satisfied, we'll make it right. Your investment is protected.</p>
             </div>
         </div>
     </section>
 
-    <section class="space-y-6">
-        <!-- https://play.tailwindcss.com/q6uIACp5NI -->
-        <div
-            class="mx-auto flex max-w-xs flex-col overflow-hidden rounded-lg bg-gray-700 p-2 shadow-lg sm:max-w-2xl sm:flex-row dark:bg-gray-800"
-        >
-            <div class="p-2 sm:w-1/2">
-                <img
-                    class="h-60 w-full rounded object-cover sm:h-80"
-                    src="https://i.pinimg.com/564x/41/c7/52/41c75274ffa14f3222691c0cbe3c1904.jpg"
-                    alt="Article"
-                />
-            </div>
-            <div class="flex flex-col justify-between p-2 sm:w-1/2 sm:p-4">
-                <div>
-                    <a
-                        href="#"
-                        class="block text-2xl font-semibold text-gray-50 hover:text-gray-600 hover:underline sm:mt-2 dark:text-white"
-                        >Lorem rem facere</a
-                    >
-                    <p class="mt-2 text-sm text-gray-200 dark:text-gray-400">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Tenetur labore, cum rem facere obcaecati beatae
-                        sunt numquam architecto delectus dignissimos explicabo
-                        quod pariatur at consequatur sint esse aut Facere.
-                        <br />
-                        Numquam architecto delectus dignissimos
-                    </p>
-                </div>
-
-                <div class="mt-4">
-                    <div class="flex items-center">
-                        <div class="flex items-center">
-                            <img
-                                class="h-10 w-10 rounded-full object-cover"
-                                src="https://i.pinimg.com/564x/1d/1e/16/1d1e16ad5227a9c726b61bd7cc4eca33.jpg"
-                                alt="Avatar"
-                            />
-                            <a
-                                href="#"
-                                class="mx-2 font-semibold text-gray-50 dark:text-gray-200"
-                                >Tocino Code</a
-                            >
-                        </div>
-                        <span
-                            class="mx-1 text-xs text-gray-400 dark:text-gray-300"
-                            >21 SEP 2015</span
-                        >
-                        <span
-                            class="relative text-xs text-gray-400 hover:cursor-pointer sm:left-12 dark:text-gray-300"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="17"
-                                height="17"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="#f2f2f2"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <circle cx="18" cy="5" r="3"></circle>
-                                <circle cx="6" cy="12" r="3"></circle>
-                                <circle cx="18" cy="19" r="3"></circle>
-                                <line
-                                    x1="8.59"
-                                    y1="13.51"
-                                    x2="15.42"
-                                    y2="17.49"
-                                ></line>
-                                <line
-                                    x1="15.41"
-                                    y1="6.51"
-                                    x2="8.59"
-                                    y2="10.49"
-                                ></line>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- https://play.tailwindcss.com/q6uIACp5NI -->
-        <div
-            class="mx-auto flex max-w-xs flex-col overflow-hidden rounded-lg bg-gray-700 p-2 shadow-lg sm:max-w-2xl sm:flex-row dark:bg-gray-800"
-        >
-            <div class="p-2 sm:w-1/2">
-                <img
-                    class="h-60 w-full rounded object-cover sm:h-80"
-                    src="https://i.pinimg.com/564x/41/c7/52/41c75274ffa14f3222691c0cbe3c1904.jpg"
-                    alt="Article"
-                />
-            </div>
-            <div class="flex flex-col justify-between p-2 sm:w-1/2 sm:p-4">
-                <div>
-                    <a
-                        href="#"
-                        class="block text-2xl font-semibold text-gray-50 hover:text-gray-600 hover:underline sm:mt-2 dark:text-white"
-                        >Lorem rem facere</a
-                    >
-                    <p class="mt-2 text-sm text-gray-200 dark:text-gray-400">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Tenetur labore, cum rem facere obcaecati beatae
-                        sunt numquam architecto delectus dignissimos explicabo
-                        quod pariatur at consequatur sint esse aut Facere.
-                        <br />
-                        Numquam architecto delectus dignissimos
-                    </p>
-                </div>
-
-                <div class="mt-4">
-                    <div class="flex items-center">
-                        <div class="flex items-center">
-                            <img
-                                class="h-10 w-10 rounded-full object-cover"
-                                src="https://i.pinimg.com/564x/1d/1e/16/1d1e16ad5227a9c726b61bd7cc4eca33.jpg"
-                                alt="Avatar"
-                            />
-                            <a
-                                href="#"
-                                class="mx-2 font-semibold text-gray-50 dark:text-gray-200"
-                                >Tocino Code</a
-                            >
-                        </div>
-                        <span
-                            class="mx-1 text-xs text-gray-400 dark:text-gray-300"
-                            >21 SEP 2015</span
-                        >
-                        <span
-                            class="relative text-xs text-gray-400 hover:cursor-pointer sm:left-12 dark:text-gray-300"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="17"
-                                height="17"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="#f2f2f2"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <circle cx="18" cy="5" r="3"></circle>
-                                <circle cx="6" cy="12" r="3"></circle>
-                                <circle cx="18" cy="19" r="3"></circle>
-                                <line
-                                    x1="8.59"
-                                    y1="13.51"
-                                    x2="15.42"
-                                    y2="17.49"
-                                ></line>
-                                <line
-                                    x1="15.41"
-                                    y1="6.51"
-                                    x2="8.59"
-                                    y2="10.49"
-                                ></line>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- URGENCY -->
+    <section class="bg-red-600 text-white px-4 py-8 text-center">
+        <p class="text-base font-bold">⚠️ Launch pricing is temporary. Price will increase when the launch window closes.</p>
+        <p class="mt-1 text-sm text-red-100">Lock in your access now before the price goes up.</p>
+        <a href="#pricing" class="mt-4 inline-block rounded-full bg-white px-8 py-3 text-sm font-bold text-red-600 transition hover:bg-red-50">
+            Secure My Access Now →
+        </a>
     </section>
 
-    <section class="bg-white">
-        <div
-            class="mx-auto max-w-6xl space-y-3 px-4 py-12 text-lg text-slate-600 md:px-8"
-        >
-            <p class="font-semibold text-slate-900">Disclaimer</p>
-            <p>
-                This product does not guarantee income or business results.
-                Outcomes vary by effort, traffic, positioning, and offer-market
-                fit. Examples or scenarios are illustrative and not promises of
-                future performance.
-            </p>
-            <p>
-                Product names and third-party platform references are used for
-                informational compatibility context only. Publication
-                eligibility and policy compliance are the responsibility of the
-                user.
-            </p>
+    <!-- DISCLAIMER -->
+    <section class="bg-slate-100 px-4 py-10 md:px-8">
+        <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-2">
+            <p class="font-semibold text-slate-600">Disclaimer</p>
+            <p>This product does not guarantee income or business results. Outcomes vary by effort, traffic, positioning, and offer-market fit. Examples are illustrative and not promises of future performance.</p>
+            <p>Product names and third-party platform references (Amazon KDP, Etsy, Gumroad) are used for informational context only. Publication eligibility and policy compliance are the responsibility of the user.</p>
         </div>
     </section>
 </template>

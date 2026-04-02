@@ -178,7 +178,7 @@ class StoryPipelineDispatcher
             return false;
         }
 
-        $isPro = $project->user->feature_tier === FeatureTier::Pro;
+        $isPro = $project->user->feature_tier?->isPro();
 
         if (! $isPro) {
             Log::warning('story.pipeline.video_skip_user_not_pro', [
