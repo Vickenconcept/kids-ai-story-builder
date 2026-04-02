@@ -147,7 +147,15 @@ const flipbookKey = computed(() =>
                     <h2 class="mb-3 text-lg font-medium">Page {{ carouselPage.page_number }}</h2>
                     <div class="grid gap-6 lg:grid-cols-2">
                         <p class="text-sm leading-relaxed">{{ carouselPage.text_content }}</p>
-                        <div v-if="carouselPage.image_url" class="overflow-hidden rounded-lg border">
+                        <div v-if="carouselPage.video_url" class="overflow-hidden rounded-lg border bg-black">
+                            <video
+                                :src="carouselPage.video_url"
+                                controls
+                                playsinline
+                                class="max-h-80 w-full object-contain"
+                            />
+                        </div>
+                        <div v-else-if="carouselPage.image_url" class="overflow-hidden rounded-lg border">
                             <img
                                 :src="carouselPage.image_url"
                                 :alt="`Illustration page ${carouselPage.page_number}`"

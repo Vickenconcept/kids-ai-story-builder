@@ -1050,7 +1050,15 @@ onUnmounted(() => {
                             </div>
                         </div>
                         <div class="flex flex-col gap-3">
-                            <div v-if="currentScrollPage.image_url" class="overflow-hidden rounded-lg border">
+                            <div v-if="currentScrollPage.video_url" class="overflow-hidden rounded-lg border bg-black">
+                                <video
+                                    :src="currentScrollPage.video_url"
+                                    controls
+                                    playsinline
+                                    class="max-h-80 w-full object-contain"
+                                />
+                            </div>
+                            <div v-else-if="currentScrollPage.image_url" class="overflow-hidden rounded-lg border">
                                 <img
                                     :src="currentScrollPage.image_url"
                                     :alt="`Illustration page ${currentScrollPage.page_number}`"
@@ -1063,12 +1071,6 @@ onUnmounted(() => {
                             <p v-else-if="project.include_narration" class="text-muted-foreground text-sm">
                                 Audio pending…
                             </p>
-                            <video
-                                v-if="currentScrollPage.video_url"
-                                :src="currentScrollPage.video_url"
-                                controls
-                                class="w-full max-w-md rounded-lg"
-                            />
                         </div>
                     </div>
                 </article>

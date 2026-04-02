@@ -54,6 +54,22 @@ class GenerateStoryPageVideoJob implements ShouldQueue
             'has_audio_path' => filled($page->audio_path),
         ]);
 
+        if (blank($page->image_path)) {
+            $errors = $page->asset_errors ?? [];
+            $errors['video'] = 'Skipped: page image missing, video requires a generated page image.';
+            $page->update(['asset_errors' => $errors]);
+
+            Log::warning('story.job.video.skipped_missing_image', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+                'page_number' => $page->page_number,
+            ]);
+
+            $dispatcher->afterVideo($page->fresh());
+
+            return;
+        }
+
         $jobRow = $recorder->begin($project, StoryAiJobType::PageVideo, $page, ['stage' => 'video']);
 
         try {
@@ -76,6 +92,19 @@ class GenerateStoryPageVideoJob implements ShouldQueue
             ]);
         } catch (Throwable $e) {
             $recorder->fail($jobRow, $e);
+
+            if ($this->shouldRetry($e)) {
+                Log::warning('story.job.video.retrying', [
+                    'project_id' => $project->id,
+                    'page_id' => $page->id,
+                    'attempt' => $this->attempts(),
+                    'max_tries' => $this->tries,
+                    'error' => $e->getMessage(),
+                ]);
+
+                throw $e;
+            }
+
             $errors = $page->asset_errors ?? [];
             $errors['video'] = $e->getMessage();
             $page->update(['asset_errors' => $errors]);
@@ -87,5 +116,28 @@ class GenerateStoryPageVideoJob implements ShouldQueue
         }
 
         $dispatcher->afterVideo($page->fresh());
+    }
+
+    private function shouldRetry(Throwable $e): bool
+    {
+        if ($this->attempts() >= $this->tries) {
+            return false;
+        }
+
+        $message = strtolower($e->getMessage());
+
+        if (str_contains($message, 'not enough credits')) {
+            return false;
+        }
+
+        return str_contains($message, '502')
+            || str_contains($message, '503')
+            || str_contains($message, '504')
+            || str_contains($message, 'bad gateway')
+            || str_contains($message, 'timed out')
+            || str_contains($message, 'timeout')
+            || str_contains($message, 'connection')
+            || str_contains($message, 'temporarily unavailable')
+            || str_contains($message, 'rate limit');
     }
 }

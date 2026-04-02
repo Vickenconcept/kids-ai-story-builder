@@ -21,4 +21,9 @@ class StoryProjectPolicy
     {
         return $user->id === $storyProject->user_id;
     }
+
+    public function delete(User $user, StoryProject $storyProject): bool
+    {
+        return $user->id === $storyProject->user_id;
+    }
 }

@@ -6,6 +6,7 @@ use App\Contracts\Story\PageVideoGenerator;
 use App\Services\Media\StoryMediaStorage;
 use App\Support\StoryMediaUrl;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\Process\Process;
@@ -44,8 +45,11 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
             try {
                 $audioBytes = Http::timeout(180)->get($audioUrl)->throw()->body();
                 $videoBytes = $this->muxAudio($videoBytes, $audioBytes);
-            } catch (\Throwable) {
-                // Keep the generated video even if optional audio muxing fails.
+            } catch (\Throwable $e) {
+                Log::warning('story.video.mux_audio_failed', [
+                    'error' => $e->getMessage(),
+                ]);
+                // Keep generated video even if optional audio muxing fails.
             }
         }
 
@@ -56,7 +60,7 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
 
     private function createVideoTask(string $apiKey, string $imageUrl, string $pageText): string
     {
-        $duration = (int) config('services.runway.duration_seconds', 5);
+        $duration = (int) config('services.runway.duration_seconds', 10);
         $ratio = (string) config('services.runway.ratio', '1280:720');
         $model = (string) config('services.runway.model', 'gen4_turbo');
 
@@ -64,7 +68,7 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
             'model' => $model,
             'promptImage' => $imageUrl,
             'promptText' => mb_substr(trim($pageText), 0, 400),
-            'duration' => max(5, min(10, $duration)),
+            'duration' => max(5, min(20, $duration)),
             'ratio' => $ratio,
         ];
 
@@ -163,7 +167,7 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         file_put_contents($audioIn, $audioBytes);
 
         $process = new Process([
-            'ffmpeg',
+            (string) config('services.ffmpeg.binary', 'ffmpeg'),
             '-y',
             '-i', $videoIn,
             '-i', $audioIn,

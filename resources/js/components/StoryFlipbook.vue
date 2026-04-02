@@ -223,6 +223,8 @@ const FRONT_FIXED_SHEETS = 2;
 
 type SpreadAudioMode = 'first' | 'sequence';
 type AutoAdvanceMode = 'off' | 'timer' | 'afterAudio';
+type VideoPlaybackMode = 'click' | 'auto';
+type DefaultMediaMode = 'video' | 'image';
 
 const settings = reactive<FlipbookSetupSettings>({
     audioOnFlip: props.playAudioOnFlip,
@@ -237,6 +239,10 @@ const settings = reactive<FlipbookSetupSettings>({
     corners: 'all',
     pagesInDOM: 10,
     bookZoomPercent: 100,
+    videoPlaybackMode: 'click' as VideoPlaybackMode,
+    defaultMediaMode: 'video' as DefaultMediaMode,
+    dragFlipEnabled: true,
+    pageMediaOverrides: {} as Record<string, DefaultMediaMode>,
 });
 
 function localStorageKey(): string {
@@ -257,6 +263,10 @@ function defaultFlipCore(): typeof settings {
         corners: 'all',
         pagesInDOM: 10,
         bookZoomPercent: 100,
+        videoPlaybackMode: 'click',
+        defaultMediaMode: 'video',
+        dragFlipEnabled: true,
+        pageMediaOverrides: {},
     };
 }
 
@@ -299,6 +309,30 @@ function applyFlipPayloadFromServer(o: Record<string, unknown>): void {
 
     if (typeof o.bookZoomPercent === 'number' && o.bookZoomPercent >= 70 && o.bookZoomPercent <= 130) {
         settings.bookZoomPercent = o.bookZoomPercent;
+    }
+
+    if (o.videoPlaybackMode === 'click' || o.videoPlaybackMode === 'auto') {
+        settings.videoPlaybackMode = o.videoPlaybackMode;
+    }
+
+    if (o.defaultMediaMode === 'video' || o.defaultMediaMode === 'image') {
+        settings.defaultMediaMode = o.defaultMediaMode;
+    }
+
+    if (typeof o.dragFlipEnabled === 'boolean') {
+        settings.dragFlipEnabled = o.dragFlipEnabled;
+    }
+
+    if (o.pageMediaOverrides && typeof o.pageMediaOverrides === 'object' && !Array.isArray(o.pageMediaOverrides)) {
+        const next: Record<string, DefaultMediaMode> = {};
+
+        for (const [uuid, mode] of Object.entries(o.pageMediaOverrides as Record<string, unknown>)) {
+            if ((mode === 'video' || mode === 'image') && typeof uuid === 'string' && uuid !== '') {
+                next[uuid] = mode;
+            }
+        }
+
+        settings.pageMediaOverrides = next;
     }
 }
 
@@ -366,6 +400,30 @@ function loadSettings(): void {
         if (typeof o.bookZoomPercent === 'number' && o.bookZoomPercent >= 70 && o.bookZoomPercent <= 130) {
             settings.bookZoomPercent = o.bookZoomPercent;
         }
+
+        if (o.videoPlaybackMode === 'click' || o.videoPlaybackMode === 'auto') {
+            settings.videoPlaybackMode = o.videoPlaybackMode;
+        }
+
+        if (o.defaultMediaMode === 'video' || o.defaultMediaMode === 'image') {
+            settings.defaultMediaMode = o.defaultMediaMode;
+        }
+
+        if (typeof o.dragFlipEnabled === 'boolean') {
+            settings.dragFlipEnabled = o.dragFlipEnabled;
+        }
+
+        if (o.pageMediaOverrides && typeof o.pageMediaOverrides === 'object' && !Array.isArray(o.pageMediaOverrides)) {
+            const next: Record<string, DefaultMediaMode> = {};
+
+            for (const [uuid, mode] of Object.entries(o.pageMediaOverrides as Record<string, unknown>)) {
+                if ((mode === 'video' || mode === 'image') && typeof uuid === 'string' && uuid !== '') {
+                    next[uuid] = mode;
+                }
+            }
+
+            settings.pageMediaOverrides = next;
+        }
     } catch {
         /* ignore */
     }
@@ -397,6 +455,10 @@ function serializeFlipSettingsForServer(): Record<string, string | number | bool
         acceleration: settings.acceleration,
         elevation: settings.elevation,
         bookZoomPercent: settings.bookZoomPercent,
+        videoPlaybackMode: settings.videoPlaybackMode,
+        defaultMediaMode: settings.defaultMediaMode,
+        dragFlipEnabled: settings.dragFlipEnabled,
+        pageMediaOverrides: settings.pageMediaOverrides,
     };
 }
 
@@ -464,6 +526,18 @@ watch(
         if (!enabled && settings.autoAdvance === 'afterAudio') {
             settings.autoAdvance = 'off';
         }
+    },
+);
+
+watch(
+    () => settings.videoPlaybackMode,
+    (mode) => {
+        if (mode === 'auto') {
+            playVideoForSpread(getCurrentView());
+            return;
+        }
+
+        pausePageVideos();
     },
 );
 
@@ -551,6 +625,138 @@ function pauseNarration(): void {
 
     el.onended = null;
     el.pause();
+}
+
+function allPageVideoEls(): HTMLVideoElement[] {
+    if (!flipRoot.value) {
+        return [];
+    }
+
+    return Array.from(
+        flipRoot.value.querySelectorAll('video[data-role="story-page-video"]'),
+    ) as HTMLVideoElement[];
+}
+
+function pausePageVideos(): void {
+    for (const video of allPageVideoEls()) {
+        video.pause();
+    }
+}
+
+function setVideoButtonState(pageUuid: string, playing: boolean): void {
+    if (!flipRoot.value) {
+        return;
+    }
+
+    const selector = `button[data-action="toggle-page-video"][data-page-uuid="${pageUuid}"]`;
+    const button = flipRoot.value.querySelector(selector) as HTMLButtonElement | null;
+
+    if (!button) {
+        return;
+    }
+
+    const label = button.querySelector('span');
+
+    if (playing) {
+        button.classList.add('bg-transparent');
+        button.classList.remove('bg-black/20');
+        if (label) {
+            label.textContent = '⏸ Pause';
+            label.classList.add('opacity-0');
+        }
+    } else {
+        button.classList.remove('bg-transparent');
+        button.classList.add('bg-black/20');
+        if (label) {
+            label.textContent = '▶ Play video';
+            label.classList.remove('opacity-0');
+        }
+    }
+}
+
+function bindVideoOverlayEvents(): void {
+    for (const video of allPageVideoEls()) {
+        const pageUuid = video.getAttribute('data-page-uuid');
+        if (!pageUuid || video.dataset.overlayBound === '1') {
+            continue;
+        }
+
+        video.dataset.overlayBound = '1';
+        video.addEventListener('play', () => setVideoButtonState(pageUuid, true));
+        video.addEventListener('pause', () => setVideoButtonState(pageUuid, false));
+        video.addEventListener('ended', () => {
+            setVideoButtonState(pageUuid, false);
+
+            if (settings.videoPlaybackMode === 'auto' && settings.autoAdvance === 'off') {
+                const view = getCurrentView();
+                if (!viewShowsEndOfBook(view)) {
+                    window.setTimeout(() => nextPage(), 260);
+                }
+            }
+        });
+    }
+}
+
+function playVideoByPageUuid(pageUuid: string): void {
+    if (!flipRoot.value) {
+        return;
+    }
+
+    const selector = `video[data-role="story-page-video"][data-page-uuid="${pageUuid}"]`;
+    const target = flipRoot.value.querySelector(selector) as HTMLVideoElement | null;
+
+    if (!target) {
+        return;
+    }
+
+    for (const video of allPageVideoEls()) {
+        if (video !== target) {
+            video.pause();
+            video.currentTime = 0;
+            const otherUuid = video.getAttribute('data-page-uuid');
+            if (otherUuid) {
+                setVideoButtonState(otherUuid, false);
+            }
+        }
+    }
+
+    void target.play().catch(() => {
+        // Autoplay can be blocked by browser policy; user can use manual play button.
+    });
+}
+
+function playVideoForSpread(view: number[]): void {
+    if (settings.videoPlaybackMode !== 'auto') {
+        return;
+    }
+
+    const indices = storyIndicesInView(view);
+
+    if (indices.length === 0) {
+        return;
+    }
+
+    const pageUuid = props.pages[indices[0]]?.uuid;
+    if (!pageUuid) {
+        return;
+    }
+
+    const page = props.pages[indices[0]];
+    if (!page?.video_url || pageMediaMode(page) !== 'video') {
+        return;
+    }
+
+    window.setTimeout(() => playVideoByPageUuid(pageUuid), 120);
+}
+
+function pageMediaMode(p: FlipbookPage): DefaultMediaMode {
+    const override = settings.pageMediaOverrides?.[p.uuid];
+
+    if (override === 'video' || override === 'image') {
+        return override;
+    }
+
+    return settings.defaultMediaMode;
 }
 
 /** Turn.js `turned` passes (event, page, view); tolerate arity/order bugs and fall back to live view. */
@@ -723,6 +929,7 @@ function getCurrentView(): number[] {
 function onTurning(): void {
     clearAdvanceTimer();
     pauseNarration();
+    pausePageVideos();
 }
 
 function onTurned(_e: unknown, pageOrView?: unknown, viewMaybe?: unknown): void {
@@ -730,6 +937,7 @@ function onTurned(_e: unknown, pageOrView?: unknown, viewMaybe?: unknown): void 
     updateCurrentContentPageNumbers(view);
     emitVisiblePageUuid(view);
     playSpreadNarration(view);
+    playVideoForSpread(view);
     scheduleTimerAdvance(view);
     syncBookHorizontalNudge();
     // Re-mount quiz/game sheets after each page turn
@@ -890,7 +1098,34 @@ async function initTurn(): Promise<void> {
                 Boolean(props.canGeneratePageVideo) && Boolean(p.image_url) && !pageBusy;
 
             if (p.image_url) {
-                const imageWrap = jq('<div class="relative min-h-0 flex-1 bg-muted/30" />').append(
+                const mediaWrap = jq('<div class="relative min-h-0 flex-1 bg-muted/30" />');
+                const showVideo = Boolean(p.video_url) && pageMediaMode(p) === 'video';
+
+                if (showVideo && p.video_url) {
+                    const videoEl = jq('<video />')
+                        .attr('src', p.video_url)
+                        .attr('playsinline', 'true')
+                        .attr('preload', 'metadata')
+                        .attr('data-role', 'story-page-video')
+                        .attr('data-page-uuid', p.uuid)
+                        .addClass('story-flipbook-page-img')
+                        .css({
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                            backgroundColor: '#000',
+                        });
+
+                    mediaWrap.append(videoEl);
+                    mediaWrap.append(
+                        jq(
+                            `<button type="button" class="story-video-play-btn absolute inset-0 z-20 grid place-items-center bg-black/20 transition hover:bg-black/30" data-action="toggle-page-video" data-page-uuid="${p.uuid}" aria-label="Play video for page ${p.page_number}">` +
+                                '<span class="inline-flex items-center justify-center rounded-full bg-background/95 px-4 py-2 text-sm font-semibold shadow-lg">▶ Play video</span>' +
+                            '</button>',
+                        ),
+                    );
+                } else {
+                    mediaWrap.append(
                         jq('<img />')
                             .attr('src', p.image_url)
                             .attr('alt', `Page ${p.page_number}`)
@@ -902,6 +1137,16 @@ async function initTurn(): Promise<void> {
                                 objectFit: 'contain',
                             }),
                     );
+                }
+
+                if (p.video_url) {
+                    const mediaLabel = showVideo ? 'Show image' : 'Show video';
+                    mediaWrap.append(
+                        jq(
+                            `<button type="button" class="absolute top-2 left-1/2 z-20 -translate-x-1/2 rounded-md border border-border/80 bg-background/90 px-2.5 py-1 text-[11px] font-semibold shadow-sm backdrop-blur-sm transition hover:bg-background" data-action="toggle-page-media" data-page-uuid="${p.uuid}">${mediaLabel}</button>`,
+                        ),
+                    );
+                }
 
                 if (props.showPageVideoAction) {
                     const disabledReason = !props.canGeneratePageVideo
@@ -929,10 +1174,10 @@ async function initTurn(): Promise<void> {
                         }
                     }
 
-                    imageWrap.append(button);
+                    mediaWrap.append(button);
                 }
 
-                inner.append(imageWrap);
+                inner.append(mediaWrap);
             }
 
             inner.append(
@@ -992,7 +1237,7 @@ async function initTurn(): Promise<void> {
         acceleration: useAcceleration,
         display: settings.display,
         elevation: settings.elevation,
-        corners: settings.corners,
+        corners: settings.dragFlipEnabled ? settings.corners : 'none',
         pages: totalRenderedPages,
         when: {
             turning: onTurning,
@@ -1003,6 +1248,9 @@ async function initTurn(): Promise<void> {
     ready.value = true;
 
     $root.on('pointerdown.pageVideoAction mousedown.pageVideoAction touchstart.pageVideoAction', '[data-action="generate-page-video"]', (e: unknown) => {
+        (e as Event).stopPropagation();
+    });
+    $root.on('pointerdown.pageMediaToggle mousedown.pageMediaToggle touchstart.pageMediaToggle', '[data-action="toggle-page-media"]', (e: unknown) => {
         (e as Event).stopPropagation();
     });
     $root.on('click.pageVideoAction', '[data-action="generate-page-video"]', (e: unknown) => {
@@ -1017,11 +1265,60 @@ async function initTurn(): Promise<void> {
 
         emit('generate-page-video', pageUuid);
     });
+    $root.on('click.pageMediaToggle', '[data-action="toggle-page-media"]', (e: unknown) => {
+        (e as Event).preventDefault();
+        (e as Event).stopPropagation();
 
+        const target = e.currentTarget as HTMLElement | null;
+        const pageUuid = target?.getAttribute('data-page-uuid');
+
+        if (!pageUuid) {
+            return;
+        }
+
+        const current = settings.pageMediaOverrides?.[pageUuid] ?? settings.defaultMediaMode;
+        const next: DefaultMediaMode = current === 'video' ? 'image' : 'video';
+        settings.pageMediaOverrides = {
+            ...(settings.pageMediaOverrides ?? {}),
+            [pageUuid]: next,
+        };
+        scheduleRebuildTurn();
+    });
+    $root.on('pointerdown.pageVideoToggle mousedown.pageVideoToggle touchstart.pageVideoToggle', '[data-action="toggle-page-video"]', (e: unknown) => {
+        (e as Event).stopPropagation();
+    });
+    $root.on('click.pageVideoToggle', '[data-action="toggle-page-video"]', (e: unknown) => {
+        (e as Event).preventDefault();
+        (e as Event).stopPropagation();
+
+        const target = e.currentTarget as HTMLElement | null;
+        const pageUuid = target?.getAttribute('data-page-uuid');
+
+        if (!pageUuid || !flipRoot.value) {
+            return;
+        }
+
+        const selector = `video[data-role="story-page-video"][data-page-uuid="${pageUuid}"]`;
+        const video = flipRoot.value.querySelector(selector) as HTMLVideoElement | null;
+
+        if (!video) {
+            return;
+        }
+
+        if (video.paused) {
+            playVideoByPageUuid(pageUuid);
+        } else {
+            video.pause();
+            setVideoButtonState(pageUuid, false);
+        }
+    });
+
+    bindVideoOverlayEvents();
     const currentView = $root.turn('view') as unknown as number[];
     updateCurrentContentPageNumbers(currentView);
     emitVisiblePageUuid(currentView);
     playSpreadNarration(currentView);
+    playVideoForSpread(currentView);
     scheduleTimerAdvance(currentView);
 
     await nextTick();
@@ -1168,6 +1465,8 @@ watch(
         settings.gradients,
         settings.acceleration,
         settings.elevation,
+        settings.dragFlipEnabled,
+        settings.defaultMediaMode,
     ],
     () => {
         if (!jq || !flipRoot.value) {
@@ -1176,6 +1475,18 @@ watch(
 
         scheduleRebuildTurn();
     },
+);
+
+watch(
+    () => settings.pageMediaOverrides,
+    () => {
+        if (!jq || !flipRoot.value) {
+            return;
+        }
+
+        scheduleRebuildTurn();
+    },
+    { deep: true },
 );
 
 watch(

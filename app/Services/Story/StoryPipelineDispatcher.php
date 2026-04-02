@@ -135,6 +135,7 @@ class StoryPipelineDispatcher
     public function afterAudio(StoryPage $page): void
     {
         $project = $page->project->fresh(['user']);
+        $shouldQueueVideo = $this->shouldQueueVideo($project);
 
         Log::info('story.pipeline.after_audio', [
             'project_id' => $project->id,
@@ -144,7 +145,7 @@ class StoryPipelineDispatcher
             'user_feature_tier' => $project->user?->feature_tier?->value,
         ]);
 
-        if ($this->shouldQueueVideo($project)) {
+        if ($shouldQueueVideo && filled($page->image_path)) {
             Log::info('story.pipeline.queue_video_after_audio', [
                 'project_id' => $project->id,
                 'page_id' => $page->id,
@@ -153,6 +154,14 @@ class StoryPipelineDispatcher
                 ->onQueue(config('story.queues.video'));
 
             return;
+        }
+
+        if ($shouldQueueVideo && blank($page->image_path)) {
+            Log::warning('story.pipeline.video_skip_missing_image_after_audio', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+                'page_number' => $page->page_number,
+            ]);
         }
 
         Log::info('story.pipeline.complete_after_audio', [

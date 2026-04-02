@@ -63,6 +63,11 @@ class UpdateStoryProjectPresentationRequest extends FormRequest
             'flip_settings.acceleration' => ['sometimes', 'boolean'],
             'flip_settings.elevation' => ['sometimes', 'integer', 'min:0', 'max:120'],
             'flip_settings.bookZoomPercent' => ['sometimes', 'integer', 'min:70', 'max:130'],
+            'flip_settings.videoPlaybackMode' => ['sometimes', Rule::in(['click', 'auto'])],
+            'flip_settings.defaultMediaMode' => ['sometimes', Rule::in(['video', 'image'])],
+            'flip_settings.dragFlipEnabled' => ['sometimes', 'boolean'],
+            'flip_settings.pageMediaOverrides' => ['sometimes', 'array'],
+            'flip_settings.pageMediaOverrides.*' => ['sometimes', Rule::in(['video', 'image'])],
             'flip_settings.readMode' => ['sometimes', Rule::in(['flip', 'scroll'])],
         ];
     }

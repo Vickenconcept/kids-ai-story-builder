@@ -74,6 +74,19 @@ class GenerateStoryPageImageJob implements ShouldQueue
             ]);
         } catch (Throwable $e) {
             $recorder->fail($jobRow, $e);
+
+            if ($this->shouldRetry($e)) {
+                Log::warning('story.job.image.retrying', [
+                    'project_id' => $project->id,
+                    'page_id' => $page->id,
+                    'attempt' => $this->attempts(),
+                    'max_tries' => $this->tries,
+                    'error' => $e->getMessage(),
+                ]);
+
+                throw $e;
+            }
+
             $errors = $page->asset_errors ?? [];
             $errors['image'] = $e->getMessage();
             $page->update(['asset_errors' => $errors]);
@@ -85,5 +98,24 @@ class GenerateStoryPageImageJob implements ShouldQueue
         }
 
         $dispatcher->afterImage($page->fresh());
+    }
+
+    private function shouldRetry(Throwable $e): bool
+    {
+        if ($this->attempts() >= $this->tries) {
+            return false;
+        }
+
+        $message = strtolower($e->getMessage());
+
+        return str_contains($message, '502')
+            || str_contains($message, '503')
+            || str_contains($message, '504')
+            || str_contains($message, 'bad gateway')
+            || str_contains($message, 'timed out')
+            || str_contains($message, 'timeout')
+            || str_contains($message, 'connection')
+            || str_contains($message, 'temporarily unavailable')
+            || str_contains($message, 'rate limit');
     }
 }
