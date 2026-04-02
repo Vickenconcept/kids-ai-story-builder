@@ -244,6 +244,24 @@ const settings = reactive<FlipbookSetupSettings>({
     dragFlipEnabled: true,
     pageMediaOverrides: {} as Record<string, DefaultMediaMode>,
 });
+let suppressSettingsSync = false;
+let suppressDepth = 0;
+let lastPersistedFlipSettingsJson = '';
+
+function withSuppressedSettingsSync(fn: () => void): void {
+    suppressDepth += 1;
+    suppressSettingsSync = true;
+    try {
+        fn();
+    } finally {
+        // Keep suppression through the next microtask so watcher callbacks
+        // triggered by this assignment burst cannot immediately persist again.
+        queueMicrotask(() => {
+            suppressDepth = Math.max(0, suppressDepth - 1);
+            suppressSettingsSync = suppressDepth > 0;
+        });
+    }
+}
 
 function localStorageKey(): string {
     return props.storyUuid ? `${STORAGE_KEY}:${props.storyUuid}` : STORAGE_KEY;
@@ -271,6 +289,7 @@ function defaultFlipCore(): typeof settings {
 }
 
 function applyFlipPayloadFromServer(o: Record<string, unknown>): void {
+    withSuppressedSettingsSync(() => {
     if (typeof o.audioOnFlip === 'boolean') {
         settings.audioOnFlip = o.audioOnFlip;
     }
@@ -334,6 +353,7 @@ function applyFlipPayloadFromServer(o: Record<string, unknown>): void {
 
         settings.pageMediaOverrides = next;
     }
+    });
 }
 
 /** Defaults → optional per-story localStorage (author only) → server flip_settings (author & public). */
@@ -467,15 +487,29 @@ function schedulePersistFlipSettingsToServer(): void {
         return;
     }
 
+    const payload = serializeFlipSettingsForServer();
+    const payloadJson = JSON.stringify(payload);
+    if (payloadJson === lastPersistedFlipSettingsJson) {
+        return;
+    }
+
     if (persistFlipTimer !== null) {
         clearTimeout(persistFlipTimer);
     }
 
     persistFlipTimer = window.setTimeout(() => {
         persistFlipTimer = null;
+        const latestPayload = serializeFlipSettingsForServer();
+        const latestPayloadJson = JSON.stringify(latestPayload);
+
+        if (latestPayloadJson === lastPersistedFlipSettingsJson) {
+            return;
+        }
+
+        lastPersistedFlipSettingsJson = latestPayloadJson;
         router.patch(
             `/stories/${props.storyUuid}`,
-            { flip_settings: serializeFlipSettingsForServer() },
+            { flip_settings: latestPayload },
             { preserveScroll: true },
         );
     }, 450);
@@ -484,6 +518,10 @@ function schedulePersistFlipSettingsToServer(): void {
 watch(
     () => ({ ...settings }),
     () => {
+        if (suppressSettingsSync) {
+            return;
+        }
+
         saveSettings();
         schedulePersistFlipSettingsToServer();
     },
@@ -494,6 +532,7 @@ watch(
     () => props.flipSettings,
     (nextSettings) => {
         if (nextSettings && typeof nextSettings === 'object' && !Array.isArray(nextSettings)) {
+            lastPersistedFlipSettingsJson = JSON.stringify(nextSettings);
             applyFlipPayloadFromServer(nextSettings as Record<string, unknown>);
         }
     },
@@ -999,6 +1038,20 @@ function syncBookHorizontalNudge(): void {
     }
 }
 
+function applyDragFlipInteraction(): void {
+    if (!flipRoot.value || !jq || !ready.value) {
+        return;
+    }
+
+    try {
+        // When drag-flip is disabled, block pointer/touch page turning.
+        // Programmatic turning (buttons/keyboard handlers) still works.
+        jq(flipRoot.value).turn('disable', !settings.dragFlipEnabled);
+    } catch {
+        /* noop */
+    }
+}
+
 const scalerStyle = computed(() => ({
     transform: `scale(${settings.bookZoomPercent / 100})`,
     transformOrigin: 'center center',
@@ -1246,6 +1299,7 @@ async function initTurn(): Promise<void> {
     });
 
     ready.value = true;
+    applyDragFlipInteraction();
 
     $root.on('pointerdown.pageVideoAction mousedown.pageVideoAction touchstart.pageVideoAction', '[data-action="generate-page-video"]', (e: unknown) => {
         (e as Event).stopPropagation();
@@ -1465,7 +1519,6 @@ watch(
         settings.gradients,
         settings.acceleration,
         settings.elevation,
-        settings.dragFlipEnabled,
         settings.defaultMediaMode,
     ],
     () => {
@@ -1474,6 +1527,13 @@ watch(
         }
 
         scheduleRebuildTurn();
+    },
+);
+
+watch(
+    () => settings.dragFlipEnabled,
+    () => {
+        applyDragFlipInteraction();
     },
 );
 
