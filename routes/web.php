@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CreditPackController;
 use App\Http\Controllers\Billing\CreditPurchaseController;
 use App\Http\Controllers\Story\PublicStoryController;
 use App\Http\Controllers\Story\StoryPageController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Story\StoryProjectController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -20,7 +21,7 @@ Route::inertia('/oto2', 'Oto2')->name('oto2');
 Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('stories.public.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::prefix('credits')->name('credits.')->group(function () {
         Route::get('/', [CreditPurchaseController::class, 'index'])->name('index');

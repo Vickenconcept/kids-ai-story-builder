@@ -58,24 +58,73 @@ class StoryProjectController extends Controller
     }
     public function index(Request $request): Response
     {
-        $projects = StoryProject::query()
-            ->where('user_id', $request->user()->id)
-            ->latest()
-            ->get([
-                'id',
-                'uuid',
-                'title',
-                'topic',
-                'status',
-                'page_count',
-                'pages_completed',
-                'created_at',
-                'updated_at',
-            ]);
+        $userId = $request->user()->id;
+
+        $query = StoryProject::query()
+            ->where('user_id', $userId)
+            ->latest();
+
+        if ($request->filled('status') && in_array($request->input('status'), ['draft', 'processing', 'ready', 'failed'], true)) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('search')) {
+            $q = '%'.trim((string) $request->input('search')).'%';
+            $query->where(fn ($b) => $b->where('title', 'like', $q)->orWhere('topic', 'like', $q));
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->input('date_from'));
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->input('date_to'));
+        }
+
+        $projects = $query->get([
+            'id', 'uuid', 'title', 'topic', 'status', 'page_count', 'pages_completed',
+            'include_narration', 'include_video', 'cover_front', 'created_at', 'updated_at',
+        ])->map(fn ($p) => [
+            'id'               => $p->id,
+            'uuid'             => $p->uuid,
+            'title'            => $p->title,
+            'topic'            => $p->topic,
+            'status'           => $p->status->value,
+            'page_count'       => $p->page_count,
+            'pages_completed'  => $p->pages_completed,
+            'include_narration'=> (bool) $p->include_narration,
+            'include_video'    => (bool) $p->include_video,
+            'cover_url'        => $this->resolveCoverThumbnail($p->cover_front),
+            'created_at'       => $p->created_at->format('M j, Y'),
+            'updated_at'       => $p->updated_at->diffForHumans(),
+        ]);
+
+        $all = StoryProject::query()->where('user_id', $userId);
+        $stats = [
+            'total'      => (clone $all)->count(),
+            'ready'      => (clone $all)->where('status', StoryProjectStatus::Ready)->count(),
+            'processing' => (clone $all)->where('status', StoryProjectStatus::Processing)->count(),
+            'draft'      => (clone $all)->where('status', StoryProjectStatus::Draft)->count(),
+            'failed'     => (clone $all)->where('status', StoryProjectStatus::Failed)->count(),
+        ];
 
         return Inertia::render('Stories/Index', [
             'projects' => $projects,
+            'stats'    => $stats,
+            'filters'  => $request->only(['status', 'search', 'date_from', 'date_to']),
         ]);
+    }
+
+    private function resolveCoverThumbnail(?array $cover): ?string
+    {
+        if (! is_array($cover) || empty($cover)) {
+            return null;
+        }
+        $kind = strtolower((string) ($cover['kind'] ?? ''));
+        if (in_array($kind, ['image', 'gif', 'ai_image'], true) && ! empty($cover['path'])) {
+            return StoryMediaUrl::resolve((string) $cover['path']);
+        }
+        return null;
     }
 
     public function create(Request $request): Response

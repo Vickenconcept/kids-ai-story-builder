@@ -363,231 +363,401 @@ const illustrationStyleOptions = [
     <Head title="Create story" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="mx-auto flex max-w-2xl flex-col gap-8 p-4">
-            <div>
-                <h1 class="text-2xl font-semibold tracking-tight">New story project</h1>
-                <p class="text-muted-foreground mt-1 text-sm">
-                    Text runs first; images, audio, and optional video are queued independently per page.
-                </p>
+        <div class="min-h-full bg-muted/30 flex flex-col gap-6 p-4 md:p-6 dark:bg-muted/10">
+
+            <!-- Page header -->
+            <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">New Story Project</h1>
+                    <p class="text-muted-foreground mt-1 text-sm">
+                        AI writes the text first, then queues illustrations, narration and video per page.
+                    </p>
+                </div>
+                <Button variant="outline" as-child size="sm">
+                    <Link href="/stories">← Back to Stories</Link>
+                </Button>
             </div>
 
-            <div
-                v-if="isElite"
-                class="grid gap-4 sm:grid-cols-2"
-                :class="creationMode === 'none' ? 'mx-auto w-full max-w-3xl' : ''"
-            >
+            <!-- Elite mode chooser -->
+            <div v-if="isElite" class="grid gap-4 sm:grid-cols-2 sm:max-w-xl mx-auto w-full">
                 <button
                     type="button"
-                    class="rounded-xl border p-6 text-left transition-colors md:min-h-40"
-                    :class="creationMode === 'manual' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/30'"
+                    class="group relative rounded-2xl border-2 p-5 text-left transition-all"
+                    :class="creationMode === 'manual'
+                        ? 'border-violet-500 bg-violet-50/60 dark:bg-violet-950/20'
+                        : 'border-border hover:border-violet-300 hover:bg-muted/30'"
                     @click="setManualMode"
                 >
-                    <p class="text-base font-semibold">Enter Prompt Manually</p>
-                    <p class="text-muted-foreground mt-2 text-sm">
-                        Full control. Use the form below to customize every setting.
-                    </p>
+                    <div class="mb-2 flex size-9 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/40">
+                        <svg class="size-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </div>
+                    <p class="font-semibold">Manual Prompt</p>
+                    <p class="text-muted-foreground mt-1 text-sm">Full control — fill in every field yourself.</p>
+                    <div v-if="creationMode === 'manual'" class="absolute right-3 top-3 size-5 rounded-full bg-violet-500 text-white grid place-items-center">
+                        <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
                 </button>
 
                 <button
-                    v-if="isElite"
                     type="button"
-                    class="rounded-xl border p-6 text-left transition-colors md:min-h-40"
-                    :class="creationMode === 'template' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/30'"
+                    class="group relative rounded-2xl border-2 p-5 text-left transition-all"
+                    :class="creationMode === 'template'
+                        ? 'border-violet-500 bg-violet-50/60 dark:bg-violet-950/20'
+                        : 'border-border hover:border-violet-300 hover:bg-muted/30'"
                     @click="setTemplateMode"
                 >
-                    <p class="text-base font-semibold">Create From Template</p>
-                    <p class="text-muted-foreground mt-2 text-sm">
-                        Pick from ready-made niches and media profiles with credit estimates.
-                    </p>
+                    <div class="mb-2 flex size-9 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/40">
+                        <svg class="size-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zm12 0a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+                    </div>
+                    <p class="font-semibold">From Template</p>
+                    <p class="text-muted-foreground mt-1 text-sm">Pick a ready-made niche with credit estimates.</p>
+                    <div v-if="creationMode === 'template'" class="absolute right-3 top-3 size-5 rounded-full bg-violet-500 text-white grid place-items-center">
+                        <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
                 </button>
             </div>
 
             <p v-if="isElite && creationMode === 'none'" class="text-muted-foreground text-center text-sm">
-                Choose how you want to start: manual prompt or template.
+                Choose a creation mode above to continue.
             </p>
 
-            <div v-if="isElite && creationMode === 'template'" class="rounded-lg border p-4">
-                <p class="text-sm font-semibold">Template mode selected</p>
-                <p v-if="selectedTemplate" class="text-muted-foreground mt-1 text-xs">
-                    Using template: <span class="font-medium text-foreground">{{ selectedTemplate.name }}</span>
-                    ({{ mediaProfileLabel(selectedTemplate.media_profile) }})
-                </p>
-                <p v-else class="text-destructive mt-1 text-xs">
-                    No template selected yet. Choose one to continue.
-                </p>
-                <div class="mt-3">
-                    <Button type="button" variant="outline" @click="isTemplateDialogOpen = true">
-                        Choose Template
-                    </Button>
+            <!-- Template selected banner -->
+            <div
+                v-if="isElite && creationMode === 'template'"
+                class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50/60 p-4 dark:border-violet-800/40 dark:bg-violet-950/20"
+            >
+                <div>
+                    <p class="text-sm font-semibold text-violet-800 dark:text-violet-300">
+                        {{ selectedTemplate ? `Template: ${selectedTemplate.name}` : 'No template selected yet' }}
+                    </p>
+                    <p v-if="selectedTemplate" class="text-xs text-violet-700/80 dark:text-violet-400 mt-0.5">
+                        {{ mediaProfileLabel(selectedTemplate.media_profile) }} · {{ selectedTemplate.page_count }} pages
+                    </p>
+                    <p v-else class="text-xs text-destructive mt-0.5">Select a template to continue.</p>
                 </div>
+                <Button type="button" variant="outline" size="sm" @click="isTemplateDialogOpen = true">
+                    {{ selectedTemplate ? 'Change Template' : 'Choose Template' }}
+                </Button>
             </div>
 
-            <form v-if="showForm" class="flex flex-col gap-6" @submit.prevent="submit">
-                <div class="grid gap-2">
-                    <Label for="title">Title</Label>
-                    <Input id="title" v-model="form.title" placeholder="e.g. Luna and the Lost Stars" required />
-                    <p class="text-muted-foreground text-xs">Give your story a short, catchy title.</p>
-                    <p v-if="form.errors.title" class="text-destructive text-sm">
-                        {{ form.errors.title }}
-                    </p>
-                </div>
+            <!-- Main form + sidebar -->
+            <form v-if="showForm" class="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8" @submit.prevent="submit">
 
-                <div class="grid gap-2">
-                    <Label for="topic">Topic</Label>
-                    <Input id="topic" v-model="form.topic" placeholder="e.g. Friendship, planets, and teamwork" required />
-                    <p class="text-muted-foreground text-xs">Describe what the story should be about.</p>
-                </div>
+                <!-- Left: form fields -->
+                <div class="flex flex-1 flex-col gap-6 min-w-0">
 
-                <div class="grid gap-2 sm:grid-cols-2 sm:gap-4">
-                    <div class="grid gap-2">
-                        <Label for="lesson_type">Lesson type</Label>
-                        <select
-                            id="lesson_type"
-                            v-model="form.lesson_type"
-                            class="border-input bg-background h-10 rounded-md border px-3 text-sm"
-                        >
-                            <option v-for="opt in lessonTypeOptions" :key="opt.value" :value="opt.value">
-                                {{ opt.label }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="grid gap-2">
-                        <Label for="age_group">Age group</Label>
-                        <select
-                            id="age_group"
-                            v-model="form.age_group"
-                            class="border-input bg-background h-10 rounded-md border px-3 text-sm"
-                        >
-                            <option v-for="opt in ageGroupOptions" :key="opt.value" :value="opt.value">
-                                {{ opt.label }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid gap-2 sm:grid-cols-2 sm:gap-4">
-                    <div class="grid gap-2">
-                        <Label for="page_count">Pages</Label>
-                        <Input
-                            id="page_count"
-                            v-model.number="form.page_count"
-                            type="number"
-                            min="2"
-                            max="15"
-                            placeholder="2-15"
-                            required
-                            @input="normalizePageCount"
-                        />
-                        <p class="text-muted-foreground text-xs">Choose between 2 and 15 pages.</p>
-                        <p v-if="form.errors.page_count" class="text-destructive text-sm">
-                            {{ form.errors.page_count }}
-                        </p>
-                    </div>
-                    <div class="grid gap-2">
-                        <Label for="illustration_style">Illustration style</Label>
-                        <select
-                            id="illustration_style"
-                            v-model="form.illustration_style"
-                            class="border-input bg-background h-10 rounded-md border px-3 text-sm"
-                        >
-                            <option v-for="opt in illustrationStyleOptions" :key="opt.value" :value="opt.value">
-                                {{ opt.label }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-4 rounded-lg border p-4">
-                    <div class="rounded-lg border border-amber-300/60 bg-amber-50/60 p-3 text-sm">
-                        <p class="font-semibold text-amber-900">Credits balance: {{ props.storyCredits }}</p>
-                        <p class="mt-1 text-xs text-amber-900/80">
-                            Estimated total for this setup: {{ breakdown.total }}
-                            <span v-if="canSubmit">(remaining: {{ remainingCredits }})</span>
-                            <span v-else>(short by {{ Math.abs(remainingCredits) }})</span>
-                        </p>
-                        <ul class="mt-2 space-y-1 text-xs text-amber-900/80">
-                            <li>Text: {{ breakdown.text }} (fixed)</li>
-                            <li>Images: {{ breakdown.image }} ({{ pages }} x {{ costs.image }})</li>
-                            <li>Audio: {{ breakdown.audio }} <span v-if="form.include_narration">({{ pages }} x {{ costs.audio }})</span></li>
-                            <li>Video: {{ breakdown.video }} <span v-if="isPro && form.include_video">({{ pages }} x {{ costs.video }})</span></li>
-                        </ul>
+                    <!-- Section: Story basics -->
+                    <div class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
+                        <h2 class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            Story Basics
+                        </h2>
+                        <div class="flex flex-col gap-4">
+                            <div class="grid gap-1.5">
+                                <Label for="title" class="font-medium">Title</Label>
+                                <Input
+                                    id="title"
+                                    v-model="form.title"
+                                    placeholder="e.g. Luna and the Lost Stars"
+                                    class="h-11"
+                                    required
+                                />
+                                <p v-if="form.errors.title" class="text-destructive text-xs">{{ form.errors.title }}</p>
+                                <p v-else class="text-muted-foreground text-xs">Give your story a short, catchy title.</p>
+                            </div>
+                            <div class="grid gap-1.5">
+                                <Label for="topic" class="font-medium">Topic / Premise</Label>
+                                <textarea
+                                    id="topic"
+                                    v-model="form.topic"
+                                    placeholder="e.g. A young girl discovers a hidden world beneath the ocean and learns about bravery and friendship."
+                                    rows="3"
+                                    class="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-lg border px-3 py-2 text-sm resize-none focus-visible:outline-none focus-visible:ring-1"
+                                    required
+                                />
+                                <p class="text-muted-foreground text-xs">Describe what the story should be about.</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <label class="hover:bg-muted/40 flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-border/60 p-2.5 transition-colors">
-                        <span>Include quizzes (per page)</span>
-                        <span class="relative inline-flex">
-                            <input v-model="form.include_quiz" type="checkbox" class="peer sr-only" />
-                            <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
-                            </span>
-                        </span>
-                    </label>
-                    <label class="hover:bg-muted/40 flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-border/60 p-2.5 transition-colors">
-                        <span>Include narration (TTS) - {{ pages * costs.audio }} credits</span>
-                        <span class="relative inline-flex">
-                            <input v-model="form.include_narration" :disabled="!form.include_narration && !canEnableNarration" type="checkbox" class="peer sr-only" />
-                            <span class="bg-muted peer-checked:bg-primary/80 peer-disabled:opacity-55 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
-                            </span>
-                        </span>
-                    </label>
-                    <label v-if="isPro" class="hover:bg-muted/40 flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-border/60 p-2.5 transition-colors">
-                        <span>Include page video (Pro) - {{ pages * costs.video }} credits</span>
-                        <span class="relative inline-flex">
-                            <input v-model="form.include_video" :disabled="!form.include_video && !canEnableVideo" type="checkbox" class="peer sr-only" />
-                            <span class="bg-muted peer-checked:bg-primary/80 peer-disabled:opacity-55 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
-                            </span>
-                        </span>
-                    </label>
-                    <p v-if="isPro && !canEnableVideo" class="text-destructive text-xs">
-                        Not enough credits to enable video for {{ pages }} pages. You can afford up to {{ maxPagesWithVideo }} page(s) with video.
-                    </p>
-                    <p v-if="!form.include_narration && !canEnableNarration" class="text-destructive text-xs">
-                        Not enough credits to enable narration for {{ pages }} pages. You can afford up to {{ maxPagesWithNarration }} page(s) with narration.
-                    </p>
-                    <p v-else class="text-muted-foreground text-xs">
-                        Video generation is available on the Pro tier.
-                    </p>
+                    <!-- Section: Story settings -->
+                    <div class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
+                        <h2 class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Story Settings
+                        </h2>
+                        <div class="flex flex-col gap-5">
+
+                            <!-- Lesson + Age row -->
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div class="grid gap-1.5">
+                                    <Label for="lesson_type" class="font-medium">Lesson Type</Label>
+                                    <select
+                                        id="lesson_type"
+                                        v-model="form.lesson_type"
+                                        class="border-input bg-background focus-visible:ring-ring h-11 w-full rounded-lg border px-3 text-sm focus-visible:outline-none focus-visible:ring-1"
+                                    >
+                                        <option v-for="opt in lessonTypeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+                                    </select>
+                                </div>
+                                <div class="grid gap-1.5">
+                                    <Label class="font-medium">Age Group</Label>
+                                    <div class="flex gap-2 flex-wrap">
+                                        <button
+                                            v-for="opt in ageGroupOptions"
+                                            :key="opt.value"
+                                            type="button"
+                                            class="rounded-lg border px-3 py-2 text-sm transition-all"
+                                            :class="form.age_group === opt.value
+                                                ? 'border-violet-500 bg-violet-50 text-violet-700 font-semibold dark:bg-violet-900/30 dark:text-violet-300'
+                                                : 'border-border hover:border-violet-300 hover:bg-muted/30'"
+                                            @click="form.age_group = opt.value"
+                                        >
+                                            {{ opt.label }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Page count stepper -->
+                            <div class="grid gap-1.5">
+                                <Label class="font-medium">Number of Pages</Label>
+                                <div class="flex items-center gap-3">
+                                    <button
+                                        type="button"
+                                        class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border text-lg font-bold transition-colors hover:bg-muted disabled:opacity-40"
+                                        :disabled="form.page_count <= 2"
+                                        @click="form.page_count = Math.max(2, form.page_count - 1)"
+                                    >−</button>
+                                    <div class="flex flex-col items-center gap-0.5 min-w-16">
+                                        <span class="text-2xl font-bold">{{ form.page_count }}</span>
+                                        <span class="text-muted-foreground text-xs">pages</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border text-lg font-bold transition-colors hover:bg-muted disabled:opacity-40"
+                                        :disabled="form.page_count >= 15"
+                                        @click="form.page_count = Math.min(15, form.page_count + 1)"
+                                    >+</button>
+                                    <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                                        <div
+                                            class="h-full rounded-full bg-violet-500 transition-all"
+                                            :style="{ width: `${((form.page_count - 2) / 13) * 100}%` }"
+                                        />
+                                    </div>
+                                    <span class="text-muted-foreground text-xs shrink-0">max 15</span>
+                                </div>
+                                <p v-if="form.errors.page_count" class="text-destructive text-xs">{{ form.errors.page_count }}</p>
+                            </div>
+
+                            <!-- Illustration style -->
+                            <div class="grid gap-1.5">
+                                <Label class="font-medium">Illustration Style</Label>
+                                <div class="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                                    <button
+                                        v-for="opt in illustrationStyleOptions"
+                                        :key="opt.value"
+                                        type="button"
+                                        class="rounded-xl border-2 px-3 py-2.5 text-center text-xs font-medium transition-all"
+                                        :class="form.illustration_style === opt.value
+                                            ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300'
+                                            : 'border-border hover:border-violet-300 hover:bg-muted/30'"
+                                        @click="form.illustration_style = opt.value"
+                                    >
+                                        {{ opt.label }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Features / toggles -->
+                    <div class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
+                        <h2 class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                            Features
+                        </h2>
+                        <div class="flex flex-col gap-3">
+
+                            <!-- Quizzes toggle -->
+                            <label class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border/60 p-4 transition-colors hover:bg-muted/30">
+                                <div>
+                                    <p class="text-sm font-medium">Include Quizzes</p>
+                                    <p class="text-muted-foreground text-xs mt-0.5">Add a quiz question at the end of each page</p>
+                                </div>
+                                <span class="relative inline-flex shrink-0">
+                                    <input v-model="form.include_quiz" type="checkbox" class="peer sr-only" />
+                                    <span class="bg-muted peer-checked:bg-violet-500 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                        <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                    </span>
+                                </span>
+                            </label>
+
+                            <!-- Narration toggle -->
+                            <label class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border/60 p-4 transition-colors hover:bg-muted/30">
+                                <div>
+                                    <p class="text-sm font-medium">
+                                        Include Narration
+                                        <span class="ml-1.5 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                            {{ pages * costs.audio }} credits
+                                        </span>
+                                    </p>
+                                    <p class="text-muted-foreground text-xs mt-0.5">AI text-to-speech audio for every page</p>
+                                    <p v-if="!form.include_narration && !canEnableNarration" class="text-destructive text-xs mt-1">
+                                        Not enough credits — max {{ maxPagesWithNarration }} pages with narration
+                                    </p>
+                                </div>
+                                <span class="relative inline-flex shrink-0">
+                                    <input v-model="form.include_narration" :disabled="!form.include_narration && !canEnableNarration" type="checkbox" class="peer sr-only" />
+                                    <span class="bg-muted peer-checked:bg-blue-500 peer-disabled:opacity-50 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                        <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                    </span>
+                                </span>
+                            </label>
+
+                            <!-- Video toggle (Pro) -->
+                            <label
+                                v-if="isPro"
+                                class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border/60 p-4 transition-colors hover:bg-muted/30"
+                            >
+                                <div>
+                                    <p class="text-sm font-medium flex items-center gap-1.5">
+                                        Include Page Video
+                                        <span class="rounded-full bg-violet-100 px-2 py-0.5 text-xs text-violet-700 dark:bg-violet-900/30 dark:text-violet-400">Pro</span>
+                                        <span class="rounded-full bg-violet-100 px-2 py-0.5 text-xs text-violet-700 dark:bg-violet-900/30 dark:text-violet-400">
+                                            {{ pages * costs.video }} credits
+                                        </span>
+                                    </p>
+                                    <p class="text-muted-foreground text-xs mt-0.5">AI-generated video for each illustrated page</p>
+                                    <p v-if="!canEnableVideo" class="text-destructive text-xs mt-1">
+                                        Not enough credits — max {{ maxPagesWithVideo }} pages with video
+                                    </p>
+                                </div>
+                                <span class="relative inline-flex shrink-0">
+                                    <input v-model="form.include_video" :disabled="!form.include_video && !canEnableVideo" type="checkbox" class="peer sr-only" />
+                                    <span class="bg-muted peer-checked:bg-violet-500 peer-disabled:opacity-50 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                        <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                    </span>
+                                </span>
+                            </label>
+
+                            <!-- Non-pro video nudge -->
+                            <div
+                                v-if="!isPro"
+                                class="flex items-start gap-3 rounded-xl border border-violet-200/60 bg-violet-50/60 p-4 dark:border-violet-800/40 dark:bg-violet-950/20"
+                            >
+                                <svg class="mt-0.5 size-4 shrink-0 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-medium text-violet-800 dark:text-violet-300">Video generation requires Pro</p>
+                                    <p class="text-xs text-violet-700/70 dark:text-violet-400 mt-0.5">Upgrade to unlock AI video for every story page.</p>
+                                    <Link href="/oto1" class="mt-2 inline-block text-xs font-semibold text-violet-600 hover:underline">Upgrade to Pro →</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex gap-3">
-                    <Button type="submit" :disabled="form.processing || !canGenerate">Generate</Button>
-                    <Button variant="outline" type="button" as-child>
-                        <Link href="/stories">Cancel</Link>
-                    </Button>
-                </div>
-                <p v-if="creationMode === 'template' && !selectedTemplate" class="text-destructive text-sm">
-                    Choose a template first to continue in template mode.
-                </p>
-                <p v-if="!canSubmit" class="text-destructive text-sm">
-                    Insufficient credits for this setup. Required: {{ breakdown.total }}, available: {{ props.storyCredits }}.
-                </p>
-                <div v-if="!canSubmit">
-                    <Button type="button" variant="outline" @click="creditsModal.open()">
-                        Buy Credits
-                    </Button>
+                <!-- Right: sticky credit summary -->
+                <div class="lg:w-72 lg:shrink-0">
+                    <div class="sticky top-4 flex flex-col gap-4">
+
+                        <!-- Credit breakdown card -->
+                        <div class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
+                            <h3 class="mb-3 text-sm font-semibold">Credit Estimate</h3>
+
+                            <!-- Balance -->
+                            <div class="mb-4 flex items-center justify-between rounded-xl bg-muted/50 px-3 py-2">
+                                <span class="text-xs text-muted-foreground">Your balance</span>
+                                <span class="font-bold text-amber-600 dark:text-amber-400">{{ props.storyCredits }} credits</span>
+                            </div>
+
+                            <!-- Breakdown rows -->
+                            <div class="flex flex-col gap-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Story text</span>
+                                    <span class="font-medium">{{ breakdown.text }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted-foreground">Illustrations (×{{ pages }})</span>
+                                    <span class="font-medium">{{ breakdown.image }}</span>
+                                </div>
+                                <div class="flex justify-between" :class="!form.include_narration ? 'opacity-40' : ''">
+                                    <span class="text-muted-foreground">Narration (×{{ pages }})</span>
+                                    <span class="font-medium">{{ breakdown.audio }}</span>
+                                </div>
+                                <div v-if="isPro" class="flex justify-between" :class="!form.include_video ? 'opacity-40' : ''">
+                                    <span class="text-muted-foreground">Video (×{{ pages }})</span>
+                                    <span class="font-medium">{{ breakdown.video }}</span>
+                                </div>
+                                <div class="mt-1 border-t pt-2 flex justify-between font-semibold">
+                                    <span>Total cost</span>
+                                    <span :class="canSubmit ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive'">
+                                        {{ breakdown.total }}
+                                    </span>
+                                </div>
+                                <div class="flex justify-between text-xs" :class="canSubmit ? 'text-muted-foreground' : 'text-destructive font-semibold'">
+                                    <span>{{ canSubmit ? 'Remaining after' : 'Short by' }}</span>
+                                    <span>{{ Math.abs(remainingCredits) }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Progress bar -->
+                            <div class="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
+                                <div
+                                    class="h-full rounded-full transition-all"
+                                    :class="canSubmit ? 'bg-emerald-500' : 'bg-destructive'"
+                                    :style="{ width: `${Math.min(100, (breakdown.total / Math.max(1, props.storyCredits)) * 100)}%` }"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- CTA buttons -->
+                        <div class="flex flex-col gap-2">
+                            <Button
+                                type="submit"
+                                class="h-11 w-full bg-violet-600 text-white hover:bg-violet-700"
+                                :disabled="form.processing || !canGenerate"
+                            >
+                                <svg v-if="form.processing" class="mr-2 size-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                {{ form.processing ? 'Generating…' : '✨ Generate Story' }}
+                            </Button>
+                            <Button variant="outline" type="button" class="w-full" as-child>
+                                <Link href="/stories">Cancel</Link>
+                            </Button>
+                        </div>
+
+                        <!-- Validation messages -->
+                        <div class="flex flex-col gap-2 text-xs">
+                            <p v-if="creationMode === 'template' && !selectedTemplate" class="text-destructive">
+                                ⚠ Choose a template to continue.
+                            </p>
+                            <p v-if="!canSubmit" class="text-destructive">
+                                ⚠ Not enough credits. Need {{ breakdown.total }}, have {{ props.storyCredits }}.
+                            </p>
+                            <div v-if="!canSubmit">
+                                <Button type="button" variant="outline" size="sm" class="w-full" @click="creditsModal.open()">
+                                    Buy Credits
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
 
+            <!-- Template picker dialog -->
             <Dialog v-if="isElite" v-model:open="isTemplateDialogOpen">
                 <DialogContent class="sm:max-w-5xl">
                     <DialogHeader>
                         <DialogTitle>Choose a Story Template</DialogTitle>
                         <DialogDescription>
-                            Search and filter templates by niche and output type. Templates that cost more than your
-                            current credits are disabled.
+                            Browse ready-made niches and media profiles. Templates are sorted by credit cost.
                         </DialogDescription>
                     </DialogHeader>
 
                     <div class="grid gap-3 sm:grid-cols-3">
                         <div class="sm:col-span-2">
-                            <Label for="template-search">Search templates</Label>
-                            <Input
-                                id="template-search"
-                                v-model="templateSearch"
-                                placeholder="Search by template name, niche, or description"
-                            />
+                            <Label for="template-search">Search</Label>
+                            <Input id="template-search" v-model="templateSearch" placeholder="Name, niche, or description…" />
                         </div>
                         <div>
                             <Label for="template-niche">Niche</Label>
@@ -597,9 +767,7 @@ const illustrationStyleOptions = [
                                 class="border-input bg-background h-10 w-full rounded-md border px-3 text-sm"
                             >
                                 <option value="all">All niches</option>
-                                <option v-for="niche in nicheOptions" :key="niche" :value="niche">
-                                    {{ niche }}
-                                </option>
+                                <option v-for="niche in nicheOptions" :key="niche" :value="niche">{{ niche }}</option>
                             </select>
                         </div>
                     </div>
@@ -618,40 +786,34 @@ const illustrationStyleOptions = [
                         </select>
                     </div>
 
-                    <p v-if="templatesLoading" class="text-muted-foreground text-sm">Loading templates...</p>
+                    <p v-if="templatesLoading" class="text-muted-foreground text-sm">Loading templates…</p>
                     <p v-else-if="templatesError" class="text-destructive text-sm">{{ templatesError }}</p>
-                    <p v-else-if="filteredTemplates.length === 0" class="text-muted-foreground text-sm">
-                        No templates match your filters.
-                    </p>
+                    <p v-else-if="filteredTemplates.length === 0" class="text-muted-foreground text-sm">No templates match your filters.</p>
 
-                    <div v-else class="max-h-105 overflow-y-auto pr-1">
+                    <div v-else class="max-h-96 overflow-y-auto pr-1">
                         <div class="grid gap-3 md:grid-cols-3">
                             <button
                                 v-for="template in filteredTemplates"
                                 :key="template.id"
                                 type="button"
-                                class="rounded-xl border p-3 text-left transition-colors"
-                                :class="templateDisableReason(template) ? 'cursor-not-allowed border-border/60 opacity-60' : 'border-border hover:bg-muted/40'"
+                                class="rounded-xl border-2 p-3 text-left transition-all"
+                                :class="templateDisableReason(template)
+                                    ? 'cursor-not-allowed border-border/40 opacity-50'
+                                    : selectedTemplateId === template.id
+                                        ? 'border-violet-500 bg-violet-50/60 dark:bg-violet-950/20'
+                                        : 'border-border hover:border-violet-300 hover:bg-muted/30'"
                                 :disabled="Boolean(templateDisableReason(template))"
                                 @click="applyTemplate(template)"
                             >
-                                <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                    {{ template.niche }}
-                                </p>
+                                <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{{ template.niche }}</p>
                                 <h3 class="mt-1 text-sm font-semibold">{{ template.name }}</h3>
-                                <p class="text-muted-foreground mt-1 line-clamp-2 text-xs">
-                                    {{ template.description }}
-                                </p>
-
-                                <div class="mt-3 flex flex-wrap gap-2 text-[11px]">
-                                    <span class="rounded-full border px-2 py-0.5">{{ mediaProfileLabel(template.media_profile) }}</span>
-                                    <span class="rounded-full border px-2 py-0.5">{{ template.page_count }} pages</span>
-                                    <span class="rounded-full border px-2 py-0.5">{{ estimateTemplateCredits(template) }} credits</span>
+                                <p class="text-muted-foreground mt-1 line-clamp-2 text-xs">{{ template.description }}</p>
+                                <div class="mt-3 flex flex-wrap gap-1.5 text-[11px]">
+                                    <span class="rounded-full bg-muted px-2 py-0.5">{{ mediaProfileLabel(template.media_profile) }}</span>
+                                    <span class="rounded-full bg-muted px-2 py-0.5">{{ template.page_count }} pages</span>
+                                    <span class="rounded-full bg-amber-100 text-amber-700 px-2 py-0.5 dark:bg-amber-900/30 dark:text-amber-400">{{ estimateTemplateCredits(template) }} cr</span>
                                 </div>
-
-                                <p v-if="templateDisableReason(template)" class="text-destructive mt-2 text-xs">
-                                    {{ templateDisableReason(template) }}
-                                </p>
+                                <p v-if="templateDisableReason(template)" class="text-destructive mt-2 text-xs">{{ templateDisableReason(template) }}</p>
                             </button>
                         </div>
                     </div>
