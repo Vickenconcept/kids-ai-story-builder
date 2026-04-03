@@ -29,8 +29,12 @@ const emit = defineEmits<{
 
 const processingLines = [
     'Creating your story pages...',
+    'Writing your story...',
     'Preparing visuals and narration...',
+    'Adding narration...',
     'Final touches before your story opens...',
+    'Adding the finishing touches...',
+    'Finishing up...',
 ];
 
 const lineIndex = ref(0);
@@ -96,7 +100,7 @@ const stageLabel = computed(() => {
 onMounted(() => {
     lineTimer = window.setInterval(() => {
         lineIndex.value = (lineIndex.value + 1) % processingLines.length;
-    }, 2200);
+    }, 4000);
 });
 
 onBeforeUnmount(() => {

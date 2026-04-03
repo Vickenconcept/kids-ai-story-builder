@@ -46,6 +46,8 @@ return [
         'model' => env('RUNWAY_MODEL', 'gen4_turbo'),
         'ratio' => env('RUNWAY_RATIO', '1280:720'),
         'duration_seconds' => (int) env('RUNWAY_DURATION_SECONDS', 10),
+        'min_duration_seconds' => (int) env('RUNWAY_MIN_DURATION_SECONDS', 5),
+        'max_duration_seconds' => (int) env('RUNWAY_MAX_DURATION_SECONDS', 20),
         'poll_interval_ms' => (int) env('RUNWAY_POLL_INTERVAL_MS', 2000),
         'max_polls' => (int) env('RUNWAY_MAX_POLLS', 120),
     ],

@@ -37,7 +37,7 @@ return [
     */
     'models' => [
         'text' => env('STORY_MODEL_TEXT', 'gpt-4o-mini'),
-        'image' => env('STORY_MODEL_IMAGE', 'dall-e-3'),
+        'image' => env('STORY_MODEL_IMAGE', 'gpt-image-1'),
         'tts' => env('STORY_MODEL_TTS', 'tts-1'),
         'tts_voice' => env('STORY_TTS_VOICE', 'nova'),
     ],
