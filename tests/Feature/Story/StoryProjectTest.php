@@ -196,4 +196,37 @@ class StoryProjectTest extends TestCase
                     ->etc())
                 ->has('pages', 1));
     }
+
+    public function test_owner_can_fetch_page_media_status_json(): void
+    {
+        $user = User::factory()->create(['story_credits' => 42]);
+        $project = StoryProject::query()->create([
+            'user_id' => $user->id,
+            'title' => 'Media poll',
+            'topic' => 'T',
+            'lesson_type' => 'moral',
+            'age_group' => '6-8',
+            'page_count' => 1,
+            'illustration_style' => 'cartoon',
+            'include_quiz' => false,
+            'include_narration' => false,
+            'include_video' => false,
+            'status' => StoryProjectStatus::Ready,
+            'pages_completed' => 1,
+        ]);
+
+        $page = StoryPage::query()->create([
+            'story_project_id' => $project->id,
+            'page_number' => 1,
+            'text_content' => 'Hi',
+            'quiz_questions' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->getJson(route('stories.page-media-status', $project))
+            ->assertOk()
+            ->assertJsonPath('story_credits', 42)
+            ->assertJsonPath('pages.0.uuid', $page->uuid)
+            ->assertJsonPath('pages.0.video_generating', false);
+    }
 }

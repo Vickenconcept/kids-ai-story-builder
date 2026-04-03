@@ -1100,6 +1100,16 @@ async function initTurn(): Promise<void> {
     const $root = jq(flipRoot.value);
     $root.off('.pageVideoAction');
 
+    let savedTurnPage: number | null = null;
+    try {
+        const cur = $root.turn('page') as unknown;
+        if (typeof cur === 'number' && !Number.isNaN(cur) && cur > 0) {
+            savedTurnPage = cur;
+        }
+    } catch {
+        /* turn not initialized yet */
+    }
+
     try {
         $root.turn('destroy');
     } catch {
@@ -1342,6 +1352,14 @@ async function initTurn(): Promise<void> {
             turned: onTurned,
         },
     });
+
+    if (savedTurnPage !== null && savedTurnPage >= 1 && savedTurnPage <= totalRenderedPages) {
+        try {
+            $root.turn('page', savedTurnPage);
+        } catch {
+            /* */
+        }
+    }
 
     ready.value = true;
     applyDragFlipInteraction();

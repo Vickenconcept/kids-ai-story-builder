@@ -21,6 +21,7 @@ use App\Services\Story\StoryPipelineDispatcher;
 use App\Support\StoryMediaUrl;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -207,30 +208,7 @@ class StoryProjectController extends Controller
             ->latest('id')
             ->value('error_message');
 
-        /*
-         * Only the latest PageVideo job per page controls "generating" UI. Older stuck running rows
-         * (e.g. after a retry or duplicate dispatch) must not keep the button spinning once a newer job succeeded.
-         */
-        $pageIds = $story->pages->pluck('id');
-        $latestPageVideoJobIds = $pageIds->isEmpty()
-            ? collect()
-            : StoryAiJob::query()
-                ->where('story_project_id', $story->id)
-                ->where('type', StoryAiJobType::PageVideo)
-                ->whereIn('story_page_id', $pageIds)
-                ->selectRaw('max(id) as id')
-                ->groupBy('story_page_id')
-                ->pluck('id');
-
-        $videoGeneratingPageIds = $latestPageVideoJobIds->isEmpty()
-            ? []
-            : StoryAiJob::query()
-                ->whereIn('id', $latestPageVideoJobIds)
-                ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
-                ->pluck('story_page_id')
-                ->all();
-
-        $videoGeneratingSet = array_flip($videoGeneratingPageIds);
+        $videoGeneratingSet = $this->videoGeneratingPageIdSet($story);
 
         $pages = $story->pages->map(fn ($page) => [
             'id' => $page->id,
@@ -279,6 +257,55 @@ class StoryProjectController extends Controller
             'story_credits' => $request->user()->story_credits,
             'feature_tier' => $request->user()->feature_tier?->value ?? FeatureTier::Basic->value,
             'video_credit_cost' => (int) config('story.credit_costs.video', 0),
+        ]);
+    }
+
+    /**
+     * Map of story_page_id => true when that page's latest PageVideo AI job is still pending or running.
+     *
+     * @return array<int, true>
+     */
+    private function videoGeneratingPageIdSet(StoryProject $story): array
+    {
+        $story->loadMissing('pages');
+        $pageIds = $story->pages->pluck('id');
+        $latestPageVideoJobIds = $pageIds->isEmpty()
+            ? collect()
+            : StoryAiJob::query()
+                ->where('story_project_id', $story->id)
+                ->where('type', StoryAiJobType::PageVideo)
+                ->whereIn('story_page_id', $pageIds)
+                ->selectRaw('max(id) as id')
+                ->groupBy('story_page_id')
+                ->pluck('id');
+
+        $videoGeneratingPageIds = $latestPageVideoJobIds->isEmpty()
+            ? []
+            : StoryAiJob::query()
+                ->whereIn('id', $latestPageVideoJobIds)
+                ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
+                ->pluck('story_page_id')
+                ->all();
+
+        return array_flip($videoGeneratingPageIds);
+    }
+
+    /** Lightweight JSON for author UI polling while page video jobs run (avoids Inertia reload resetting the flipbook). */
+    public function pageMediaStatus(Request $request, StoryProject $story): JsonResponse
+    {
+        $this->authorize('view', $story);
+
+        $story->load('pages');
+        $videoGeneratingSet = $this->videoGeneratingPageIdSet($story);
+        $pages = $story->pages->map(fn ($page) => [
+            'uuid' => $page->uuid,
+            'video_url' => StoryMediaUrl::resolve($page->video_path),
+            'video_generating' => isset($videoGeneratingSet[$page->id]),
+        ]);
+
+        return response()->json([
+            'pages' => $pages,
+            'story_credits' => (int) $request->user()->story_credits,
         ]);
     }
 

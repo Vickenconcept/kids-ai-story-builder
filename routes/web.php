@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [StoryProjectController::class, 'index'])->name('index');
         Route::get('/create', [StoryProjectController::class, 'create'])->name('create');
         Route::post('/', [StoryProjectController::class, 'store'])->name('store');
+        Route::get('/{story:uuid}/page-media-status', [StoryProjectController::class, 'pageMediaStatus'])->name('page-media-status');
         Route::get('/{story:uuid}', [StoryProjectController::class, 'show'])->name('show');
         Route::patch('/{story:uuid}', [StoryProjectController::class, 'updatePresentation'])->name('update');
         Route::delete('/{story:uuid}', [StoryProjectController::class, 'destroy'])->name('destroy');

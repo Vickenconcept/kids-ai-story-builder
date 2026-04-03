@@ -85,6 +85,9 @@ const pageSaveState = ref<Record<string, 'idle' | 'unsaved' | 'saving' | 'saved'
 const advancedSaveBusy = ref(false);
 const advancedDirty = ref(false);
 const pageVideoBusy = ref<Record<string, boolean>>({});
+/** Merged from fetch poll so we do not Inertia-reload (which resets the flipbook) while page video jobs run. */
+const pageMediaPoll = ref<Record<string, { video_url: string | null; video_generating: boolean }>>({});
+const polledStoryCredits = ref<number | null>(null);
 const currentFlipPageUuid = ref<string | null>(null);
 const creditsModal = useCreditsModal();
 
@@ -118,11 +121,32 @@ const unsavedPagesCount = computed(() => {
 });
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
 const isPro = computed(() => props.feature_tier === 'pro' || props.feature_tier === 'elite');
-const canAffordSingleVideo = computed(() => props.story_credits >= props.video_credit_cost);
+
+const displayPages = computed((): PageRow[] =>
+    props.pages.map((p) => {
+        const o = pageMediaPoll.value[p.uuid];
+        if (!o) {
+            return p;
+        }
+
+        return {
+            ...p,
+            video_url: o.video_url,
+            video_generating: o.video_generating,
+        };
+    }),
+);
+
+const displayStoryCredits = computed(() =>
+    polledStoryCredits.value !== null ? polledStoryCredits.value : props.story_credits,
+);
+
+const canAffordSingleVideo = computed(() => displayStoryCredits.value >= props.video_credit_cost);
+
 const mergedPageVideoBusy = computed(() => {
     const m: Record<string, boolean> = { ...pageVideoBusy.value };
 
-    for (const p of props.pages) {
+    for (const p of displayPages.value) {
         if (p.video_generating) {
             m[p.uuid] = true;
         }
@@ -160,7 +184,7 @@ const showGenerationOverlay = computed(
         (creditsExhausted.value && !creditsOverlayDismissed.value),
 );
 
-const currentScrollPage = computed(() => props.pages[scrollCarouselIndex.value] ?? null);
+const currentScrollPage = computed(() => displayPages.value[scrollCarouselIndex.value] ?? null);
 const canScrollPrev = computed(() => scrollCarouselIndex.value > 0);
 const canScrollNext = computed(() => scrollCarouselIndex.value < props.pages.length - 1);
 
@@ -237,7 +261,7 @@ const flipbookKey = computed(() =>
         JSON.stringify(props.project.flip_settings),
         props.project.sharing_enabled,
         props.pages.length,
-        props.pages.map((p) => p.uuid + (p.quiz_questions ? JSON.stringify(p.quiz_questions) : '') + (p.video_generating ? 'v1' : 'v0')).join('-'),
+        props.pages.map((p) => p.uuid + (p.quiz_questions ? JSON.stringify(p.quiz_questions) : '')).join('-'),
     ].join('|'),
 );
 
@@ -681,27 +705,50 @@ watch(generateVideo, (on) => {
 
 let poll: ReturnType<typeof setInterval> | null = null;
 
-function anyPageVideoGenerating(): boolean {
-    return props.pages.some((p) => Boolean(p.video_generating));
+const anyPageVideoGenerating = computed(() => displayPages.value.some((p) => Boolean(p.video_generating)));
+
+async function fetchPageMediaStatus(): Promise<void> {
+    try {
+        const res = await fetch(`/stories/${props.project.uuid}/page-media-status`, {
+            headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            credentials: 'same-origin',
+        });
+        if (!res.ok) {
+            return;
+        }
+        const data = (await res.json()) as {
+            pages: { uuid: string; video_url: string | null; video_generating: boolean }[];
+            story_credits: number;
+        };
+        const next: Record<string, { video_url: string | null; video_generating: boolean }> = {};
+        for (const p of data.pages) {
+            next[p.uuid] = { video_url: p.video_url, video_generating: p.video_generating };
+        }
+        pageMediaPoll.value = next;
+        polledStoryCredits.value = data.story_credits;
+    } catch {
+        /* ignore network errors */
+    }
 }
+
+watch(
+    () => props.pages,
+    () => {
+        pageMediaPoll.value = {};
+        polledStoryCredits.value = null;
+    },
+);
 
 onMounted(() => {
     poll = setInterval(() => {
-        const processing = props.project.status === 'processing';
-        const pageVideoPending = anyPageVideoGenerating();
-
-        if (processing) {
+        if (props.project.status === 'processing') {
             router.reload({ only: ['project', 'pages', 'story_credits'] });
 
             return;
         }
 
-        /*
-         * Ready/failed stories do not use the processing poll above; page-level video still runs in the queue.
-         * Light reload (author story page only — public /read/ does not mount this) so the UI clears when video finishes.
-         */
-        if (pageVideoPending) {
-            router.reload({ only: ['pages', 'story_credits'] });
+        if (anyPageVideoGenerating.value) {
+            void fetchPageMediaStatus();
         }
     }, 8000);
 });
@@ -731,7 +778,7 @@ onUnmounted(() => {
     <div class="min-h-screen w-full bg-muted/30 dark:bg-muted/10">
         <StorySetupTopBar
             :project="project"
-            :story-credits="props.story_credits"
+            :story-credits="displayStoryCredits"
             :feature-tier="props.feature_tier"
             :view-mode="viewMode"
             :show-view-mode="!isDraftReviewStage"
@@ -787,7 +834,7 @@ onUnmounted(() => {
                     </div>
 
                     <article
-                        v-for="page in pages"
+                        v-for="page in displayPages"
                         :key="page.uuid"
                         class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm dark:border-sidebar-border"
                     >
@@ -1021,7 +1068,7 @@ onUnmounted(() => {
                     <StoryFlipbook
                         :key="flipbookKey"
                         :title="project.title"
-                        :pages="pages"
+                        :pages="displayPages"
                         :play-audio-on-flip="flipbookPlayAudioOnFlip"
                         :narration-unavailable-hint="flipbookNarrationOffHint"
                         :story-uuid="project.uuid"
