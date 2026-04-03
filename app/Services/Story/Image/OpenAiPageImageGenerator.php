@@ -24,20 +24,30 @@ class OpenAiPageImageGenerator implements PageImageGenerator
             mb_substr($input->pageText, 0, 900),
         ]);
 
-        $response = $this->client->images()->create([
+        $payload = [
             'model' => config('story.models.image'),
             'prompt' => $prompt,
             'n' => 1,
             'size' => '1024x1024',
-            'response_format' => 'url',
-        ]);
-
-        $url = $response->data[0]->url ?? '';
-        if ($url === '') {
-            throw new RuntimeException('Image API returned no URL.');
+        ];
+        if (! str_starts_with((string) $payload['model'], 'gpt-image-')) {
+            $payload['response_format'] = 'url';
         }
 
-        $binary = Http::timeout(120)->get($url)->throw()->body();
+        $response = $this->client->images()->create($payload);
+
+        $url = $response->data[0]->url ?? '';
+        if ($url !== '') {
+            $binary = Http::timeout(120)->get($url)->throw()->body();
+        } else {
+            $b64 = $response->data[0]->b64_json ?? '';
+            $binary = $b64 !== '' ? base64_decode($b64, true) : false;
+        }
+
+        if (! is_string($binary) || $binary === '') {
+            throw new RuntimeException('Image API returned no image data.');
+        }
+
         $name = 'page-'.uniqid('', true).'.png';
 
         return $this->media->storeBytes($binary, $storageDirectory, $name, 'image');
