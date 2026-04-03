@@ -6,28 +6,30 @@ use App\Contracts\Story\PageImageGenerator;
 use App\Data\Story\PageImageInput;
 use App\Enums\FeatureTier;
 use App\Enums\StoryAiJobStatus;
+use App\Enums\StoryAiJobType;
 use App\Enums\StoryProjectStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStoryProjectRequest;
 use App\Http\Requests\UpdateStoryProjectPresentationRequest;
 use App\Jobs\Story\GenerateStoryPageVideoJob;
+use App\Models\StoryAiJob;
 use App\Models\StoryPage;
 use App\Models\StoryProject;
 use App\Services\Media\StoryMediaStorage;
-use App\Services\Story\StoryPipelineDispatcher;
 use App\Services\Story\StoryCreditService;
+use App\Services\Story\StoryPipelineDispatcher;
 use App\Support\StoryMediaUrl;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
 
@@ -40,6 +42,7 @@ class StoryProjectController extends Controller
     {
         $this->authorize('delete', $story);
         $story->delete();
+
         return redirect()->route('stories.index')->with('success', 'Story deleted.');
     }
 
@@ -49,13 +52,15 @@ class StoryProjectController extends Controller
     public function bulkDestroy(Request $request): RedirectResponse
     {
         $ids = $request->input('ids', []);
-        if (!is_array($ids) || empty($ids)) {
+        if (! is_array($ids) || empty($ids)) {
             return redirect()->route('stories.index')->with('error', 'No stories selected.');
         }
         $userId = $request->user()->id;
         $deleted = StoryProject::where('user_id', $userId)->whereIn('id', $ids)->delete();
+
         return redirect()->route('stories.index')->with('success', "$deleted stories deleted.");
     }
+
     public function index(Request $request): Response
     {
         $userId = $request->user()->id;
@@ -85,33 +90,33 @@ class StoryProjectController extends Controller
             'id', 'uuid', 'title', 'topic', 'status', 'page_count', 'pages_completed',
             'include_narration', 'include_video', 'cover_front', 'created_at', 'updated_at',
         ])->map(fn ($p) => [
-            'id'               => $p->id,
-            'uuid'             => $p->uuid,
-            'title'            => $p->title,
-            'topic'            => $p->topic,
-            'status'           => $p->status->value,
-            'page_count'       => $p->page_count,
-            'pages_completed'  => $p->pages_completed,
-            'include_narration'=> (bool) $p->include_narration,
-            'include_video'    => (bool) $p->include_video,
-            'cover_url'        => $this->resolveCoverThumbnail($p->cover_front),
-            'created_at'       => $p->created_at->format('M j, Y'),
-            'updated_at'       => $p->updated_at->diffForHumans(),
+            'id' => $p->id,
+            'uuid' => $p->uuid,
+            'title' => $p->title,
+            'topic' => $p->topic,
+            'status' => $p->status->value,
+            'page_count' => $p->page_count,
+            'pages_completed' => $p->pages_completed,
+            'include_narration' => (bool) $p->include_narration,
+            'include_video' => (bool) $p->include_video,
+            'cover_url' => $this->resolveCoverThumbnail($p->cover_front),
+            'created_at' => $p->created_at->format('M j, Y'),
+            'updated_at' => $p->updated_at->diffForHumans(),
         ]);
 
         $all = StoryProject::query()->where('user_id', $userId);
         $stats = [
-            'total'      => (clone $all)->count(),
-            'ready'      => (clone $all)->where('status', StoryProjectStatus::Ready)->count(),
+            'total' => (clone $all)->count(),
+            'ready' => (clone $all)->where('status', StoryProjectStatus::Ready)->count(),
             'processing' => (clone $all)->where('status', StoryProjectStatus::Processing)->count(),
-            'draft'      => (clone $all)->where('status', StoryProjectStatus::Draft)->count(),
-            'failed'     => (clone $all)->where('status', StoryProjectStatus::Failed)->count(),
+            'draft' => (clone $all)->where('status', StoryProjectStatus::Draft)->count(),
+            'failed' => (clone $all)->where('status', StoryProjectStatus::Failed)->count(),
         ];
 
         return Inertia::render('Stories/Index', [
             'projects' => $projects,
-            'stats'    => $stats,
-            'filters'  => $request->only(['status', 'search', 'date_from', 'date_to']),
+            'stats' => $stats,
+            'filters' => $request->only(['status', 'search', 'date_from', 'date_to']),
         ]);
     }
 
@@ -124,6 +129,7 @@ class StoryProjectController extends Controller
         if (in_array($kind, ['image', 'gif', 'ai_image'], true) && ! empty($cover['path'])) {
             return StoryMediaUrl::resolve((string) $cover['path']);
         }
+
         return null;
     }
 
@@ -149,8 +155,7 @@ class StoryProjectController extends Controller
         StoreStoryProjectRequest $request,
         StoryPipelineDispatcher $dispatcher,
         StoryCreditService $credits,
-    ): \Illuminate\Http\RedirectResponse
-    {
+    ): RedirectResponse {
         $this->authorize('create', StoryProject::class);
 
         $user = $request->user();
@@ -202,6 +207,17 @@ class StoryProjectController extends Controller
             ->latest('id')
             ->value('error_message');
 
+        $videoGeneratingPageIds = StoryAiJob::query()
+            ->where('story_project_id', $story->id)
+            ->where('type', StoryAiJobType::PageVideo)
+            ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
+            ->whereNotNull('story_page_id')
+            ->pluck('story_page_id')
+            ->unique()
+            ->all();
+
+        $videoGeneratingSet = array_flip($videoGeneratingPageIds);
+
         $pages = $story->pages->map(fn ($page) => [
             'id' => $page->id,
             'uuid' => $page->uuid,
@@ -212,6 +228,7 @@ class StoryProjectController extends Controller
             'image_url' => StoryMediaUrl::resolve($page->image_path),
             'audio_url' => StoryMediaUrl::resolve($page->audio_path),
             'video_url' => StoryMediaUrl::resolve($page->video_path),
+            'video_generating' => isset($videoGeneratingSet[$page->id]),
         ]);
 
         return Inertia::render('Stories/Show', [
@@ -272,10 +289,29 @@ class StoryProjectController extends Controller
             return back()->with('error', 'Generate image first before creating video for this page.');
         }
 
+        $inFlight = StoryAiJob::query()
+            ->where('story_project_id', $story->id)
+            ->where('story_page_id', $page->id)
+            ->where('type', StoryAiJobType::PageVideo)
+            ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
+            ->exists();
+
+        if ($inFlight) {
+            return back()->with('info', 'Video generation is already in progress for this page.');
+        }
+
         $needed = $credits->cost('video');
         if ((int) $user->story_credits < $needed) {
             return back()->with('error', 'Not enough credits for page video. Required: '.$needed.' credits.');
         }
+
+        StoryAiJob::create([
+            'story_project_id' => $story->id,
+            'story_page_id' => $page->id,
+            'type' => StoryAiJobType::PageVideo,
+            'status' => StoryAiJobStatus::Pending,
+            'payload' => ['stage' => 'video', 'source' => 'manual'],
+        ]);
 
         GenerateStoryPageVideoJob::dispatch($page->id)
             ->onQueue(config('story.queues.video'));
@@ -288,8 +324,7 @@ class StoryProjectController extends Controller
         StoryProject $story,
         StoryPipelineDispatcher $dispatcher,
         StoryCreditService $credits,
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $this->authorize('update', $story);
 
         $validated = $request->validate([
@@ -484,7 +519,7 @@ class StoryProjectController extends Controller
             abort(500, 'Could not initialize export package.');
         }
 
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         if ($zip->open($tmpPath, ZipArchive::OVERWRITE) !== true) {
             @unlink($tmpPath);
             abort(500, 'Could not create export archive.');
@@ -504,6 +539,7 @@ class StoryProjectController extends Controller
                     'included_path' => null,
                     'status' => 'missing',
                 ];
+
                 continue;
             }
 
@@ -729,7 +765,7 @@ class StoryProjectController extends Controller
 
     private function renderPdf(string $html, array $paperOptions): string
     {
-        $options = new Options();
+        $options = new Options;
         $options->set('isRemoteEnabled', true);
         $options->set('defaultFont', 'DejaVu Sans');
 
@@ -749,8 +785,7 @@ class StoryProjectController extends Controller
         int $pageCount,
         ?array $frontCoverAsset = null,
         ?array $backCoverAsset = null,
-    ): string
-    {
+    ): string {
         $cover = $this->kdpCoverSpecs($pageCount)['trim_options'][$trim] ?? null;
         if (! is_array($cover)) {
             return '<html><body><p>Invalid cover specs.</p></body></html>';
@@ -964,16 +999,16 @@ class StoryProjectController extends Controller
         $bleedPx = (int) round($bleedIn * $dpi);
         $trimPx = (int) round($trimWidthIn * $dpi);
         $spinePx = (int) round($spineIn * $dpi);
-                $contentHeightPx = $h - (2 * $bleedPx);
-                $frontX = $w - $bleedPx - $trimPx;
-                $spineX = (int) round(($w - $spinePx) / 2);
-                $backLabelX = $bleedPx + 28;
-                $frontLabelX = $frontX + 28;
-                $labelY = $bleedPx + 42;
-                $titleY = $h - $bleedPx - 24;
-                $centerX = (int) round($w / 2);
-                $centerY = (int) round($h / 2);
-                $spineInLabel = number_format($spineIn, 4);
+        $contentHeightPx = $h - (2 * $bleedPx);
+        $frontX = $w - $bleedPx - $trimPx;
+        $spineX = (int) round(($w - $spinePx) / 2);
+        $backLabelX = $bleedPx + 28;
+        $frontLabelX = $frontX + 28;
+        $labelY = $bleedPx + 42;
+        $titleY = $h - $bleedPx - 24;
+        $centerX = (int) round($w / 2);
+        $centerY = (int) round($h / 2);
+        $spineInLabel = number_format($spineIn, 4);
 
         $safeTitle = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 

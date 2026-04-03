@@ -26,18 +26,23 @@ export type FlipbookSetupSettings = {
     dragFlipEnabled: boolean;
 };
 
-const props = defineProps<{
-    settings: FlipbookSetupSettings;
-    playAudioOnFlip: boolean;
-    /** Shown when narration autoplay is disabled but not because the story lacks audio (e.g. page videos). */
-    narrationUnavailableHint?: string;
-    includeQuiz: boolean;
-    hasQuizPages: boolean;
-    storyUuid?: string;
-    setupMode: boolean;
-    gameplayEnabledLocal: boolean;
-    gameplayToggleBusy: boolean;
-}>();
+const props = withDefaults(
+    defineProps<{
+        settings: FlipbookSetupSettings;
+        playAudioOnFlip: boolean;
+        /** Shown when narration autoplay is disabled but not because the story lacks audio (e.g. page videos). */
+        narrationUnavailableHint?: string;
+        includeQuiz: boolean;
+        hasQuizPages: boolean;
+        storyUuid?: string;
+        setupMode: boolean;
+        gameplayEnabledLocal: boolean;
+        gameplayToggleBusy: boolean;
+        /** Pro/Elite: show video playback & default image/video controls. */
+        showVideoMediaSettings?: boolean;
+    }>(),
+    { showVideoMediaSettings: true },
+);
 
 const emit = defineEmits<{
     'set-gameplay-enabled': [checked: boolean];
@@ -140,37 +145,39 @@ const emit = defineEmits<{
                 </select>
             </div>
 
-            <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
-                <div class="flex items-center gap-2">
-                    <Label class="text-xs">Video playback</Label>
-                    <span class="text-muted-foreground rounded border border-border px-1.5 py-0.5 text-[10px]">
-                        flipbook pages
-                    </span>
+            <template v-if="props.showVideoMediaSettings">
+                <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
+                    <div class="flex items-center gap-2">
+                        <Label class="text-xs">Video playback</Label>
+                        <span class="text-muted-foreground rounded border border-border px-1.5 py-0.5 text-[10px]">
+                            flipbook pages
+                        </span>
+                    </div>
+                    <select
+                        v-model="props.settings.videoPlaybackMode"
+                        class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
+                    >
+                        <option value="click">Click play button</option>
+                        <option value="auto">Auto-play current page</option>
+                    </select>
                 </div>
-                <select
-                    v-model="props.settings.videoPlaybackMode"
-                    class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
-                >
-                    <option value="click">Click play button</option>
-                    <option value="auto">Auto-play current page</option>
-                </select>
-            </div>
 
-            <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
-                <div class="flex items-center gap-2">
-                    <Label class="text-xs">When page has both image + video</Label>
+                <div class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
+                    <div class="flex items-center gap-2">
+                        <Label class="text-xs">When page has both image + video</Label>
+                    </div>
+                    <select
+                        v-model="props.settings.defaultMediaMode"
+                        class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
+                    >
+                        <option value="video">Show video by default</option>
+                        <option value="image">Show image by default</option>
+                    </select>
+                    <p class="text-muted-foreground text-xs">
+                        You can override per page using the media toggle button near Generate video.
+                    </p>
                 </div>
-                <select
-                    v-model="props.settings.defaultMediaMode"
-                    class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm"
-                >
-                    <option value="video">Show video by default</option>
-                    <option value="image">Show image by default</option>
-                </select>
-                <p class="text-muted-foreground text-xs">
-                    You can override per page using the media toggle button near Generate video.
-                </p>
-            </div>
+            </template>
 
             <div v-if="props.settings.autoAdvance === 'timer'" class="space-y-1.5 rounded-lg border border-border/60 p-2.5">
                 <div class="flex items-center gap-2">

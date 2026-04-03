@@ -20,6 +20,8 @@ export type FlipbookPage = {
     image_url: string | null;
     audio_url: string | null;
     video_url: string | null;
+    /** Server-side: page video job pending or running (author view). */
+    video_generating?: boolean;
 };
 
 export type CoverConfigJson = {
@@ -63,6 +65,8 @@ const props = withDefaults(
         pageVideoActionHint?: string;
         /** When playAudioOnFlip is false but narration exists (e.g. video stories), explain why the toggle is off. */
         narrationUnavailableHint?: string;
+        /** Hide video playback / default media controls in setup (e.g. Basic tier readers). */
+        showVideoMediaSettings?: boolean;
     }>(),
     {
         playAudioOnFlip: true,
@@ -78,6 +82,7 @@ const props = withDefaults(
         pageVideoBusy: () => ({}),
         pageVideoActionHint: '',
         narrationUnavailableHint: '',
+        showVideoMediaSettings: true,
     },
 );
 
@@ -1144,7 +1149,8 @@ async function initTurn(): Promise<void> {
             );
             const turnPageNumber = FRONT_FIXED_SHEETS + 1 + slotIndex;
             const buttonSideClass = turnPageNumber % 2 === 0 ? 'left-2' : 'right-2';
-            const pageBusy = Boolean(props.pageVideoBusy?.[p.uuid]);
+            const pageBusy =
+                Boolean(props.pageVideoBusy?.[p.uuid]) || Boolean((p as FlipbookPage).video_generating);
             const canGenerateThisPage =
                 Boolean(props.canGeneratePageVideo) && Boolean(p.image_url) && !pageBusy;
 
@@ -1248,7 +1254,7 @@ async function initTurn(): Promise<void> {
                         `<path d="M8 16H3v5"/>` +
                         `</svg>`;
                     const busySvg =
-                        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<svg class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
                         `<path d="M21 12a9 9 0 1 1-6.219-8.56"/>` +
                         `</svg>`;
                     const btnIcon = pageBusy ? busySvg : p.video_url ? reSvg : genSvg;
@@ -1589,7 +1595,17 @@ watch(
 );
 
 watch(
-    () => [props.pages, props.gameplayEnabled, props.coverFront, props.coverBack, props.setupMode, props.flipSettings],
+    () => [
+        props.pages,
+        props.pageVideoBusy,
+        props.canGeneratePageVideo,
+        props.showPageVideoAction,
+        props.gameplayEnabled,
+        props.coverFront,
+        props.coverBack,
+        props.setupMode,
+        props.flipSettings,
+    ],
     () => {
         if (!jq || !flipRoot.value) {
             return;
@@ -1670,6 +1686,7 @@ onBeforeUnmount(() => {
                 :setup-mode="setupMode"
                 :gameplay-enabled-local="gameplayEnabledLocal"
                 :gameplay-toggle-busy="gameplayToggleBusy"
+                :show-video-media-settings="showVideoMediaSettings"
                 @set-gameplay-enabled="setGameplayEnabled"
             >
                 <slot name="setup-extra" />

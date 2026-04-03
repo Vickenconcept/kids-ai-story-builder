@@ -25,13 +25,18 @@ class OpenAiPageImageGenerator implements PageImageGenerator
             mb_substr($input->pageText, 0, 900),
         ]);
 
+        $model = trim((string) config('story.models.image'));
+
         $payload = [
-            'model' => config('story.models.image'),
+            'model' => $model,
             'prompt' => $prompt,
             'n' => 1,
             'size' => '1024x1024',
         ];
-        if (! str_starts_with((string) $payload['model'], 'gpt-image-')) {
+
+        // DALL·E 2/3 accept response_format=url. GPT image models (gpt-image-1, gpt-image-1.5, …) reject it
+        // and return base64 by default; see https://platform.openai.com/docs/api-reference/images/create
+        if (str_starts_with(strtolower($model), 'dall-e-')) {
             $payload['response_format'] = 'url';
         }
 

@@ -43,10 +43,10 @@ return [
     ],
 
     'credit_costs' => [
-        'text' => (int) env('STORY_CREDIT_TEXT', 5),
-        'image' => (int) env('STORY_CREDIT_IMAGE', 3),
+        'text' => (int) env('STORY_CREDIT_TEXT', 3),
+        'image' => (int) env('STORY_CREDIT_IMAGE', 5),
         'audio' => (int) env('STORY_CREDIT_AUDIO', 2),
-        'video' => (int) env('STORY_CREDIT_VIDEO', 10),
+        'video' => (int) env('STORY_CREDIT_VIDEO', 30),
     ],
 
     'admin_emails' => array_values(array_filter(array_map(

@@ -3,7 +3,9 @@
 namespace App\Jobs\Story;
 
 use App\Contracts\Story\PageVideoGenerator;
+use App\Enums\StoryAiJobStatus;
 use App\Enums\StoryAiJobType;
+use App\Models\StoryAiJob;
 use App\Models\StoryPage;
 use App\Services\Story\StoryAiJobRecorder;
 use App\Services\Story\StoryCreditService;
@@ -64,6 +66,17 @@ class GenerateStoryPageVideoJob implements ShouldQueue
         ]);
 
         if (blank($page->image_path)) {
+            StoryAiJob::query()
+                ->where('story_project_id', $project->id)
+                ->where('story_page_id', $page->id)
+                ->where('type', StoryAiJobType::PageVideo)
+                ->where('status', StoryAiJobStatus::Pending)
+                ->update([
+                    'status' => StoryAiJobStatus::Failed,
+                    'error_message' => 'Skipped: page image missing, video requires a generated page image.',
+                    'finished_at' => now(),
+                ]);
+
             $errors = $page->asset_errors ?? [];
             $errors['video'] = 'Skipped: page image missing, video requires a generated page image.';
             $page->update(['asset_errors' => $errors]);
@@ -79,7 +92,23 @@ class GenerateStoryPageVideoJob implements ShouldQueue
             return;
         }
 
-        $jobRow = $recorder->begin($project, StoryAiJobType::PageVideo, $page, ['stage' => 'video']);
+        $jobRow = StoryAiJob::query()
+            ->where('story_project_id', $project->id)
+            ->where('story_page_id', $page->id)
+            ->where('type', StoryAiJobType::PageVideo)
+            ->where('status', StoryAiJobStatus::Pending)
+            ->orderByDesc('id')
+            ->first();
+
+        if ($jobRow !== null) {
+            $jobRow->update([
+                'status' => StoryAiJobStatus::Running,
+                'started_at' => now(),
+                'payload' => array_merge($jobRow->payload ?? [], ['stage' => 'video']),
+            ]);
+        } else {
+            $jobRow = $recorder->begin($project, StoryAiJobType::PageVideo, $page, ['stage' => 'video']);
+        }
 
         try {
             $credits->spendOnce('video:page:'.$page->id, $project->user, 'video');

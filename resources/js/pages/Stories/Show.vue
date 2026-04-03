@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { Clapperboard } from 'lucide-vue-next';
+import { Clapperboard, Loader2 } from 'lucide-vue-next';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import StoryCoverSettingsAccordion from '@/components/StoryCoverSettingsAccordion.vue';
 import StoryFlipbook from '@/components/StoryFlipbook.vue';
@@ -20,6 +20,7 @@ type PageRow = {
     image_url: string | null;
     audio_url: string | null;
     video_url: string | null;
+    video_generating?: boolean;
 };
 
 type QuizDraftRow = {
@@ -118,6 +119,18 @@ const unsavedPagesCount = computed(() => {
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
 const isPro = computed(() => props.feature_tier === 'pro' || props.feature_tier === 'elite');
 const canAffordSingleVideo = computed(() => props.story_credits >= props.video_credit_cost);
+const mergedPageVideoBusy = computed(() => {
+    const m: Record<string, boolean> = { ...pageVideoBusy.value };
+
+    for (const p of props.pages) {
+        if (p.video_generating) {
+            m[p.uuid] = true;
+        }
+    }
+
+    return m;
+});
+
 const canGeneratePageVideoInFlipbook = computed(() => isPro.value && canAffordSingleVideo.value);
 const pageVideoActionHint = computed(() => {
     if (!isPro.value) {
@@ -224,7 +237,7 @@ const flipbookKey = computed(() =>
         JSON.stringify(props.project.flip_settings),
         props.project.sharing_enabled,
         props.pages.length,
-        props.pages.map((p) => p.uuid + (p.quiz_questions ? JSON.stringify(p.quiz_questions) : '')).join('-'),
+        props.pages.map((p) => p.uuid + (p.quiz_questions ? JSON.stringify(p.quiz_questions) : '') + (p.video_generating ? 'v1' : 'v0')).join('-'),
     ].join('|'),
 );
 
@@ -470,6 +483,10 @@ function savePageText(pageUuid: string): void {
     );
 }
 
+function isPageVideoGenerating(page: PageRow): boolean {
+    return Boolean(page.video_generating) || Boolean(pageVideoBusy.value[page.uuid]);
+}
+
 function canGenerateVideoForPage(page: PageRow): boolean {
     if (!isPro.value) {
         return false;
@@ -479,7 +496,11 @@ function canGenerateVideoForPage(page: PageRow): boolean {
         return false;
     }
 
-    return Boolean(page.image_url) && !Boolean(pageVideoBusy.value[page.uuid]);
+    if (isPageVideoGenerating(page)) {
+        return false;
+    }
+
+    return Boolean(page.image_url);
 }
 
 function generateVideoForPage(page: PageRow): void {
@@ -774,7 +795,7 @@ onUnmounted(() => {
                                     class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700 dark:bg-red-900/30 dark:text-red-400"
                                 >Save failed</span>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div v-if="isPro" class="flex items-center gap-2">
                                 <Button
                                     type="button"
                                     size="sm"
@@ -783,8 +804,15 @@ onUnmounted(() => {
                                     :title="pageVideoActionHint"
                                     @click="generateVideoForPage(page)"
                                 >
-                                    <Clapperboard class="mr-1.5 size-3.5" />
-                                    {{ page.video_url ? 'Regen video' : 'Gen video' }}
+                                    <Loader2 v-if="isPageVideoGenerating(page)" class="mr-1.5 size-3.5 animate-spin" />
+                                    <Clapperboard v-else class="mr-1.5 size-3.5" />
+                                    {{
+                                        isPageVideoGenerating(page)
+                                            ? 'Video…'
+                                            : page.video_url
+                                              ? 'Regen video'
+                                              : 'Gen video'
+                                    }}
                                 </Button>
                                 <Button
                                     type="button"
@@ -801,10 +829,12 @@ onUnmounted(() => {
 
                         <!-- Credit / pro hints -->
                         <div class="px-4 pt-3 pb-1 flex flex-wrap gap-2 text-xs">
-                            <span class="text-muted-foreground">Video: {{ props.video_credit_cost }} credits/page</span>
-                            <span v-if="!isPro" class="text-amber-600">· Pro required for video</span>
-                            <span v-else-if="!canAffordSingleVideo" class="text-destructive">· Not enough credits</span>
-                            <button v-if="!canAffordSingleVideo" class="text-violet-600 hover:underline" type="button" @click="openCreditsModal">Buy credits</button>
+                            <template v-if="isPro">
+                                <span class="text-muted-foreground">Video: {{ props.video_credit_cost }} credits/page</span>
+                                <span v-if="!canAffordSingleVideo" class="text-destructive">· Not enough credits</span>
+                                <button v-if="!canAffordSingleVideo" class="text-violet-600 hover:underline" type="button" @click="openCreditsModal">Buy credits</button>
+                            </template>
+                            <span v-else class="text-muted-foreground">Page video is available on Pro and Elite.</span>
                         </div>
 
                         <!-- Textarea -->
@@ -906,6 +936,7 @@ onUnmounted(() => {
                         </label>
 
                         <label
+                            v-if="isPro"
                             class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-border/60 px-3 py-2.5 transition-colors hover:bg-muted/30"
                             :class="{ 'opacity-50 pointer-events-none': !project.include_video }"
                         >
@@ -983,9 +1014,10 @@ onUnmounted(() => {
                         :cover-front="project.cover_front"
                         :cover-back="project.cover_back"
                         :flip-settings="project.flip_settings"
-                        :show-page-video-action="true"
+                        :show-page-video-action="isPro"
+                        :show-video-media-settings="isPro"
                         :can-generate-page-video="canGeneratePageVideoInFlipbook"
-                        :page-video-busy="pageVideoBusy"
+                        :page-video-busy="mergedPageVideoBusy"
                         :page-video-action-hint="pageVideoActionHint"
                         @view-page-change="onFlipViewPageChange"
                         @generate-page-video="onFlipbookGeneratePageVideo"
@@ -1054,7 +1086,7 @@ onUnmounted(() => {
                             <!-- Card header -->
                             <div class="flex items-center justify-between gap-2 border-b border-border/60 bg-muted/30 px-5 py-3">
                                 <h2 class="font-semibold">Page {{ currentScrollPage.page_number }}</h2>
-                                <div class="flex items-center gap-2">
+                                <div v-if="isPro" class="flex items-center gap-2">
                                     <span class="text-muted-foreground text-xs">Video: {{ props.video_credit_cost }} cr</span>
                                     <Button
                                         type="button"
@@ -1064,8 +1096,15 @@ onUnmounted(() => {
                                         :title="pageVideoActionHint"
                                         @click="generateVideoForPage(currentScrollPage)"
                                     >
-                                        <Clapperboard class="mr-1.5 size-3.5" />
-                                        {{ currentScrollPage.video_url ? 'Regen video' : 'Gen video' }}
+                                        <Loader2 v-if="isPageVideoGenerating(currentScrollPage)" class="mr-1.5 size-3.5 animate-spin" />
+                                        <Clapperboard v-else class="mr-1.5 size-3.5" />
+                                        {{
+                                            isPageVideoGenerating(currentScrollPage)
+                                                ? 'Video…'
+                                                : currentScrollPage.video_url
+                                                  ? 'Regen video'
+                                                  : 'Gen video'
+                                        }}
                                     </Button>
                                 </div>
                             </div>
