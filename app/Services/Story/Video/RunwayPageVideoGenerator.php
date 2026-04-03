@@ -85,6 +85,12 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
             throw new RuntimeException('Runway did not return a task ID.');
         }
 
+        Log::info('story.video.runway.task_created', [
+            'task_id' => $taskId,
+            'duration' => $duration,
+            'model' => $model,
+        ]);
+
         return $taskId;
     }
 
@@ -100,6 +106,14 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
                 ->json();
 
             $status = strtoupper((string) ($response['status'] ?? ''));
+            if ($i === 0 || ($i + 1) % 15 === 0) {
+                Log::info('story.video.runway.poll', [
+                    'task_id' => $taskId,
+                    'poll' => $i + 1,
+                    'max_polls' => $maxPolls,
+                    'status' => $status,
+                ]);
+            }
             if (in_array($status, ['FAILED', 'CANCELLED'], true)) {
                 $reason = (string) ($response['error'] ?? $response['failure'] ?? 'Unknown Runway failure.');
                 throw new RuntimeException('Runway video task failed: '.$reason);

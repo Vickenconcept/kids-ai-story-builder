@@ -20,6 +20,12 @@ class GenerateStoryPageVideoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * Runway polling + download + FFmpeg mux can exceed default Forge worker timeouts (~60s).
+     * Queue worker --timeout must be >= this value (Forge: daemon timeout in Supervisor).
+     */
+    public int $timeout = 900;
+
     public int $tries = 2;
 
     /**
@@ -50,6 +56,8 @@ class GenerateStoryPageVideoJob implements ShouldQueue
             'page_id' => $page->id,
             'page_number' => $page->page_number,
             'queue' => config('story.queues.video'),
+            'attempt' => $this->attempts(),
+            'max_tries' => $this->tries,
             'has_image_path' => filled($page->image_path),
             'has_audio_path' => filled($page->audio_path),
         ]);
@@ -138,6 +146,7 @@ class GenerateStoryPageVideoJob implements ShouldQueue
             || str_contains($message, 'timeout')
             || str_contains($message, 'connection')
             || str_contains($message, 'temporarily unavailable')
-            || str_contains($message, 'rate limit');
+            || str_contains($message, 'rate limit')
+            || str_contains($message, 'unexpected error occurred');
     }
 }
