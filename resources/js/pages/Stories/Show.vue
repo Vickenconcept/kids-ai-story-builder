@@ -681,12 +681,29 @@ watch(generateVideo, (on) => {
 
 let poll: ReturnType<typeof setInterval> | null = null;
 
+function anyPageVideoGenerating(): boolean {
+    return props.pages.some((p) => Boolean(p.video_generating));
+}
+
 onMounted(() => {
     poll = setInterval(() => {
-        if (props.project.status === 'processing') {
-            router.reload({ only: ['project', 'pages'] });
+        const processing = props.project.status === 'processing';
+        const pageVideoPending = anyPageVideoGenerating();
+
+        if (processing) {
+            router.reload({ only: ['project', 'pages', 'story_credits'] });
+
+            return;
         }
-    }, 5000);
+
+        /*
+         * Ready/failed stories do not use the processing poll above; page-level video still runs in the queue.
+         * Light reload (author story page only — public /read/ does not mount this) so the UI clears when video finishes.
+         */
+        if (pageVideoPending) {
+            router.reload({ only: ['pages', 'story_credits'] });
+        }
+    }, 8000);
 });
 
 onUnmounted(() => {

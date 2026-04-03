@@ -207,14 +207,28 @@ class StoryProjectController extends Controller
             ->latest('id')
             ->value('error_message');
 
-        $videoGeneratingPageIds = StoryAiJob::query()
-            ->where('story_project_id', $story->id)
-            ->where('type', StoryAiJobType::PageVideo)
-            ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
-            ->whereNotNull('story_page_id')
-            ->pluck('story_page_id')
-            ->unique()
-            ->all();
+        /*
+         * Only the latest PageVideo job per page controls "generating" UI. Older stuck running rows
+         * (e.g. after a retry or duplicate dispatch) must not keep the button spinning once a newer job succeeded.
+         */
+        $pageIds = $story->pages->pluck('id');
+        $latestPageVideoJobIds = $pageIds->isEmpty()
+            ? collect()
+            : StoryAiJob::query()
+                ->where('story_project_id', $story->id)
+                ->where('type', StoryAiJobType::PageVideo)
+                ->whereIn('story_page_id', $pageIds)
+                ->selectRaw('max(id) as id')
+                ->groupBy('story_page_id')
+                ->pluck('id');
+
+        $videoGeneratingPageIds = $latestPageVideoJobIds->isEmpty()
+            ? []
+            : StoryAiJob::query()
+                ->whereIn('id', $latestPageVideoJobIds)
+                ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
+                ->pluck('story_page_id')
+                ->all();
 
         $videoGeneratingSet = array_flip($videoGeneratingPageIds);
 
