@@ -36,30 +36,14 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         }
 
         $audioUrl = StoryMediaUrl::resolve($relativeAudioPath);
-        $audioBytes = null;
-        $audioDurationSeconds = null;
-
-        if (is_string($audioUrl) && $audioUrl !== '') {
-            try {
-                $audioBytes = Http::timeout(180)->get($audioUrl)->throw()->body();
-                $audioDurationSeconds = $this->extractAudioDurationSeconds($audioBytes);
-            } catch (\Throwable $e) {
-                Log::warning('story.video.audio_prepare_failed', [
-                    'error' => $e->getMessage(),
-                ]);
-                // Continue with fallback duration and no mux if audio cannot be prepared.
-                $audioBytes = null;
-                $audioDurationSeconds = null;
-            }
-        }
-
-        $taskId = $this->createVideoTask($apiKey, $imageUrl, $pageText, $audioDurationSeconds);
+        $taskId = $this->createVideoTask($apiKey, $imageUrl, $pageText);
         $videoUrl = $this->waitForVideoUrl($apiKey, $taskId);
 
         $videoBytes = Http::timeout(300)->get($videoUrl)->throw()->body();
 
-        if (is_string($audioBytes) && $audioBytes !== '') {
+        if (is_string($audioUrl) && $audioUrl !== '') {
             try {
+                $audioBytes = Http::timeout(180)->get($audioUrl)->throw()->body();
                 $videoBytes = $this->muxAudio($videoBytes, $audioBytes);
             } catch (\Throwable $e) {
                 Log::warning('story.video.mux_audio_failed', [
@@ -74,15 +58,14 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         return $this->media->storeBytes($videoBytes, $storageDirectory, $name, 'video');
     }
 
-    private function createVideoTask(string $apiKey, string $imageUrl, string $pageText, ?int $audioDurationSeconds): string
+    private function createVideoTask(string $apiKey, string $imageUrl, string $pageText): string
     {
         $defaultDuration = (int) config('services.runway.duration_seconds', 10);
         $minDuration = (int) config('services.runway.min_duration_seconds', 5);
-        $maxDuration = (int) config('services.runway.max_duration_seconds', 20);
+        $maxDuration = (int) config('services.runway.max_duration_seconds', 10);
         $ratio = (string) config('services.runway.ratio', '1280:720');
         $model = (string) config('services.runway.model', 'gen4_turbo');
-        $requestedDuration = $audioDurationSeconds ?? $defaultDuration;
-        $duration = max($minDuration, min($maxDuration, $requestedDuration));
+        $duration = max($minDuration, min($maxDuration, $defaultDuration));
 
         $payload = [
             'model' => $model,
@@ -186,16 +169,47 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         file_put_contents($videoIn, $videoBytes);
         file_put_contents($audioIn, $audioBytes);
 
-        $process = new Process([
+        $videoDuration = $this->probeDurationSeconds($videoIn);
+        $audioDuration = $this->probeDurationSeconds($audioIn);
+        $loopCount = 0;
+
+        if ($videoDuration > 0.0 && $audioDuration > $videoDuration) {
+            // stream_loop value is "additional repeats", so 1 means play twice total.
+            $loopCount = max(0, (int) ceil($audioDuration / $videoDuration) - 1);
+        }
+
+        $command = [
             (string) config('services.ffmpeg.binary', 'ffmpeg'),
             '-y',
-            '-i', $videoIn,
-            '-i', $audioIn,
-            '-c:v', 'copy',
-            '-c:a', 'aac',
-            '-shortest',
-            $output,
-        ]);
+        ];
+
+        if ($loopCount > 0) {
+            $command[] = '-stream_loop';
+            $command[] = (string) $loopCount;
+        }
+
+        $command[] = '-i';
+        $command[] = $videoIn;
+        $command[] = '-i';
+        $command[] = $audioIn;
+
+        if ($loopCount > 0) {
+            // Re-encode when looping to avoid container/timestamp issues on concatenated repeats.
+            $command[] = '-c:v';
+            $command[] = 'libx264';
+            $command[] = '-pix_fmt';
+            $command[] = 'yuv420p';
+        } else {
+            $command[] = '-c:v';
+            $command[] = 'copy';
+        }
+
+        $command[] = '-c:a';
+        $command[] = 'aac';
+        $command[] = '-shortest';
+        $command[] = $output;
+
+        $process = new Process($command);
 
         $process->setTimeout(180);
         $process->run();
@@ -211,41 +225,29 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         return $bytes;
     }
 
-    private function extractAudioDurationSeconds(string $audioBytes): int
+    private function probeDurationSeconds(string $inputPath): float
     {
-        $tempDir = storage_path('app/tmp/runway-audio-probe-'.Str::uuid());
-
-        if (! is_dir($tempDir) && ! mkdir($tempDir, 0775, true) && ! is_dir($tempDir)) {
-            throw new RuntimeException('Unable to create temporary directory for audio duration probing.');
-        }
-
-        $audioIn = $tempDir.'/input.mp3';
-        file_put_contents($audioIn, $audioBytes);
-
         $process = new Process([
             $this->ffprobeBinary(),
             '-v', 'error',
             '-show_entries', 'format=duration',
             '-of', 'default=noprint_wrappers=1:nokey=1',
-            $audioIn,
+            $inputPath,
         ]);
 
         $process->setTimeout(20);
         $process->run();
 
         if (! $process->isSuccessful()) {
-            $this->cleanupProbeTempDir($tempDir);
             throw new RuntimeException('FFprobe duration probe failed: '.trim($process->getErrorOutput()));
         }
 
-        $seconds = (float) trim($process->getOutput());
-        $this->cleanupProbeTempDir($tempDir);
-
+        $seconds = (float) trim((string) $process->getOutput());
         if ($seconds <= 0) {
-            throw new RuntimeException('FFprobe returned an invalid audio duration.');
+            throw new RuntimeException('FFprobe returned an invalid media duration.');
         }
 
-        return max(1, (int) ceil($seconds));
+        return $seconds;
     }
 
     private function ffprobeBinary(): string
@@ -260,18 +262,6 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         }
 
         return 'ffprobe';
-    }
-
-    private function cleanupProbeTempDir(string $tempDir): void
-    {
-        $audioIn = $tempDir.'/input.mp3';
-        if (is_file($audioIn)) {
-            @unlink($audioIn);
-        }
-
-        if (is_dir($tempDir)) {
-            @rmdir($tempDir);
-        }
     }
 
     private function cleanupTempDir(string $tempDir): void
