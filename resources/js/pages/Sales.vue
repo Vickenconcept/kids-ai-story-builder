@@ -533,10 +533,12 @@ import { Head } from '@inertiajs/vue3';
         </div>
     </section>
 
-    <!-- ── DISCLAIMER ──────────────────────────────────────────── -->
-    <section class="bg-indigo-50 px-4 py-10 md:px-8">
-        <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-2">
+    <!-- ── JVZOO REQUIRED DISCLAIMER ─────────────────────────── -->
+    <section class="bg-slate-100 px-4 py-8 md:px-8">
+        <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-3">
             <p class="font-semibold text-slate-600">Disclaimer</p>
+            <p>Please note that this product does not provide any guarantee of income or success. The results achieved by the product owner or any other individuals mentioned are not indicative of future success or earnings. This website is not affiliated with FaceBook or any of its associated entities. Once you navigate away from FaceBook, the responsibility for the content and its usage lies solely with the user. All content on this website, including but not limited to text, images, and multimedia, is protected by copyright law and the Digital Millennium Copyright Act. Unauthorized copying, duplication, modification, or theft, whether intentional or unintentional, is strictly prohibited. Violators will be prosecuted to the fullest extent of the law.</p>
+            <p>We want to clarify that JVZoo serves as the retailer for the products featured on this site. JVZoo® is a registered trademark of BBC Systems Inc., a Florida corporation located at 1809 E. Broadway Street, Suite 125, Oviedo, FL 32765, USA, and is used with permission. The role of JVZoo as a retailer does not constitute an endorsement, approval, or review of these products or any claims, statements, or opinions used in their promotion.</p>
             <p>This product does not guarantee income or business results. Outcomes vary by effort, traffic, positioning, and offer-market fit. Examples are illustrative and not promises of future performance.</p>
             <p>Product names and third-party platform references (Amazon KDP, Etsy, Gumroad) are used for informational context only. Publication eligibility and policy compliance are the responsibility of the user.</p>
         </div>
