@@ -63,7 +63,22 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Move the fresh build aside so the working tree is clean for rebase
+          cp -r public/build /tmp/fresh-build
+
+          # Restore public/build to whatever git last knew (tracked files only)
+          git checkout -- public/build 2>/dev/null || true
+          # Remove any untracked new-hash files the build created
+          git clean -fd public/build
+
+          # Now rebase is safe — no unstaged changes in public/build
           git pull --rebase origin "${GITHUB_REF_NAME}"
+
+          # Put the freshly built assets back
+          rm -rf public/build
+          cp -r /tmp/fresh-build public/build
+
           git add -f public/build
           git diff --cached --quiet && exit 0
           git commit -m "chore(ci): build frontend assets [skip ci]"
