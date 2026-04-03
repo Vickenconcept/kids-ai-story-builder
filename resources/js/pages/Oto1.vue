@@ -1,23 +1,23 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Wait — Your Storybooks Are Missing The Most Powerful Feature" />
+    <Head title="Wait â€” Your Storybooks Are Missing The Most Powerful Feature" />
 
     <!-- URGENT HEADER BAR -->
     <div class="bg-red-600 text-white text-center px-4 py-3 text-sm font-bold">
-        ⚠️ IMPORTANT: Do Not Close This Page — This Offer Is Only Available Right Now
+        âš ï¸ IMPORTANT: Do Not Close This Page â€” This Offer Is Only Available Right Now
     </div>
 
     <!-- HERO -->
     <section class="bg-slate-950 text-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
             <p class="inline-block rounded-full border border-red-400/40 bg-red-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-red-300">
-                🚨 One-Time Upgrade — This Page Will Not Appear Again
+                ðŸš¨ One-Time Upgrade â€” This Page Will Not Appear Again
             </p>
             <h1 class="mt-6 text-4xl font-extrabold leading-tight md:text-6xl">
-                Wait… Your Storybooks Are Still<br class="hidden md:block"/>
+                Waitâ€¦ Your Storybooks Are Still<br class="hidden md:block"/>
                 <span class="text-yellow-400">Missing The MOST Powerful Feature</span>
             </h1>
             <p class="mx-auto mt-6 max-w-2xl text-base text-slate-300 md:text-lg">
@@ -32,30 +32,30 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-slate-900 text-white px-4 py-14 md:px-8">
         <div class="mx-auto max-w-3xl">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-extrabold md:text-3xl">Here's What You Can Do Right Now…</h2>
+                <h2 class="text-2xl font-extrabold md:text-3xl">Here's What You Can Do Right Nowâ€¦</h2>
             </div>
             <div class="grid gap-4 md:grid-cols-2">
                 <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">What You Already Have ✔</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">What You Already Have âœ”</p>
                     <ul class="space-y-2 text-sm text-slate-300">
-                        <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Full story pages</li>
-                        <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Matching AI illustrations</li>
-                        <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Read-aloud voice narration</li>
-                        <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Shareable flipbook reader</li>
+                        <li class="flex items-center gap-2"><span class="text-emerald-400">âœ”</span> Full story pages</li>
+                        <li class="flex items-center gap-2"><span class="text-emerald-400">âœ”</span> Matching AI illustrations</li>
+                        <li class="flex items-center gap-2"><span class="text-emerald-400">âœ”</span> Read-aloud voice narration</li>
+                        <li class="flex items-center gap-2"><span class="text-emerald-400">âœ”</span> Shareable flipbook reader</li>
                     </ul>
                 </div>
                 <div class="rounded-2xl border-2 border-yellow-400/60 bg-yellow-400/5 p-6">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-yellow-400 mb-3">What You're Still Missing ❌</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-yellow-400 mb-3">What You're Still Missing âŒ</p>
                     <ul class="space-y-2 text-sm text-slate-300">
-                        <li class="flex items-center gap-2"><span class="text-red-400">✗</span> Turning story pages into <strong class="text-white">videos</strong></li>
-                        <li class="flex items-center gap-2"><span class="text-red-400">✗</span> Creating content for YouTube &amp; Shorts</li>
-                        <li class="flex items-center gap-2"><span class="text-red-400">✗</span> Building a <strong class="text-white">faceless video channel</strong></li>
-                        <li class="flex items-center gap-2"><span class="text-red-400">✗</span> Getting <strong class="text-white">views, engagement, and growth</strong></li>
+                        <li class="flex items-center gap-2"><span class="text-red-400">âœ—</span> Turning story pages into <strong class="text-white">videos</strong></li>
+                        <li class="flex items-center gap-2"><span class="text-red-400">âœ—</span> Creating content for YouTube &amp; Shorts</li>
+                        <li class="flex items-center gap-2"><span class="text-red-400">âœ—</span> Building a <strong class="text-white">faceless video channel</strong></li>
+                        <li class="flex items-center gap-2"><span class="text-red-400">âœ—</span> Getting <strong class="text-white">views, engagement, and growth</strong></li>
                     </ul>
                 </div>
             </div>
             <div class="mt-8 rounded-2xl border border-yellow-400/30 bg-yellow-400/5 p-6 text-center">
-                <p class="text-base font-bold text-yellow-300">👉 The most engaging content format online is VIDEO — not static pages.</p>
+                <p class="text-base font-bold text-yellow-300">ðŸ‘‰ The most engaging content format online is VIDEO â€” not static pages.</p>
                 <p class="mt-2 text-sm text-slate-400">Without this upgrade, you're leaving the most powerful distribution channel on the table.</p>
             </div>
         </div>
@@ -69,14 +69,14 @@ import { Head } from '@inertiajs/vue3';
             <p class="mx-auto mt-4 max-w-xl text-sm text-slate-600">The content that gets views, subscribers, and sales today is video. Not PDFs. Not static pages.</p>
             <div class="mt-8 grid gap-4 md:grid-cols-3 text-left">
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center">
-                    <p class="text-4xl font-extrabold text-yellow-500 mb-2">3×</p>
+                    <p class="text-4xl font-extrabold text-yellow-500 mb-2">3Ã—</p>
                     <p class="text-sm font-semibold text-slate-800">More engagement</p>
-                    <p class="mt-1 text-xs text-slate-500">Video content gets 3× more engagement than static posts on every major platform</p>
+                    <p class="mt-1 text-xs text-slate-500">Video content gets 3Ã— more engagement than static posts on every major platform</p>
                 </div>
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center">
                     <p class="text-4xl font-extrabold text-yellow-500 mb-2">2B+</p>
                     <p class="text-sm font-semibold text-slate-800">Monthly viewers</p>
-                    <p class="mt-1 text-xs text-slate-500">Kids' content channels on YouTube reach billions — and story-based content is one of the fastest growing niches</p>
+                    <p class="mt-1 text-xs text-slate-500">Kids' content channels on YouTube reach billions â€” and story-based content is one of the fastest growing niches</p>
                 </div>
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center">
                     <p class="text-4xl font-extrabold text-yellow-500 mb-2">$0</p>
@@ -91,12 +91,12 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-slate-950 text-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
             <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">See The Difference</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🎬 Watch: Your Story Becomes a Video</h2>
-            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">Every story page transforms into a dynamic animated video scene — synced with your narration automatically.</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">ðŸŽ¬ Watch: Your Story Becomes a Video</h2>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">Every story page transforms into a dynamic animated video scene â€” synced with your narration automatically.</p>
             <div class="mt-8 overflow-hidden rounded-2xl border-2 border-yellow-400/40 bg-slate-800 aspect-video flex items-center justify-center cursor-pointer group hover:border-yellow-400 transition">
                 <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-400 text-slate-900 text-3xl shadow-lg shadow-yellow-400/30 group-hover:scale-110 transition">▶</div>
-                    <p class="text-sm font-semibold text-slate-300">Watch: Story → Video in seconds</p>
+                    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-400 text-slate-900 text-3xl shadow-lg shadow-yellow-400/30 group-hover:scale-110 transition">â–¶</div>
+                    <p class="text-sm font-semibold text-slate-300">Watch: Story â†’ Video in seconds</p>
                     <p class="text-xs text-slate-500 mt-1">~90 seconds</p>
                 </div>
             </div>
@@ -112,32 +112,32 @@ import { Head } from '@inertiajs/vue3';
             </div>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div class="rounded-2xl border border-yellow-200 bg-white p-6">
-                    <p class="text-3xl mb-3">🎥</p>
+                    <p class="text-3xl mb-3">ðŸŽ¥</p>
                     <h3 class="font-bold text-slate-900">Page-to-Video Conversion</h3>
-                    <p class="mt-2 text-sm text-slate-600">Turn each story page into a dynamic animated video scene. Narration syncs automatically — zero editing required.</p>
+                    <p class="mt-2 text-sm text-slate-600">Turn each story page into a dynamic animated video scene. Narration syncs automatically â€” zero editing required.</p>
                 </div>
                 <div class="rounded-2xl border-2 border-yellow-400 bg-white p-6">
-                    <p class="text-3xl mb-3">📱</p>
+                    <p class="text-3xl mb-3">ðŸ“±</p>
                     <h3 class="font-bold text-slate-900">Social-Ready in One Click</h3>
                     <p class="mt-2 text-sm text-slate-600">Export directly for YouTube, Shorts, TikTok, and Reels. Perfect dimensions. Perfect format. Ready to upload today.</p>
                 </div>
                 <div class="rounded-2xl border border-yellow-200 bg-white p-6">
-                    <p class="text-3xl mb-3">🔊</p>
+                    <p class="text-3xl mb-3">ðŸ”Š</p>
                     <h3 class="font-bold text-slate-900">Voice + Visuals Synced</h3>
-                    <p class="mt-2 text-sm text-slate-600">Your narration automatically matches the visuals on screen. The result looks professionally produced — without a studio.</p>
+                    <p class="mt-2 text-sm text-slate-600">Your narration automatically matches the visuals on screen. The result looks professionally produced â€” without a studio.</p>
                 </div>
                 <div class="rounded-2xl border border-yellow-200 bg-white p-6">
-                    <p class="text-3xl mb-3">🚀</p>
+                    <p class="text-3xl mb-3">ðŸš€</p>
                     <h3 class="font-bold text-slate-900">Build a Kids Video Channel</h3>
-                    <p class="mt-2 text-sm text-slate-600">Create a new story video every day. Build a faceless YouTube channel around kids' content — one of the highest-earning niches.</p>
+                    <p class="mt-2 text-sm text-slate-600">Create a new story video every day. Build a faceless YouTube channel around kids' content â€” one of the highest-earning niches.</p>
                 </div>
                 <div class="rounded-2xl border border-yellow-200 bg-white p-6">
-                    <p class="text-3xl mb-3">⚡</p>
+                    <p class="text-3xl mb-3">âš¡</p>
                     <h3 class="font-bold text-slate-900">Higher Engagement</h3>
-                    <p class="mt-2 text-sm text-slate-600">Kids watch. Kids re-watch. Video keeps them engaged far longer than static pages — and the algorithm rewards it.</p>
+                    <p class="mt-2 text-sm text-slate-600">Kids watch. Kids re-watch. Video keeps them engaged far longer than static pages â€” and the algorithm rewards it.</p>
                 </div>
                 <div class="rounded-2xl border border-yellow-200 bg-white p-6">
-                    <p class="text-3xl mb-3">💰</p>
+                    <p class="text-3xl mb-3">ðŸ’°</p>
                     <h3 class="font-bold text-slate-900">Monetize Your Content</h3>
                     <p class="mt-2 text-sm text-slate-600">YouTube ad revenue, brand deals, Patreon, or sell video bundles. Your story videos become a real income stream.</p>
                 </div>
@@ -149,23 +149,23 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-slate-900 text-white px-4 py-14 md:px-8">
         <div class="mx-auto max-w-4xl">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-extrabold md:text-3xl">With This Upgrade You Can…</h2>
+                <h2 class="text-2xl font-extrabold md:text-3xl">With This Upgrade You Canâ€¦</h2>
             </div>
             <div class="grid gap-3 md:grid-cols-2">
                 <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">✔</span>
+                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">âœ”</span>
                     <p class="text-sm text-slate-300">Launch a <strong class="text-white">kids YouTube channel</strong> without showing your face or hiring a team</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">✔</span>
+                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">âœ”</span>
                     <p class="text-sm text-slate-300">Post <strong class="text-white">daily story videos</strong> to Shorts and Reels and grow an audience fast</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">✔</span>
+                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">âœ”</span>
                     <p class="text-sm text-slate-300">Turn your storybooks into <strong class="text-white">video products</strong> you can sell or bundle for higher prices</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">✔</span>
+                    <span class="text-yellow-400 font-bold mt-0.5 shrink-0">âœ”</span>
                     <p class="text-sm text-slate-300">Offer <strong class="text-white">animated story videos</strong> as a premium service for parents and schools</p>
                 </div>
             </div>
@@ -179,12 +179,12 @@ import { Head } from '@inertiajs/vue3';
             <div class="mt-8 grid gap-3 md:grid-cols-3 text-sm">
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <p class="font-bold text-slate-900">Video Editor</p>
-                    <p class="mt-2 text-2xl font-extrabold text-red-500">$50–$200</p>
+                    <p class="mt-2 text-2xl font-extrabold text-red-500">$50â€“$200</p>
                     <p class="mt-1 text-slate-500 text-xs">per video, per freelancer</p>
                 </div>
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <p class="font-bold text-slate-900">Animation Tools</p>
-                    <p class="mt-2 text-2xl font-extrabold text-red-500">$30–$100/mo</p>
+                    <p class="mt-2 text-2xl font-extrabold text-red-500">$30â€“$100/mo</p>
                     <p class="mt-1 text-slate-500 text-xs">monthly subscription</p>
                 </div>
                 <div class="rounded-2xl border-2 border-yellow-400 bg-yellow-50 p-5">
@@ -199,32 +199,32 @@ import { Head } from '@inertiajs/vue3';
     <!-- CTA -->
     <section class="bg-slate-950 text-white px-4 py-20 md:px-8">
         <div class="mx-auto max-w-2xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">One-Time Upgrade — Never This Price Again</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Add PRO Video to Your Storybook Studio</h2>
+            <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">One-Time Upgrade â€” Never This Price Again</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Add PRO Video to Your StorySpark AI</h2>
             <p class="mt-4 text-slate-400 text-sm">This upgrade is only shown once. When you leave this page, this offer disappears permanently.</p>
 
             <div class="mt-10 rounded-2xl border-2 border-yellow-400/50 bg-white/5 p-8">
                 <p class="text-sm font-semibold text-slate-400 line-through">Regular price: $197</p>
                 <p class="mt-2 text-7xl font-extrabold text-yellow-400">TBA</p>
-                <p class="mt-1 text-sm text-slate-400">One-time · Instant activation · No monthly fees</p>
+                <p class="mt-1 text-sm text-slate-400">One-time Â· Instant activation Â· No monthly fees</p>
 
                 <ul class="mt-6 space-y-2 text-left text-sm text-slate-300">
-                    <li class="flex items-center gap-2"><span class="text-yellow-400">✔</span> Page-to-video conversion engine</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-400">✔</span> Voice + visuals auto-synced</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-400">✔</span> YouTube, Shorts, Reels &amp; TikTok export</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-400">✔</span> Higher story &amp; page limits</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-400">✔</span> Premium illustration styles</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-400">✔</span> Priority rendering queue</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-400">âœ”</span> Page-to-video conversion engine</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-400">âœ”</span> Voice + visuals auto-synced</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-400">âœ”</span> YouTube, Shorts, Reels &amp; TikTok export</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-400">âœ”</span> Higher story &amp; page limits</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-400">âœ”</span> Premium illustration styles</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-400">âœ”</span> Priority rendering queue</li>
                 </ul>
 
                 <a href="#" class="mt-8 block w-full rounded-full bg-yellow-400 py-4 text-center text-base font-bold text-slate-900 shadow-lg shadow-yellow-400/30 transition hover:bg-yellow-300">
-                    👉 YES — Upgrade To PRO Video Now
+                    ðŸ‘‰ YES â€” Upgrade To PRO Video Now
                 </a>
-                <p class="mt-4 text-xs text-slate-500">⚠️ This offer disappears when you leave this page</p>
+                <p class="mt-4 text-xs text-slate-500">âš ï¸ This offer disappears when you leave this page</p>
             </div>
 
             <a href="#" class="mt-6 block text-xs text-slate-600 hover:text-slate-400 transition">
-                No thanks, I'm okay with just basic story pages — skip this upgrade
+                No thanks, I'm okay with just basic story pages â€” skip this upgrade
             </a>
         </div>
     </section>
@@ -233,7 +233,7 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-slate-50 px-4 py-8 md:px-8">
         <div class="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
             <p class="font-semibold text-slate-700">About Video Credits</p>
-            <p class="mt-2">Video generation uses additional processing power for higher-quality animated output. This upgrade activates the video engine on your account — usage credits apply per video created. Additional top-up packs are available inside the app at any time.</p>
+            <p class="mt-2">Video generation uses additional processing power for higher-quality animated output. This upgrade activates the video engine on your account â€” usage credits apply per video created. Additional top-up packs are available inside the app at any time.</p>
         </div>
     </section>
 
@@ -242,8 +242,9 @@ import { Head } from '@inertiajs/vue3';
         <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-3">
             <p class="font-semibold text-slate-600">Disclaimer</p>
             <p>Please note that this product does not provide any guarantee of income or success. The results achieved by the product owner or any other individuals mentioned are not indicative of future success or earnings. This website is not affiliated with FaceBook or any of its associated entities. Once you navigate away from FaceBook, the responsibility for the content and its usage lies solely with the user. All content on this website, including but not limited to text, images, and multimedia, is protected by copyright law and the Digital Millennium Copyright Act. Unauthorized copying, duplication, modification, or theft, whether intentional or unintentional, is strictly prohibited. Violators will be prosecuted to the fullest extent of the law.</p>
-            <p>We want to clarify that JVZoo serves as the retailer for the products featured on this site. JVZoo® is a registered trademark of BBC Systems Inc., a Florida corporation located at 1809 E. Broadway Street, Suite 125, Oviedo, FL 32765, USA, and is used with permission. The role of JVZoo as a retailer does not constitute an endorsement, approval, or review of these products or any claims, statements, or opinions used in their promotion.</p>
+            <p>We want to clarify that JVZoo serves as the retailer for the products featured on this site. JVZooÂ® is a registered trademark of BBC Systems Inc., a Florida corporation located at 1809 E. Broadway Street, Suite 125, Oviedo, FL 32765, USA, and is used with permission. The role of JVZoo as a retailer does not constitute an endorsement, approval, or review of these products or any claims, statements, or opinions used in their promotion.</p>
             <p>Results vary. Income and engagement outcomes depend on individual effort, content quality, platform performance, and market conditions. This is not a guarantee of earnings or viewership.</p>
         </div>
     </section>
 </template>
+

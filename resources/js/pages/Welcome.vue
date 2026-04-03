@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { dashboard, login, register } from '@/routes';
 
@@ -58,13 +58,13 @@ const steps = [
 </script>
 
 <template>
-    <Head title="AI Storybook Studio – Create Illustrated Storybooks in Minutes">
+    <Head title="StorySpark AI â€“ Create Illustrated Storybooks in Minutes">
         <meta name="description" content="Turn any idea into a fully illustrated, narrated children's storybook in minutes using AI. No writing or design skills needed." />
     </Head>
 
     <div class="min-h-screen bg-[#0d0d1a] text-white antialiased">
 
-        <!-- ── NAV ─────────────────────────────────────────────── -->
+        <!-- â”€â”€ NAV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <header class="sticky top-0 z-50 border-b border-white/6 bg-[#0d0d1a]/80 backdrop-blur-xl">
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
                 <!-- Logo -->
@@ -75,7 +75,7 @@ const steps = [
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                         </svg>
                     </div>
-                    <span class="text-sm font-bold tracking-tight">AI Storybook Studio</span>
+                    <span class="text-sm font-bold tracking-tight">StorySpark AI</span>
                 </div>
 
                 <!-- Auth links -->
@@ -107,7 +107,7 @@ const steps = [
             </div>
         </header>
 
-        <!-- ── HERO ───────────────────────────────────────────── -->
+        <!-- â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section class="relative overflow-hidden px-5 pb-24 pt-20 text-center md:pb-32 md:pt-28">
             <!-- Glow orbs -->
             <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -136,7 +136,7 @@ const steps = [
                 <!-- Sub -->
                 <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-400 md:text-lg">
                     No writing skills. No design skills. No tech knowledge.<br />
-                    Just enter your idea — AI writes the story, draws every page,<br class="hidden md:block" />
+                    Just enter your idea â€” AI writes the story, draws every page,<br class="hidden md:block" />
                     adds narration, generates videos, and builds an interactive flipbook.
                 </p>
 
@@ -157,7 +157,7 @@ const steps = [
                         :href="dashboard()"
                         class="inline-flex items-center gap-2 rounded-full bg-violet-600 px-7 py-3.5 text-sm font-bold shadow-lg shadow-violet-600/30 transition hover:bg-violet-500 active:scale-95"
                     >
-                        Open Dashboard →
+                        Open Dashboard â†’
                     </Link>
                     <a
                         href="#how-it-works"
@@ -166,7 +166,7 @@ const steps = [
                         See How It Works
                     </a>
                 </div>
-                <p class="mt-4 text-xs text-slate-600">No credit card required &nbsp;·&nbsp; Free to start &nbsp;·&nbsp; Instant access</p>
+                <p class="mt-4 text-xs text-slate-600">No credit card required &nbsp;Â·&nbsp; Free to start &nbsp;Â·&nbsp; Instant access</p>
             </div>
 
             <!-- Floating preview card -->
@@ -178,7 +178,7 @@ const steps = [
                         <span class="size-3 rounded-full bg-yellow-500/60" />
                         <span class="size-3 rounded-full bg-green-500/60" />
                         <div class="ml-3 flex-1 rounded-md bg-white/6 px-3 py-1 text-left text-[11px] text-slate-500">
-                            aistorybookstudio.com/read/the-dragon-who-lost-his-fire
+                            storyspark.ai/read/the-dragon-who-lost-his-fire
                         </div>
                     </div>
                     <!-- Mock flipbook -->
@@ -254,25 +254,25 @@ const steps = [
                     <span class="text-xs font-semibold text-slate-300">Story generated in 42 seconds</span>
                 </div>
                 <div class="absolute -bottom-4 right-6 flex items-center gap-2 rounded-xl border border-white/10 bg-[#1a1a2e] px-3 py-2 shadow-xl">
-                    <span class="text-base">📚</span>
-                    <span class="text-xs font-semibold text-slate-300">12 pages &nbsp;·&nbsp; Full illustrations</span>
+                    <span class="text-base">ðŸ“š</span>
+                    <span class="text-xs font-semibold text-slate-300">12 pages &nbsp;Â·&nbsp; Full illustrations</span>
                 </div>
             </div>
         </section>
 
-        <!-- ── TRUST STRIP ─────────────────────────────────────── -->
+        <!-- â”€â”€ TRUST STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <div class="border-y border-white/6 bg-white/2">
             <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-5 py-5 text-xs font-medium text-slate-500">
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Full illustrated story pages</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> AI-generated visuals per page</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Built-in voice narration</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Animated page videos</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Interactive flipbook reader</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> KDP-ready PDF export</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">âœ“</span> Full illustrated story pages</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">âœ“</span> AI-generated visuals per page</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">âœ“</span> Built-in voice narration</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">âœ“</span> Animated page videos</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">âœ“</span> Interactive flipbook reader</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">âœ“</span> KDP-ready PDF export</span>
             </div>
         </div>
 
-        <!-- ── HOW IT WORKS ────────────────────────────────────── -->
+        <!-- â”€â”€ HOW IT WORKS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section id="how-it-works" class="px-5 py-20 md:py-28">
             <div class="mx-auto max-w-5xl">
                 <div class="mb-14 text-center">
@@ -293,13 +293,13 @@ const steps = [
             </div>
         </section>
 
-        <!-- ── FEATURES ────────────────────────────────────────── -->
+        <!-- â”€â”€ FEATURES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section class="px-5 py-20 md:py-28">
             <div class="mx-auto max-w-5xl">
                 <div class="mb-14 text-center">
                     <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-400">Everything Included</p>
                     <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">One Tool. Complete Storybooks.</h2>
-                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-400">Every feature you need to create, publish and sell stunning children's storybooks — all in one place.</p>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-400">Every feature you need to create, publish and sell stunning children's storybooks â€” all in one place.</p>
                 </div>
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <div
@@ -318,7 +318,7 @@ const steps = [
             </div>
         </section>
 
-        <!-- ── CTA SECTION ─────────────────────────────────────── -->
+        <!-- â”€â”€ CTA SECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section class="px-5 py-20 md:py-28">
             <div class="relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-violet-500/20 bg-linear-to-br from-violet-950/60 via-[#12122a] to-indigo-950/60 px-8 py-14 text-center shadow-2xl shadow-violet-950/60">
                 <!-- Glow -->
@@ -329,7 +329,7 @@ const steps = [
                     <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-400">Start Creating</p>
                     <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Your First Storybook is One Click Away</h2>
                     <p class="mx-auto mt-4 max-w-md text-sm leading-relaxed text-slate-400">
-                        Create your account, enter your idea, and watch AI bring your story to life — completely free to start.
+                        Create your account, enter your idea, and watch AI bring your story to life â€” completely free to start.
                     </p>
                     <div class="mt-8 flex flex-wrap justify-center gap-3">
                         <Link
@@ -337,14 +337,14 @@ const steps = [
                             :href="register()"
                             class="inline-flex items-center gap-2 rounded-full bg-violet-600 px-8 py-3.5 text-sm font-bold shadow-lg shadow-violet-600/30 transition hover:bg-violet-500 active:scale-95"
                         >
-                            Create Free Account →
+                            Create Free Account â†’
                         </Link>
                         <Link
                             v-if="$page.props.auth.user"
                             :href="dashboard()"
                             class="inline-flex items-center gap-2 rounded-full bg-violet-600 px-8 py-3.5 text-sm font-bold shadow-lg shadow-violet-600/30 transition hover:bg-violet-500 active:scale-95"
                         >
-                            Go to Dashboard →
+                            Go to Dashboard â†’
                         </Link>
                         <Link
                             v-if="!$page.props.auth.user"
@@ -358,7 +358,7 @@ const steps = [
             </div>
         </section>
 
-        <!-- ── FOOTER ──────────────────────────────────────────── -->
+        <!-- â”€â”€ FOOTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <footer class="border-t border-white/6 px-5 py-8">
             <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-2.5">
@@ -367,9 +367,9 @@ const steps = [
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                         </svg>
                     </div>
-                    <span class="text-xs font-bold text-slate-400">AI Storybook Studio</span>
+                    <span class="text-xs font-bold text-slate-400">StorySpark AI</span>
                 </div>
-                <p class="text-xs text-slate-600">© 2026 AI Storybook Studio. All rights reserved.</p>
+                <p class="text-xs text-slate-600">Â© 2026 StorySpark AI. All rights reserved.</p>
                 <div class="flex gap-4 text-xs text-slate-600">
                     <Link :href="login()" class="transition hover:text-slate-400">Log in</Link>
                     <Link v-if="canRegister" :href="register()" class="transition hover:text-slate-400">Register</Link>
@@ -378,3 +378,4 @@ const steps = [
         </footer>
     </div>
 </template>
+

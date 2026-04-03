@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import {
     BookOpen,
@@ -100,7 +100,7 @@ function progressPercent(project: RecentProject) {
                 <div class="flex flex-col gap-1">
                     <div class="flex items-center gap-2">
                         <Sparkles class="size-5 text-violet-500" />
-                        <span class="text-sm font-medium text-violet-600 dark:text-violet-400">AI Storybook Studio</span>
+                        <span class="text-sm font-medium text-violet-600 dark:text-violet-400">StorySpark AI</span>
                         <span
                             class="rounded-full px-2 py-0.5 text-xs font-semibold capitalize"
                             :class="tierColor(tier)"
@@ -141,7 +141,7 @@ function progressPercent(project: RecentProject) {
                     <CardContent>
                         <p class="text-3xl font-bold">{{ stats.total }}</p>
                         <p class="text-muted-foreground mt-0.5 text-xs">
-                            {{ stats.draft }} draft · {{ stats.failed }} failed
+                            {{ stats.draft }} draft Â· {{ stats.failed }} failed
                         </p>
                     </CardContent>
                 </Card>
@@ -366,3 +366,4 @@ function progressPercent(project: RecentProject) {
         </div>
     </AppLayout>
 </template>
+
