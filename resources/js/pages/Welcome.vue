@@ -69,7 +69,7 @@ const steps = [
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-9 w-auto object-contain" />
+                    <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-16 w-auto object-contain" />
                 </div>
 
                 <!-- Auth links -->
@@ -356,7 +356,7 @@ const steps = [
         <footer class="border-t border-white/6 px-5 py-8">
             <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center">
-                    <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-7 w-auto object-contain opacity-70" />
+                    <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-14 w-auto object-contain opacity-70" />
                 </div>
                 <p class="text-xs text-slate-600">Â© 2026 DreamForge AI. All rights reserved.</p>
                 <div class="flex gap-4 text-xs text-slate-600">

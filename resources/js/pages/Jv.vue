@@ -26,7 +26,7 @@ import { Head } from '@inertiajs/vue3';
             class="flex w-full items-center justify-between p-4 md:px-16 md:py-6 lg:px-24 xl:px-32"
         >
             <a href="#" class="flex items-center">
-                <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-10 w-auto object-contain" />
+                <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-16 w-auto object-contain" />
             </a>
             <div
                 id="menu"
