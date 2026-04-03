@@ -11,6 +11,7 @@ use App\Services\Story\StoryPipelineDispatcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
@@ -141,23 +142,50 @@ class GenerateStoryPageVideoJob implements ShouldQueue
             return false;
         }
 
+        if ($this->isNonRetryableRunwayHttpError($e)) {
+            return false;
+        }
+
         $message = strtolower($e->getMessage());
 
         if (str_contains($message, 'not enough credits')) {
             return false;
         }
 
+        if (str_contains($message, 'runway video task failed:')) {
+            return false;
+        }
+
         return str_contains($message, '502')
             || str_contains($message, '503')
             || str_contains($message, '504')
+            || str_contains($message, '500')
             || str_contains($message, 'bad gateway')
             || str_contains($message, 'timed out')
             || str_contains($message, 'timeout')
             || str_contains($message, 'connection')
             || str_contains($message, 'temporarily unavailable')
             || str_contains($message, 'rate limit')
-            || str_contains($message, 'unexpected error occurred')
             || str_contains($message, 'stale task id was cleared')
             || str_contains($message, 'task not found');
+    }
+
+    /**
+     * Do not queue-retry client errors (4xx except 429): repeating the same bad payload wastes queue time and may confuse operators.
+     */
+    private function isNonRetryableRunwayHttpError(Throwable $e): bool
+    {
+        if (! $e instanceof RequestException) {
+            return false;
+        }
+
+        $response = $e->response;
+        if ($response === null) {
+            return false;
+        }
+
+        $status = $response->status();
+
+        return $status >= 400 && $status < 500 && $status !== 429;
     }
 }

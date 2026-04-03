@@ -37,6 +37,9 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         if (! is_string($imageUrl) || $imageUrl === '') {
             throw new RuntimeException('Cannot generate video without a page image URL.');
         }
+        if (! str_starts_with($imageUrl, 'https://')) {
+            throw new RuntimeException('Runway requires a public HTTPS image URL; got: '.mb_substr($imageUrl, 0, 120));
+        }
 
         $audioUrl = StoryMediaUrl::resolve($relativeAudioPath);
         $taskId = $this->resolveOrCreateRunwayTask(
@@ -104,10 +107,19 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
             'ratio' => $ratio,
         ];
 
-        $response = $this->runwayRequest($apiKey)
-            ->post(self::BASE_URL.'/image_to_video', $payload)
-            ->throw()
-            ->json();
+        $httpResponse = $this->runwayRequest($apiKey)
+            ->post(self::BASE_URL.'/image_to_video', $payload);
+
+        if ($httpResponse->failed()) {
+            Log::error('story.video.runway.image_to_video_http_error', [
+                'status' => $httpResponse->status(),
+                'body' => mb_substr($httpResponse->body(), 0, 16000),
+            ]);
+        }
+
+        $httpResponse->throw();
+        /** @var array<string, mixed> $response */
+        $response = $httpResponse->json() ?? [];
 
         $taskId = (string) ($response['id'] ?? '');
         if ($taskId === '') {
@@ -137,6 +149,14 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
                     $onRunwayTaskIdChanged(null);
                 }
                 throw new RuntimeException('Runway task not found; stale task id was cleared.');
+            }
+
+            if ($httpResponse->failed() && $httpResponse->status() >= 400 && $httpResponse->status() < 500 && $httpResponse->status() !== 429) {
+                Log::error('story.video.runway.task_poll_http_error', [
+                    'task_id' => $taskId,
+                    'status' => $httpResponse->status(),
+                    'body' => mb_substr($httpResponse->body(), 0, 16000),
+                ]);
             }
 
             $httpResponse->throw();
