@@ -373,6 +373,10 @@ const illustrationStyleOptions = [
     { value: '3d', label: '3D render' },
     { value: 'storybook', label: 'Classic storybook' },
     { value: 'anime', label: 'Anime inspired' },
+    { value: 'flat-vector', label: 'Flat vector' },
+    { value: 'pencil-sketch', label: 'Pencil sketch' },
+    { value: 'pixel-art', label: 'Pixel art' },
+    { value: 'paper-collage', label: 'Paper collage' },
 ];
 </script>
 

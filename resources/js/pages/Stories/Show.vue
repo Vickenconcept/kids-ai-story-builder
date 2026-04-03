@@ -234,7 +234,24 @@ const illustrationStyleOptions = [
     { value: '3d', label: '3D render' },
     { value: 'storybook', label: 'Classic storybook' },
     { value: 'anime', label: 'Anime inspired' },
+    { value: 'flat-vector', label: 'Flat vector' },
+    { value: 'pencil-sketch', label: 'Pencil sketch' },
+    { value: 'pixel-art', label: 'Pixel art' },
+    { value: 'paper-collage', label: 'Paper collage' },
 ];
+
+/** Flip-to-play narration only when there is narration and no project-wide page video (avoids double audio). */
+const flipbookPlayAudioOnFlip = computed(
+    () => props.project.include_narration && !props.project.include_video,
+);
+
+const flipbookNarrationOffHint = computed(() => {
+    if (props.project.include_narration && props.project.include_video) {
+        return 'Page videos include audio, so flip-to-play narration stays off to avoid overlapping sound.';
+    }
+
+    return '';
+});
 
 const ttsVoiceOptions = [
     { value: 'nova', label: 'Nova' },
@@ -412,6 +429,8 @@ async function startMediaGeneration(): Promise<void> {
             generate_images: generateImages.value,
             generate_audio: generateAudio.value,
             generate_video: generateVideo.value,
+            illustration_style: selectedIllustrationStyle.value,
+            meta: { tts_voice: selectedTtsVoice.value },
         },
         { preserveScroll: true, preserveState: true },
     );
@@ -955,7 +974,8 @@ onUnmounted(() => {
                         :key="flipbookKey"
                         :title="project.title"
                         :pages="pages"
-                        :play-audio-on-flip="project.include_narration"
+                        :play-audio-on-flip="flipbookPlayAudioOnFlip"
+                        :narration-unavailable-hint="flipbookNarrationOffHint"
                         :story-uuid="project.uuid"
                         :include-quiz="project.include_quiz"
                         :gameplay-enabled="project.flip_gameplay_enabled"

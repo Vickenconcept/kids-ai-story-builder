@@ -296,6 +296,9 @@ class StoryProjectController extends Controller
             'generate_images' => ['sometimes', 'boolean'],
             'generate_audio' => ['sometimes', 'boolean'],
             'generate_video' => ['sometimes', 'boolean'],
+            'illustration_style' => ['sometimes', 'string', 'max:80'],
+            'meta' => ['sometimes', 'array'],
+            'meta.tts_voice' => ['sometimes', 'string', Rule::in(['alloy', 'ash', 'coral', 'echo', 'fable', 'nova', 'onyx', 'sage', 'shimmer'])],
         ]);
 
         $story->loadMissing('pages');
@@ -333,10 +336,31 @@ class StoryProjectController extends Controller
             return back()->with('error', 'Not enough credits to start selected media. Required: '.$estimate['total'].' credits.');
         }
 
-        $story->update([
+        $updates = [
             'status' => StoryProjectStatus::Processing,
             'pages_completed' => 0,
-        ]);
+        ];
+
+        if (! empty($validated['illustration_style'])) {
+            $updates['illustration_style'] = $validated['illustration_style'];
+        }
+
+        if (! empty($validated['meta']['tts_voice'] ?? null)) {
+            $updates['meta'] = array_merge($story->meta ?? [], [
+                'tts_voice' => $validated['meta']['tts_voice'],
+            ]);
+        }
+
+        if ($generateVideo) {
+            $flip = is_array($story->flip_settings) ? $story->flip_settings : [];
+            $flip['audioOnFlip'] = false;
+            if (($flip['autoAdvance'] ?? null) === 'afterAudio') {
+                $flip['autoAdvance'] = 'off';
+            }
+            $updates['flip_settings'] = $flip;
+        }
+
+        $story->update($updates);
 
         $dispatcher->dispatchSelectedMedia(
             $story->fresh(['pages', 'user']),

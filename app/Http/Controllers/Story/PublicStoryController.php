@@ -55,6 +55,7 @@ class PublicStoryController extends Controller
                 'topic' => $story->topic,
                 'include_quiz' => $story->include_quiz,
                 'include_narration' => $story->include_narration,
+                'include_video' => $story->include_video,
                 'flip_gameplay_enabled' => $story->flip_gameplay_enabled,
                 'cover_front' => $this->hydrateCover($story->cover_front),
                 'cover_back' => $this->hydrateCover($story->cover_back),

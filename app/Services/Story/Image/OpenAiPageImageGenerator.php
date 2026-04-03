@@ -18,8 +18,9 @@ class OpenAiPageImageGenerator implements PageImageGenerator
 
     public function generate(PageImageInput $input, string $storageDirectory): string
     {
+        $style = $this->describeIllustrationStyle($input->illustrationStyle);
         $prompt = implode(' ', [
-            "Children's book illustration, {$input->illustrationStyle} style, age-appropriate, no text in image.",
+            "Children's book illustration, {$style}, age-appropriate, no text or letters in the image.",
             'Scene inspired by:',
             mb_substr($input->pageText, 0, 900),
         ]);
@@ -51,5 +52,26 @@ class OpenAiPageImageGenerator implements PageImageGenerator
         $name = 'page-'.uniqid('', true).'.png';
 
         return $this->media->storeBytes($binary, $storageDirectory, $name, 'image');
+    }
+
+    /**
+     * Map stored slug → richer prompt text so different UI choices produce visibly different art.
+     */
+    private function describeIllustrationStyle(string $slug): string
+    {
+        $key = strtolower(trim($slug));
+
+        return match ($key) {
+            'cartoon' => 'bold cartoon linework, saturated flat colors, expressive characters',
+            'watercolor' => 'soft watercolor washes, paper texture, gentle edges, luminous pigment',
+            '3d' => 'polished 3D render, soft studio lighting, rounded kid-friendly forms',
+            'storybook' => 'classic printed storybook look, warm ink and gentle crosshatching',
+            'anime' => 'anime-inspired: clean cel shading, large expressive eyes, dynamic poses',
+            'flat-vector' => 'modern flat vector art, limited palette, crisp geometric shapes',
+            'pencil-sketch' => 'graphite pencil sketch, light hatching, hand-drawn storybook feel',
+            'pixel-art' => 'cohesive pixel art, limited resolution aesthetic, retro game charm',
+            'paper-collage' => 'cut-paper collage, layered colored paper shapes, tactile edges',
+            default => trim($slug).' illustration style',
+        };
     }
 }

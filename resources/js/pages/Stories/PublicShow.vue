@@ -25,6 +25,7 @@ const props = defineProps<{
         topic: string;
         include_quiz: boolean;
         include_narration: boolean;
+        include_video: boolean;
         flip_gameplay_enabled: boolean;
         cover_front: CoverConfigJson;
         cover_back: CoverConfigJson;
@@ -68,6 +69,8 @@ watch(
     },
 );
 
+const playAudioOnFlip = computed(() => props.project.include_narration && !props.project.include_video);
+
 const flipbookKey = computed(() =>
     [
         props.project.uuid,
@@ -108,7 +111,7 @@ const flipbookKey = computed(() =>
                     :key="flipbookKey"
                     :title="project.title"
                     :pages="pages"
-                    :play-audio-on-flip="project.include_narration"
+                    :play-audio-on-flip="playAudioOnFlip"
                     :story-uuid="project.uuid"
                     :include-quiz="project.include_quiz"
                     :gameplay-enabled="project.flip_gameplay_enabled"

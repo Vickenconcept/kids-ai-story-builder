@@ -29,6 +29,8 @@ export type FlipbookSetupSettings = {
 const props = defineProps<{
     settings: FlipbookSetupSettings;
     playAudioOnFlip: boolean;
+    /** Shown when narration autoplay is disabled but not because the story lacks audio (e.g. page videos). */
+    narrationUnavailableHint?: string;
     includeQuiz: boolean;
     hasQuizPages: boolean;
     storyUuid?: string;
@@ -74,7 +76,11 @@ const emit = defineEmits<{
                 </span>
             </label>
             <p v-if="!playAudioOnFlip" class="text-muted-foreground -mt-2 text-xs">
-                Narration is unavailable for this story, so narration controls are disabled.
+                {{
+                    props.narrationUnavailableHint && props.narrationUnavailableHint.length > 0
+                        ? props.narrationUnavailableHint
+                        : 'Narration is unavailable for this story, so narration controls are disabled.'
+                }}
             </p>
 
             <label

@@ -61,6 +61,8 @@ const props = withDefaults(
         pageVideoBusy?: Record<string, boolean>;
         /** Optional reason shown as disabled button tooltip. */
         pageVideoActionHint?: string;
+        /** When playAudioOnFlip is false but narration exists (e.g. video stories), explain why the toggle is off. */
+        narrationUnavailableHint?: string;
     }>(),
     {
         playAudioOnFlip: true,
@@ -75,6 +77,7 @@ const props = withDefaults(
         canGeneratePageVideo: false,
         pageVideoBusy: () => ({}),
         pageVideoActionHint: '',
+        narrationUnavailableHint: '',
     },
 );
 
@@ -550,13 +553,16 @@ watch(
     () => props.playAudioOnFlip,
     (canPlayNarration) => {
         if (!canPlayNarration) {
-            settings.audioOnFlip = false;
+            withSuppressedSettingsSync(() => {
+                settings.audioOnFlip = false;
 
-            if (settings.autoAdvance === 'afterAudio') {
-                settings.autoAdvance = 'off';
-            }
+                if (settings.autoAdvance === 'afterAudio') {
+                    settings.autoAdvance = 'off';
+                }
+            });
         }
     },
+    { immediate: true },
 );
 
 watch(
@@ -1657,6 +1663,7 @@ onBeforeUnmount(() => {
             <StoryFlipbookSetupPanel
                 :settings="settings"
                 :play-audio-on-flip="playAudioOnFlip"
+                :narration-unavailable-hint="narrationUnavailableHint"
                 :include-quiz="includeQuiz"
                 :has-quiz-pages="hasQuizPages"
                 :story-uuid="storyUuid"
