@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\CreditPackController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Billing\CreditPurchaseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Story\PublicStoryController;
 use App\Http\Controllers\Story\StoryPageController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Story\StoryProjectController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -50,6 +51,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [CreditPackController::class, 'store'])->name('store');
         Route::patch('/{pack}', [CreditPackController::class, 'update'])->name('update');
         Route::delete('/{pack}', [CreditPackController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('can:manage-users')->prefix('admin/users')->name('admin.users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::patch('/{user}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
     });
 });
 

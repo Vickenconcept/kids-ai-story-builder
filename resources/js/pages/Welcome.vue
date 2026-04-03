@@ -114,7 +114,7 @@ const steps = [
                 <!-- Badge -->
                 <span class="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-violet-300">
                     <span class="size-1.5 animate-pulse rounded-full bg-violet-400" />
-                    Powered by OpenAI &amp; RunwayML
+                    Now Live!! Special Launch Price
                 </span>
 
                 <!-- Headline -->

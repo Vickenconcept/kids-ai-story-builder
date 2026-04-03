@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $user,
                 'canManageCreditPacks' => $user?->can('manage-credit-packs') ?? false,
+                'canManageUsers' => $user?->can('manage-users') ?? false,
             ],
             'billing' => [
                 'paypalClientId' => config('services.paypal.client_id'),

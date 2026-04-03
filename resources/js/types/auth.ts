@@ -15,6 +15,7 @@ export type User = {
 export type Auth = {
     user: User;
     canManageCreditPacks?: boolean;
+    canManageUsers?: boolean;
 };
 
 export type TwoFactorConfigContent = {

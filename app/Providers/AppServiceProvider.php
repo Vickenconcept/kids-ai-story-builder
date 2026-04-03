@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureDefaults(): void
     {
-        Gate::define('manage-credit-packs', function ($user): bool {
+        $storyAdminGate = function ($user): bool {
             $adminEmails = collect((array) config('story.admin_emails', []))
                 ->map(fn ($email) => strtolower(trim((string) $email)))
                 ->filter()
@@ -40,7 +40,10 @@ class AppServiceProvider extends ServiceProvider
                 ->all();
 
             return in_array(strtolower((string) $user->email), $adminEmails, true);
-        });
+        };
+
+        Gate::define('manage-credit-packs', $storyAdminGate);
+        Gate::define('manage-users', $storyAdminGate);
 
         Date::use(CarbonImmutable::class);
 

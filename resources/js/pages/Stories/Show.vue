@@ -675,6 +675,7 @@ onUnmounted(() => {
         <StorySetupTopBar
             :project="project"
             :story-credits="props.story_credits"
+            :feature-tier="props.feature_tier"
             :view-mode="viewMode"
             :show-view-mode="!isDraftReviewStage"
             @update:view-mode="setViewMode($event)"
