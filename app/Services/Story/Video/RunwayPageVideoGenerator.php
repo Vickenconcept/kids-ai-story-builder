@@ -5,6 +5,7 @@ namespace App\Services\Story\Video;
 use App\Contracts\Story\PageVideoGenerator;
 use App\Services\Media\StoryMediaStorage;
 use App\Support\StoryMediaUrl;
+use Closure;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -24,6 +25,8 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         ?string $relativeImagePath,
         ?string $relativeAudioPath,
         string $storageDirectory,
+        ?string $resumeRunwayTaskId = null,
+        ?Closure $onRunwayTaskIdChanged = null,
     ): string {
         $apiKey = trim((string) config('services.runway.api_key', ''));
         if ($apiKey === '') {
@@ -36,8 +39,14 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         }
 
         $audioUrl = StoryMediaUrl::resolve($relativeAudioPath);
-        $taskId = $this->createVideoTask($apiKey, $imageUrl, $pageText);
-        $videoUrl = $this->waitForVideoUrl($apiKey, $taskId);
+        $taskId = $this->resolveOrCreateRunwayTask(
+            $apiKey,
+            $imageUrl,
+            $pageText,
+            $resumeRunwayTaskId,
+            $onRunwayTaskIdChanged,
+        );
+        $videoUrl = $this->waitForVideoUrl($apiKey, $taskId, $onRunwayTaskIdChanged);
 
         $videoBytes = Http::timeout(300)->get($videoUrl)->throw()->body();
 
@@ -56,6 +65,26 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         $name = 'video-'.Str::uuid().'.mp4';
 
         return $this->media->storeBytes($videoBytes, $storageDirectory, $name, 'video');
+    }
+
+    private function resolveOrCreateRunwayTask(
+        string $apiKey,
+        string $imageUrl,
+        string $pageText,
+        ?string $resumeRunwayTaskId,
+        ?Closure $onRunwayTaskIdChanged,
+    ): string {
+        $resume = $resumeRunwayTaskId !== null ? trim($resumeRunwayTaskId) : '';
+        if ($resume !== '') {
+            return $resume;
+        }
+
+        $taskId = $this->createVideoTask($apiKey, $imageUrl, $pageText);
+        if ($onRunwayTaskIdChanged) {
+            $onRunwayTaskIdChanged($taskId);
+        }
+
+        return $taskId;
     }
 
     private function createVideoTask(string $apiKey, string $imageUrl, string $pageText): string
@@ -94,16 +123,25 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         return $taskId;
     }
 
-    private function waitForVideoUrl(string $apiKey, string $taskId): string
+    private function waitForVideoUrl(string $apiKey, string $taskId, ?Closure $onRunwayTaskIdChanged): string
     {
         $maxPolls = max(5, (int) config('services.runway.max_polls', 120));
         $sleepMs = max(500, (int) config('services.runway.poll_interval_ms', 2000));
 
         for ($i = 0; $i < $maxPolls; $i++) {
-            $response = $this->runwayRequest($apiKey)
-                ->get(self::BASE_URL.'/tasks/'.$taskId)
-                ->throw()
-                ->json();
+            $httpResponse = $this->runwayRequest($apiKey)
+                ->get(self::BASE_URL.'/tasks/'.$taskId);
+
+            if ($httpResponse->status() === 404) {
+                if ($onRunwayTaskIdChanged) {
+                    $onRunwayTaskIdChanged(null);
+                }
+                throw new RuntimeException('Runway task not found; stale task id was cleared.');
+            }
+
+            $httpResponse->throw();
+            /** @var array<string, mixed> $response */
+            $response = $httpResponse->json();
 
             $status = strtoupper((string) ($response['status'] ?? ''));
             if ($i === 0 || ($i + 1) % 15 === 0) {
@@ -115,6 +153,9 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
                 ]);
             }
             if (in_array($status, ['FAILED', 'CANCELLED'], true)) {
+                if ($onRunwayTaskIdChanged) {
+                    $onRunwayTaskIdChanged(null);
+                }
                 $reason = (string) ($response['error'] ?? $response['failure'] ?? 'Unknown Runway failure.');
                 throw new RuntimeException('Runway video task failed: '.$reason);
             }

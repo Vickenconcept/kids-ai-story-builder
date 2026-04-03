@@ -19,6 +19,7 @@ class StoryPage extends Model
         'image_path',
         'audio_path',
         'video_path',
+        'runway_video_task_id',
         'asset_errors',
     ];
 

@@ -83,14 +83,23 @@ class GenerateStoryPageVideoJob implements ShouldQueue
         try {
             $credits->spendOnce('video:page:'.$page->id, $project->user, 'video');
             $dir = 'stories/'.$project->id;
+            $pageId = $page->id;
+            $resumeTaskId = filled($page->runway_video_task_id) ? (string) $page->runway_video_task_id : null;
             $path = $video->generate(
                 (string) $page->text_content,
                 $page->image_path,
                 $page->audio_path,
                 $dir,
+                $resumeTaskId,
+                static function (?string $taskId) use ($pageId): void {
+                    StoryPage::query()->whereKey($pageId)->update(['runway_video_task_id' => $taskId]);
+                },
             );
             if ($path !== '') {
-                $page->update(['video_path' => $path]);
+                StoryPage::query()->whereKey($pageId)->update([
+                    'video_path' => $path,
+                    'runway_video_task_id' => null,
+                ]);
             }
             $recorder->complete($jobRow);
             Log::info('story.job.video.success', [
@@ -147,6 +156,8 @@ class GenerateStoryPageVideoJob implements ShouldQueue
             || str_contains($message, 'connection')
             || str_contains($message, 'temporarily unavailable')
             || str_contains($message, 'rate limit')
-            || str_contains($message, 'unexpected error occurred');
+            || str_contains($message, 'unexpected error occurred')
+            || str_contains($message, 'stale task id was cleared')
+            || str_contains($message, 'task not found');
     }
 }

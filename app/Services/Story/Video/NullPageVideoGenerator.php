@@ -19,6 +19,8 @@ class NullPageVideoGenerator implements PageVideoGenerator
         ?string $relativeImagePath,
         ?string $relativeAudioPath,
         string $storageDirectory,
+        ?string $resumeRunwayTaskId = null,
+        ?\Closure $onRunwayTaskIdChanged = null,
     ): string {
         $note = json_encode([
             'message' => 'Video provider not configured; stub asset.',
