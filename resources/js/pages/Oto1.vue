@@ -200,7 +200,7 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-slate-950 text-white px-4 py-20 md:px-8">
         <div class="mx-auto max-w-2xl text-center">
             <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">One-Time Upgrade â€” Never This Price Again</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Add PRO Video to Your StorySpark AI</h2>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Add PRO Video to Your DreamForge AI</h2>
             <p class="mt-4 text-slate-400 text-sm">This upgrade is only shown once. When you leave this page, this offer disappears permanently.</p>
 
             <div class="mt-10 rounded-2xl border-2 border-yellow-400/50 bg-white/5 p-8">

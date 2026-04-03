@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { dashboard, login, register } from '@/routes';
 
@@ -58,7 +58,7 @@ const steps = [
 </script>
 
 <template>
-    <Head title="StorySpark AI â€“ Create Illustrated Storybooks in Minutes">
+    <Head title="DreamForge AI â€“ Create Illustrated Storybooks in Minutes">
         <meta name="description" content="Turn any idea into a fully illustrated, narrated children's storybook in minutes using AI. No writing or design skills needed." />
     </Head>
 
@@ -68,14 +68,8 @@ const steps = [
         <header class="sticky top-0 z-50 border-b border-white/6 bg-[#0d0d1a]/80 backdrop-blur-xl">
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
                 <!-- Logo -->
-                <div class="flex items-center gap-2.5">
-                    <div class="flex size-8 items-center justify-center rounded-lg bg-violet-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-bold tracking-tight">StorySpark AI</span>
+                <div class="flex items-center">
+                    <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-9 w-auto object-contain" />
                 </div>
 
                 <!-- Auth links -->
@@ -178,7 +172,7 @@ const steps = [
                         <span class="size-3 rounded-full bg-yellow-500/60" />
                         <span class="size-3 rounded-full bg-green-500/60" />
                         <div class="ml-3 flex-1 rounded-md bg-white/6 px-3 py-1 text-left text-[11px] text-slate-500">
-                            storyspark.ai/read/the-dragon-who-lost-his-fire
+                            dreamforge .ai/read/the-dragon-who-lost-his-fire
                         </div>
                     </div>
                     <!-- Mock flipbook -->
@@ -361,15 +355,10 @@ const steps = [
         <!-- â”€â”€ FOOTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <footer class="border-t border-white/6 px-5 py-8">
             <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center gap-2.5">
-                    <div class="flex size-7 items-center justify-center rounded-md bg-violet-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                        </svg>
-                    </div>
-                    <span class="text-xs font-bold text-slate-400">StorySpark AI</span>
+                <div class="flex items-center">
+                    <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-7 w-auto object-contain opacity-70" />
                 </div>
-                <p class="text-xs text-slate-600">Â© 2026 StorySpark AI. All rights reserved.</p>
+                <p class="text-xs text-slate-600">Â© 2026 DreamForge AI. All rights reserved.</p>
                 <div class="flex gap-4 text-xs text-slate-600">
                     <Link :href="login()" class="transition hover:text-slate-400">Log in</Link>
                     <Link v-if="canRegister" :href="register()" class="transition hover:text-slate-400">Register</Link>

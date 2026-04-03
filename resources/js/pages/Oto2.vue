@@ -188,7 +188,7 @@ import { Head } from '@inertiajs/vue3';
                     <h2 class="mt-2 text-2xl font-extrabold md:text-3xl">Amazon KDP â€” Earn Royalties From Every Story</h2>
                     <p class="mt-4 text-sm text-slate-300 leading-relaxed">
                         Amazon Kindle Direct Publishing (KDP) lets you list illustrated children's books and earn royalties on every sale â€” with <strong class="text-white">zero upfront cost</strong>.<br/><br/>
-                        You create the storybook with StorySpark AI, export it as a PDF, follow the simple guide inside this package, and list it on Amazon in under an hour.<br/><br/>
+                        You create the storybook with DreamForge AI, export it as a PDF, follow the simple guide inside this package, and list it on Amazon in under an hour.<br/><br/>
                         The book stays live. Royalties come in. You create more.
                     </p>
                     <div class="mt-4 flex flex-wrap gap-3 text-sm">
@@ -280,7 +280,7 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-slate-50 px-4 py-8 md:px-8">
         <div class="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
             <p class="font-semibold text-slate-700">About Usage &amp; Credits</p>
-            <p class="mt-2">This pack provides done-for-you assets and guides. Your StorySpark AI account includes usage credits to generate and publish stories. Additional credits can be purchased inside the app whenever you need to create more â€” no recurring billing required.</p>
+            <p class="mt-2">This pack provides done-for-you assets and guides. Your DreamForge AI account includes usage credits to generate and publish stories. Additional credits can be purchased inside the app whenever you need to create more â€” no recurring billing required.</p>
         </div>
     </section>
 

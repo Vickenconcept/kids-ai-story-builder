@@ -100,7 +100,7 @@ function progressPercent(project: RecentProject) {
                 <div class="flex flex-col gap-1">
                     <div class="flex items-center gap-2">
                         <Sparkles class="size-5 text-violet-500" />
-                        <span class="text-sm font-medium text-violet-600 dark:text-violet-400">StorySpark AI</span>
+                        <span class="text-sm font-medium text-violet-600 dark:text-violet-400">DreamForge AI</span>
                         <span
                             class="rounded-full px-2 py-0.5 text-xs font-semibold capitalize"
                             :class="tierColor(tier)"

@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Create Storybooks in Minutes â€” StorySpark AI" />
+    <Head title="Create Storybooks in Minutes â€” DreamForge AI" />
 
     <!-- â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <section class="relative overflow-hidden bg-linear-to-br from-violet-950 via-indigo-950 to-purple-950 text-white">
@@ -68,7 +68,7 @@ import { Head } from '@inertiajs/vue3';
                     <span class="size-3 rounded-full bg-yellow-500/70" />
                     <span class="size-3 rounded-full bg-green-500/70" />
                     <div class="ml-3 flex-1 rounded-md bg-violet-900/60 px-3 py-1 text-left text-[11px] text-violet-400/60">
-                        storyspark.ai/read/the-dragon-who-lost-his-fire
+                        dreamforge .ai/read/the-dragon-who-lost-his-fire
                     </div>
                 </div>
                 <!-- Two-page spread -->
@@ -244,7 +244,7 @@ import { Head } from '@inertiajs/vue3';
         </div>
         <div class="relative mx-auto max-w-4xl text-center">
             <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">The Solution</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Introducing: StorySpark AI</h2>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Introducing: DreamForge AI</h2>
             <p class="mx-auto mt-5 max-w-xl text-base text-violet-200">
                 The first AI app that turns <strong class="text-white">one prompt</strong> into a complete story experience â€”
                 pages, illustrations, voice narration, and a shareable flipbook â€” <strong class="text-fuchsia-300">all in minutes</strong>.
@@ -361,7 +361,7 @@ import { Head } from '@inertiajs/vue3';
                         <div class="relative rounded-xl border border-violet-400/20 bg-violet-950/80 shadow-xl backdrop-blur-sm overflow-hidden">
                             <div class="flex items-center gap-1.5 border-b border-violet-400/15 bg-violet-900/40 px-3 py-1.5">
                                 <span class="size-1.5 rounded-full bg-red-500/60" /><span class="size-1.5 rounded-full bg-yellow-500/60" /><span class="size-1.5 rounded-full bg-green-500/60" />
-                                <div class="ml-1.5 flex-1 rounded bg-violet-800/60 px-2 py-0.5 text-[8px] text-violet-500">storyspark.ai/read/â€¦</div>
+                                <div class="ml-1.5 flex-1 rounded bg-violet-800/60 px-2 py-0.5 text-[8px] text-violet-500">dreamforge .ai/read/â€¦</div>
                             </div>
                             <div class="grid grid-cols-2 gap-0 p-2">
                                 <div class="rounded-l-md border border-violet-400/15 bg-linear-to-br from-violet-800/40 to-purple-800/40 p-1.5">
@@ -400,7 +400,7 @@ import { Head } from '@inertiajs/vue3';
         <div class="mx-auto max-w-5xl">
             <div class="text-center mb-10">
                 <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">Everything Included</p>
-                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">What You Get With StorySpark AI</h2>
+                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">What You Get With DreamForge AI</h2>
             </div>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
@@ -442,7 +442,7 @@ import { Head } from '@inertiajs/vue3';
         <div class="mx-auto max-w-4xl">
             <div class="text-center mb-10">
                 <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">This Is For You Ifâ€¦</p>
-                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">Who StorySpark AI Is Perfect For</h2>
+                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">Who DreamForge AI Is Perfect For</h2>
             </div>
             <div class="grid gap-4 md:grid-cols-2">
                 <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
@@ -511,7 +511,7 @@ import { Head } from '@inertiajs/vue3';
 
             <div class="mt-8 rounded-2xl border border-violet-400/20 bg-white/6 p-6 text-sm text-violet-300 text-left">
                 <p class="font-semibold text-white mb-2">ðŸ”’ Satisfaction Guarantee</p>
-                <p>Try StorySpark AI risk-free. If you're not completely satisfied, we'll make it right. Your investment is protected.</p>
+                <p>Try DreamForge AI risk-free. If you're not completely satisfied, we'll make it right. Your investment is protected.</p>
             </div>
         </div>
     </section>

@@ -17,7 +17,7 @@ import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="StorySpark AI — JV Partner Page" />
+    <Head title="DreamForge AI — JV Partner Page" />
 
     <section
         class="w-full bg-[url('https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/gridBackground.png')] bg-cover bg-center bg-no-repeat pb-44 text-sm"
@@ -25,13 +25,8 @@ import { Head } from '@inertiajs/vue3';
         <nav
             class="flex w-full items-center justify-between p-4 md:px-16 md:py-6 lg:px-24 xl:px-32"
         >
-            <a href="#" class="flex items-center gap-2">
-                <div class="flex size-8 items-center justify-center rounded-lg bg-indigo-600">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                    </svg>
-                </div>
-                <span class="text-base font-bold tracking-tight text-slate-900">StorySpark AI</span>
+            <a href="#" class="flex items-center">
+                <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-10 w-auto object-contain" />
             </a>
             <div
                 id="menu"
@@ -91,7 +86,7 @@ import { Head } from '@inertiajs/vue3';
         <div
             class="mx-auto mt-40 flex w-max items-center gap-2 rounded-full border border-slate-300 px-4 py-2 hover:border-slate-400/70 md:mt-32"
         >
-            <span class="font-semibold text-indigo-600">StorySpark AI</span>
+            <span class="font-semibold text-indigo-600">DreamForge AI</span>
             <span class="text-slate-400">·</span>
             <span>Launch window open now for early affiliates</span>
             <button class="flex items-center gap-1 font-medium">
@@ -893,7 +888,7 @@ import { Head } from '@inertiajs/vue3';
                             <span class="size-3 rounded-full bg-red-500/60" />
                             <span class="size-3 rounded-full bg-yellow-500/60" />
                             <span class="size-3 rounded-full bg-green-500/60" />
-                            <div class="ml-3 flex-1 rounded bg-white/10 px-3 py-1 text-[10px] text-indigo-300/60">storyspark.ai/read/the-dragon-who-lost-his-fire</div>
+                            <div class="ml-3 flex-1 rounded bg-white/10 px-3 py-1 text-[10px] text-indigo-300/60">dreamforge .ai/read/the-dragon-who-lost-his-fire</div>
                         </div>
                         <!-- Two page spread -->
                         <div class="grid grid-cols-2">
@@ -1375,7 +1370,7 @@ import { Head } from '@inertiajs/vue3';
                     <a href="#" class="rounded-full bg-white px-8 py-3 font-bold text-slate-900 transition hover:bg-indigo-50 text-sm">
                         Request JV Approval Now â†’
                     </a>
-                    <a href="mailto:jv@storyspark.ai" class="rounded-full border border-white/30 px-8 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                    <a href="mailto:jv@dreamforge .ai" class="rounded-full border border-white/30 px-8 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
                         Contact Us Directly
                     </a>
                 </div>
