@@ -5,109 +5,209 @@ import { Head } from '@inertiajs/vue3';
 <template>
     <Head title="Create Storybooks in Minutes — AI Storybook Studio" />
 
-    <!-- HERO -->
-    <section class="bg-slate-950 text-white overflow-hidden">
-        <div class="mx-auto max-w-5xl px-4 pt-16 pb-10 md:px-8 md:pt-24 text-center">
-            <p class="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-300">
+    <!-- ── HERO ───────────────────────────────────────────────── -->
+    <section class="relative overflow-hidden bg-linear-to-br from-violet-950 via-indigo-950 to-purple-950 text-white">
+        <!-- Glow orbs -->
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div class="absolute -top-40 left-1/2 size-[700px] -translate-x-1/2 rounded-full bg-violet-600/25 blur-[120px]" />
+            <div class="absolute top-20 right-[-5%] size-[400px] rounded-full bg-fuchsia-600/15 blur-[100px]" />
+            <div class="absolute bottom-0 left-[-5%] size-[350px] rounded-full bg-indigo-600/20 blur-[100px]" />
+        </div>
+
+        <div class="relative mx-auto max-w-5xl px-4 pt-16 pb-10 md:px-8 md:pt-24 text-center">
+            <p class="inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-fuchsia-300">
+                <span class="size-1.5 animate-pulse rounded-full bg-fuchsia-400" />
                 🚀 Now Live — Special Launch Price
             </p>
             <h1 class="mt-6 text-4xl font-extrabold leading-tight md:text-6xl lg:text-7xl">
-                Turn One Idea Into a Fully<br class="hidden md:block"/>
-                <span class="text-cyan-400">Illustrated, Narrated Storybook</span><br class="hidden md:block"/>
+                Turn One Idea Into a Fully<br class="hidden md:block" />
+                <span class="bg-linear-to-r from-fuchsia-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">Illustrated, Narrated Storybook</span><br class="hidden md:block" />
                 in Minutes
             </h1>
-            <p class="mx-auto mt-6 max-w-2xl text-base text-slate-300 md:text-lg">
-                No writing skills. No design skills. No tech knowledge.<br/>
+            <p class="mx-auto mt-6 max-w-2xl text-base text-violet-200 md:text-lg">
+                No writing skills. No design skills. No tech knowledge.<br />
                 Just enter an idea — and your complete story comes to life.
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
-                <a href="#pricing" class="rounded-full bg-cyan-400 px-8 py-4 text-base font-bold text-slate-900 transition hover:bg-cyan-300 shadow-lg shadow-cyan-400/30">
+                <a href="#pricing" class="rounded-full bg-linear-to-r from-fuchsia-500 to-violet-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-fuchsia-600/40 transition hover:from-fuchsia-400 hover:to-violet-500 active:scale-95">
                     👉 Create Your First Storybook Now
                 </a>
-                <a href="#demo" class="flex items-center gap-2 rounded-full border border-white/25 px-7 py-4 text-sm font-semibold transition hover:bg-white/10">
+                <a href="#demo" class="flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-7 py-4 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/20 hover:text-white">
                     🎬 Watch 2-Min Demo
                 </a>
             </div>
-            <p class="mt-4 text-xs text-slate-500">One-time payment · No monthly fees · Instant access</p>
+            <p class="mt-4 text-xs text-violet-400/70">One-time payment · No monthly fees · Instant access</p>
         </div>
 
         <!-- Trust bar -->
-        <div class="border-t border-white/10 bg-white/5">
-            <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-4 py-5 text-xs font-medium text-slate-400">
-                <span>✔ Full illustrated story pages</span>
-                <span>✔ AI-generated visuals per page</span>
-                <span>✔ Built-in voice narration</span>
-                <span>✔ Flipbook reader included</span>
-                <span>✔ KDP-ready export</span>
-                <span>✔ Interactive quiz layers</span>
+        <div class="relative border-t border-white/10 bg-white/5">
+            <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-4 py-5 text-xs font-medium text-violet-300">
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✔</span> Full illustrated story pages</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✔</span> AI-generated visuals per page</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✔</span> Built-in voice narration</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✔</span> Flipbook reader included</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✔</span> KDP-ready export</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✔</span> Interactive quiz layers</span>
             </div>
         </div>
     </section>
 
-    <!-- DEMO SECTION -->
-    <section id="demo" class="bg-slate-900 text-white px-4 py-16 md:px-8">
+    <!-- ── FLIPBOOK PREVIEW ────────────────────────────────────── -->
+    <section class="bg-linear-to-b from-violet-950 to-indigo-950 px-4 pb-24 pt-12 text-white overflow-hidden">
+        <div class="relative mx-auto max-w-4xl">
+            <!-- Glow -->
+            <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+                <div class="absolute -top-10 left-1/2 size-[500px] -translate-x-1/2 rounded-full bg-violet-600/15 blur-[100px]" />
+            </div>
+
+            <!-- Mock browser card -->
+            <div class="relative overflow-hidden rounded-2xl border border-violet-400/20 bg-linear-to-br from-violet-900/60 to-indigo-900/60 shadow-2xl shadow-violet-950/80 backdrop-blur-sm">
+                <!-- Browser bar -->
+                <div class="flex items-center gap-2 border-b border-white/8 bg-white/4 px-4 py-3">
+                    <span class="size-3 rounded-full bg-red-500/70" />
+                    <span class="size-3 rounded-full bg-yellow-500/70" />
+                    <span class="size-3 rounded-full bg-green-500/70" />
+                    <div class="ml-3 flex-1 rounded-md bg-violet-900/60 px-3 py-1 text-left text-[11px] text-violet-400/60">
+                        aistorybookstudio.com/read/the-dragon-who-lost-his-fire
+                    </div>
+                </div>
+                <!-- Two-page spread -->
+                <div class="grid grid-cols-2 gap-0">
+                    <div class="flex flex-col gap-3 border-r border-white/8 bg-linear-to-br from-violet-900/40 to-purple-900/40 p-6">
+                        <div class="aspect-4/3 w-full rounded-xl bg-linear-to-br from-violet-800/40 to-purple-800/40 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-10 text-violet-400/40" stroke-width="1">
+                                <rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-2.5 w-3/4 rounded bg-white/10" />
+                            <div class="h-2.5 w-full rounded bg-white/10" />
+                            <div class="h-2.5 w-5/6 rounded bg-white/10" />
+                            <div class="h-2.5 w-2/3 rounded bg-white/10" />
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <div class="flex size-6 items-center justify-center rounded-full bg-fuchsia-500 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+                                <div class="h-full w-1/3 rounded-full bg-linear-to-r from-fuchsia-500 to-violet-500" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-3 bg-linear-to-br from-indigo-900/40 to-violet-900/30 p-6">
+                        <div class="aspect-4/3 w-full rounded-xl bg-linear-to-br from-indigo-800/40 to-violet-800/40 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-10 text-indigo-400/40" stroke-width="1">
+                                <path d="m22 8-6 4 6 4V8z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-2.5 w-full rounded bg-white/10" />
+                            <div class="h-2.5 w-4/5 rounded bg-white/10" />
+                            <div class="h-2.5 w-full rounded bg-white/10" />
+                            <div class="h-2.5 w-3/4 rounded bg-white/10" />
+                        </div>
+                        <div class="rounded-lg border border-yellow-400/25 bg-yellow-400/8 p-2">
+                            <p class="text-[10px] font-semibold text-yellow-300/80">Quiz</p>
+                            <div class="mt-1 space-y-1">
+                                <div class="h-2 w-4/5 rounded bg-white/10" />
+                                <div class="h-2 w-3/5 rounded bg-white/10" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Status bar -->
+                <div class="flex items-center justify-between border-t border-white/8 bg-violet-950/40 px-4 py-2 text-[11px] text-violet-400/60">
+                    <span>Page 3 of 12</span>
+                    <div class="flex items-center gap-3">
+                        <span class="flex items-center gap-1 text-violet-400/80">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-3"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                            Illustrated
+                        </span>
+                        <span class="flex items-center gap-1 text-green-400/80">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-3"><path d="M12 18.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13z"/></svg>
+                            Narrated
+                        </span>
+                        <span class="flex items-center gap-1 text-fuchsia-400/80">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-3"><path d="m22 8-6 4 6 4V8z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+                            Video
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- Floating chips -->
+            <div class="absolute -bottom-4 left-6 flex items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-900 px-3 py-2 shadow-xl shadow-violet-950/60">
+                <span class="flex size-6 items-center justify-center rounded-full bg-green-500/20 text-green-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="size-3.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span class="text-xs font-semibold text-violet-200">Story generated in 42 seconds</span>
+            </div>
+            <div class="absolute -bottom-4 right-6 flex items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-900 px-3 py-2 shadow-xl shadow-violet-950/60">
+                <span class="text-base">📚</span>
+                <span class="text-xs font-semibold text-violet-200">12 pages · Full illustrations</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── DEMO SECTION ────────────────────────────────────────── -->
+    <section id="demo" class="bg-indigo-950 text-white px-4 py-20 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400">The Most Important 2 Minutes You'll Spend Today</p>
+            <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">The Most Important 2 Minutes You'll Spend Today</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🎬 Watch This: From One Prompt → Complete Storybook in Minutes</h2>
-            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">This is what makes people buy instantly. No explaining needed — they see it, they want it.</p>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-indigo-300">No explaining needed — they see it, they want it.</p>
 
-            <!-- Video placeholder -->
-            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-cyan-400/40 bg-slate-800 aspect-video flex items-center justify-center cursor-pointer group hover:border-cyan-400 transition">
+            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-violet-900/40 aspect-video flex items-center justify-center cursor-pointer group hover:border-fuchsia-400/60 transition">
                 <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-cyan-400 text-slate-900 text-3xl shadow-lg shadow-cyan-400/40 group-hover:scale-110 transition">▶</div>
-                    <p class="text-sm font-semibold text-slate-300">Click to watch demo</p>
-                    <p class="text-xs text-slate-500 mt-1">~2 minutes</p>
+                    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br from-fuchsia-500 to-violet-600 text-white text-3xl shadow-lg shadow-fuchsia-600/40 group-hover:scale-110 transition">▶</div>
+                    <p class="text-sm font-semibold text-violet-200">Click to watch demo</p>
+                    <p class="text-xs text-violet-400 mt-1">~2 minutes</p>
                 </div>
             </div>
 
-            <!-- Transformation checklist -->
             <div class="mt-8 grid grid-cols-2 gap-3 max-w-lg mx-auto text-sm text-left md:grid-cols-4">
-                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                <div class="rounded-xl border border-violet-500/20 bg-violet-500/10 p-3 text-center">
                     <p class="text-2xl mb-1">✍️</p>
-                    <p class="font-semibold">Prompt</p>
-                    <p class="text-xs text-slate-400 mt-1">Type your idea</p>
+                    <p class="font-semibold text-white">Prompt</p>
+                    <p class="text-xs text-violet-300 mt-1">Type your idea</p>
                 </div>
-                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                <div class="rounded-xl border border-violet-500/20 bg-violet-500/10 p-3 text-center">
                     <p class="text-2xl mb-1">📖</p>
-                    <p class="font-semibold">Story Pages</p>
-                    <p class="text-xs text-slate-400 mt-1">Full structured story</p>
+                    <p class="font-semibold text-white">Story Pages</p>
+                    <p class="text-xs text-violet-300 mt-1">Full structured story</p>
                 </div>
-                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                <div class="rounded-xl border border-violet-500/20 bg-violet-500/10 p-3 text-center">
                     <p class="text-2xl mb-1">🎨</p>
-                    <p class="font-semibold">Illustrations</p>
-                    <p class="text-xs text-slate-400 mt-1">Matched to each page</p>
+                    <p class="font-semibold text-white">Illustrations</p>
+                    <p class="text-xs text-violet-300 mt-1">Matched to each page</p>
                 </div>
-                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+                <div class="rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/10 p-3 text-center">
                     <p class="text-2xl mb-1">🎙️</p>
-                    <p class="font-semibold">Narration</p>
-                    <p class="text-xs text-slate-400 mt-1">Read-aloud voice</p>
+                    <p class="font-semibold text-white">Narration</p>
+                    <p class="text-xs text-fuchsia-300 mt-1">Read-aloud voice</p>
                 </div>
             </div>
-            <p class="mt-6 text-sm font-bold text-cyan-400">👉 This is what converts the sale.</p>
+            <p class="mt-6 text-sm font-bold text-fuchsia-400">👉 This is what converts the sale.</p>
         </div>
     </section>
 
-    <!-- BIG PROMISE -->
+    <!-- ── BIG PROMISE ─────────────────────────────────────────── -->
     <section class="bg-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
-            <h2 class="text-3xl font-extrabold text-slate-900 md:text-4xl">
-                Imagine This…
-            </h2>
+            <h2 class="text-3xl font-extrabold text-slate-900 md:text-4xl">Imagine This…</h2>
             <p class="mx-auto mt-5 max-w-2xl text-base text-slate-600 leading-relaxed">
-                You type a simple idea like <em>"A brave rabbit learns to share"</em>…<br/>
+                You type a simple idea like <em>"A brave rabbit learns to share"</em>…<br />
                 And in minutes, you have a <strong>complete multi-page storybook</strong> — with matching illustrations on every page, a read-aloud voice your kids will love, and a flipbook reader you can share with one link.
             </p>
             <p class="mt-5 text-lg font-bold text-slate-900">No writing stress. No hiring illustrators. No tech headaches.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 text-sm">
-                <span class="rounded-full bg-slate-100 border border-slate-200 px-4 py-2">Just enter an idea →</span>
-                <span class="rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 px-4 py-2">Your story comes to life →</span>
-                <span class="rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-2">Share it today ✔</span>
+                <span class="rounded-full bg-slate-100 border border-slate-200 px-4 py-2 text-slate-700">Just enter an idea →</span>
+                <span class="rounded-full bg-violet-50 border border-violet-200 text-violet-700 px-4 py-2">Your story comes to life →</span>
+                <span class="rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2">Share it today ✔</span>
             </div>
         </div>
     </section>
 
-    <!-- PROBLEM -->
-    <section class="bg-slate-50 px-4 py-16 md:px-8">
+    <!-- ── PROBLEM ─────────────────────────────────────────────── -->
+    <section class="bg-violet-50 px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl">
             <div class="text-center mb-10">
                 <p class="text-xs font-semibold uppercase tracking-widest text-red-500">Sound Familiar?</p>
@@ -132,105 +232,203 @@ import { Head } from '@inertiajs/vue3';
                 </div>
             </div>
             <p class="mt-8 text-center text-base font-semibold text-slate-800">You end up with ideas… but no finished product.</p>
-            <p class="mt-2 text-center text-lg font-bold text-cyan-600">Until now.</p>
+            <p class="mt-2 text-center text-lg font-bold text-violet-600">Until now.</p>
         </div>
     </section>
 
-    <!-- SOLUTION -->
-    <section class="bg-slate-900 text-white px-4 py-16 md:px-8">
-        <div class="mx-auto max-w-4xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400">The Solution</p>
+    <!-- ── SOLUTION ────────────────────────────────────────────── -->
+    <section class="relative overflow-hidden bg-linear-to-br from-violet-900 via-indigo-900 to-purple-900 text-white px-4 py-16 md:px-8">
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div class="absolute -top-20 right-0 size-[400px] rounded-full bg-fuchsia-600/15 blur-[100px]" />
+            <div class="absolute bottom-0 left-0 size-[400px] rounded-full bg-indigo-600/20 blur-[100px]" />
+        </div>
+        <div class="relative mx-auto max-w-4xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">The Solution</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Introducing: AI Storybook Studio</h2>
-            <p class="mx-auto mt-5 max-w-xl text-base text-slate-300">
+            <p class="mx-auto mt-5 max-w-xl text-base text-violet-200">
                 The first AI app that turns <strong class="text-white">one prompt</strong> into a complete story experience —
-                pages, illustrations, voice narration, and a shareable flipbook — <strong class="text-cyan-400">all in minutes</strong>.
+                pages, illustrations, voice narration, and a shareable flipbook — <strong class="text-fuchsia-300">all in minutes</strong>.
             </p>
             <div class="mt-10 grid gap-4 md:grid-cols-3 text-left">
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <div class="rounded-2xl border border-white/10 bg-white/8 p-6">
                     <p class="text-3xl mb-3">📖</p>
                     <h3 class="font-bold text-white">Every Page Comes Alive</h3>
-                    <p class="mt-2 text-sm text-slate-400">Your story gets structured pages with matching AI illustrations — so it feels like a <em>finished book</em>, not raw text.</p>
+                    <p class="mt-2 text-sm text-violet-200">Your story gets structured pages with matching AI illustrations — so it feels like a <em>finished book</em>, not raw text.</p>
                 </div>
-                <div class="rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-6">
+                <div class="rounded-2xl border border-fuchsia-400/30 bg-fuchsia-400/8 p-6">
                     <p class="text-3xl mb-3">🎙️</p>
                     <h3 class="font-bold text-white">Voice That Reads It For You</h3>
-                    <p class="mt-2 text-sm text-slate-400">Built-in narration turns your story into a read-along audio experience kids actually sit down and listen to.</p>
+                    <p class="mt-2 text-sm text-violet-200">Built-in narration turns your story into a read-along audio experience kids actually sit down and listen to.</p>
                 </div>
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <div class="rounded-2xl border border-white/10 bg-white/8 p-6">
                     <p class="text-3xl mb-3">📤</p>
                     <h3 class="font-bold text-white">Ready to Share in One Click</h3>
-                    <p class="mt-2 text-sm text-slate-400">Share a flipbook link, download as PDF, or publish. You go from prompt to published the same day.</p>
+                    <p class="mt-2 text-sm text-violet-200">Share a flipbook link, download as PDF, or publish. You go from prompt to published the same day.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- HOW IT WORKS -->
-    <section class="bg-white px-4 py-16 md:px-8">
-        <div class="mx-auto max-w-4xl">
-            <div class="text-center mb-12">
-                <p class="text-xs font-semibold uppercase tracking-widest text-cyan-600">So Simple Anyone Can Do It</p>
-                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">From Blank Page to Finished Story in 4 Steps</h2>
+    <!-- ── HOW IT WORKS — Illustrated Cards ───────────────────── -->
+    <section class="bg-linear-to-b from-violet-950 to-indigo-950 text-white px-4 py-20 md:py-28 md:px-8">
+        <div class="mx-auto max-w-5xl">
+            <div class="mb-14 text-center">
+                <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-fuchsia-400">So Simple Anyone Can Do It</p>
+                <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">From Blank Page to Finished Story in 3 Steps</h2>
+                <p class="mx-auto mt-3 max-w-xl text-sm text-violet-300">No tech skills needed. No design experience. Just your idea — the AI handles everything else.</p>
             </div>
-            <div class="relative grid gap-6 md:grid-cols-4">
-                <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">1</div>
-                    <h3 class="font-bold text-slate-900">Enter Your Idea</h3>
-                    <p class="mt-2 text-xs text-slate-500">Choose your topic, tone, and age group — or pick from a template</p>
+
+            <div class="grid gap-6 md:grid-cols-3">
+
+                <!-- Step 1 -->
+                <div class="overflow-hidden rounded-2xl border border-violet-400/20 bg-linear-to-br from-violet-900/60 to-indigo-900/60">
+                    <div class="relative h-52 overflow-hidden border-b border-violet-400/15 bg-linear-to-br from-violet-900/80 to-purple-900/60 p-5">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                            <div class="text-[120px] font-black text-violet-300 leading-none">01</div>
+                        </div>
+                        <div class="relative rounded-xl border border-violet-400/20 bg-violet-950/80 p-4 shadow-xl backdrop-blur-sm">
+                            <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-fuchsia-400">New Story</p>
+                            <div class="mb-3 rounded-lg border border-violet-400/20 bg-violet-500/10 p-2.5">
+                                <p class="text-[11px] text-violet-200">A brave dragon who learns to share his fire…</p>
+                                <div class="mt-1.5 h-1.5 w-2/3 rounded bg-fuchsia-400/30" />
+                            </div>
+                            <div class="mb-3 grid grid-cols-3 gap-1.5">
+                                <div class="rounded-md border border-fuchsia-400/40 bg-fuchsia-400/15 px-1.5 py-1 text-center text-[9px] font-semibold text-fuchsia-300">Ages 4–8</div>
+                                <div class="rounded-md border border-violet-400/20 bg-violet-500/10 px-1.5 py-1 text-center text-[9px] text-violet-300">Watercolor</div>
+                                <div class="rounded-md border border-violet-400/20 bg-violet-500/10 px-1.5 py-1 text-center text-[9px] text-violet-300">12 pages</div>
+                            </div>
+                            <div class="flex items-center justify-center gap-1.5 rounded-lg bg-linear-to-r from-fuchsia-500 to-violet-600 py-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="size-3 text-white"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg>
+                                <span class="text-[10px] font-bold text-white">Generate Story</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-fuchsia-400">Step 1</p>
+                        <h3 class="mt-1 text-base font-extrabold">Enter Your Idea</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-violet-300">Type any story idea, pick your age group, illustration style, and page count. Or start from a template.</p>
+                    </div>
                 </div>
-                <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">2</div>
-                    <h3 class="font-bold text-slate-900">Generate Your Story</h3>
-                    <p class="mt-2 text-xs text-slate-500">Full structured pages with logical flow — done in seconds</p>
+
+                <!-- Step 2 -->
+                <div class="overflow-hidden rounded-2xl border border-violet-400/20 bg-linear-to-br from-indigo-900/60 to-violet-900/60">
+                    <div class="relative h-52 overflow-hidden border-b border-violet-400/15 bg-linear-to-br from-indigo-900/80 to-violet-900/60 p-5">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                            <div class="text-[120px] font-black text-indigo-300 leading-none">02</div>
+                        </div>
+                        <div class="relative rounded-xl border border-violet-400/20 bg-violet-950/80 p-4 shadow-xl backdrop-blur-sm">
+                            <div class="mb-3 flex items-center justify-between">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-fuchsia-400">Generating…</p>
+                                <span class="rounded-full bg-violet-400/20 px-2 py-0.5 text-[9px] font-bold text-violet-200">8 / 12 pages</span>
+                            </div>
+                            <div class="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-violet-800/60">
+                                <div class="h-full w-2/3 rounded-full bg-linear-to-r from-fuchsia-500 to-violet-500" />
+                            </div>
+                            <div class="mb-3 grid grid-cols-4 gap-1.5">
+                                <div class="aspect-square rounded-md bg-linear-to-br from-violet-800/60 to-indigo-800/60 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-3 text-violet-400/60" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                </div>
+                                <div class="aspect-square rounded-md bg-linear-to-br from-violet-800/60 to-indigo-800/60 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-3 text-violet-400/60" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                </div>
+                                <div class="aspect-square rounded-md bg-linear-to-br from-violet-800/60 to-indigo-800/60 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-3 text-violet-400/60" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                </div>
+                                <div class="aspect-square rounded-md border border-dashed border-violet-400/25 flex items-center justify-center">
+                                    <div class="size-2 animate-pulse rounded-full bg-fuchsia-400/60" />
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">✓</span><span class="text-violet-200">Story text generated</span></div>
+                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">✓</span><span class="text-violet-200">Illustrations created</span></div>
+                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-fuchsia-400 animate-pulse">◌</span><span class="text-violet-300">Adding narration…</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-fuchsia-400">Step 2</p>
+                        <h3 class="mt-1 text-base font-extrabold">AI Builds Everything</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-violet-300">Every page is written, illustrated, and narrated automatically in the background.</p>
+                    </div>
                 </div>
-                <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">3</div>
-                    <h3 class="font-bold text-slate-900">Add Visuals &amp; Voice</h3>
-                    <p class="mt-2 text-xs text-slate-500">Generate matching page illustrations and add read-aloud narration</p>
+
+                <!-- Step 3 -->
+                <div class="overflow-hidden rounded-2xl border border-violet-400/20 bg-linear-to-br from-purple-900/60 to-indigo-900/60">
+                    <div class="relative h-52 overflow-hidden border-b border-violet-400/15 bg-linear-to-br from-purple-900/80 to-indigo-900/60 p-5">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                            <div class="text-[120px] font-black text-purple-300 leading-none">03</div>
+                        </div>
+                        <div class="relative rounded-xl border border-violet-400/20 bg-violet-950/80 shadow-xl backdrop-blur-sm overflow-hidden">
+                            <div class="flex items-center gap-1.5 border-b border-violet-400/15 bg-violet-900/40 px-3 py-1.5">
+                                <span class="size-1.5 rounded-full bg-red-500/60" /><span class="size-1.5 rounded-full bg-yellow-500/60" /><span class="size-1.5 rounded-full bg-green-500/60" />
+                                <div class="ml-1.5 flex-1 rounded bg-violet-800/60 px-2 py-0.5 text-[8px] text-violet-500">aistorybookstudio.com/read/…</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-0 p-2">
+                                <div class="rounded-l-md border border-violet-400/15 bg-linear-to-br from-violet-800/40 to-purple-800/40 p-1.5">
+                                    <div class="aspect-4/3 rounded bg-violet-700/30 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-4 text-violet-400/40" stroke-width="1"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                    </div>
+                                    <div class="mt-1 space-y-0.5"><div class="h-1 rounded bg-white/10" /><div class="h-1 w-4/5 rounded bg-white/10" /></div>
+                                </div>
+                                <div class="rounded-r-md border border-violet-400/15 bg-linear-to-br from-indigo-800/40 to-violet-800/40 p-1.5">
+                                    <div class="aspect-4/3 rounded bg-indigo-700/30 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-4 text-indigo-400/40" stroke-width="1"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                    </div>
+                                    <div class="mt-1 space-y-0.5"><div class="h-1 rounded bg-white/10" /><div class="h-1 w-3/4 rounded bg-white/10" /></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-center gap-2 border-t border-violet-400/15 px-3 py-2">
+                                <div class="flex items-center gap-1 rounded-md bg-violet-500/20 px-2 py-1 text-[8px] font-semibold text-violet-300">🔗 Share</div>
+                                <div class="flex items-center gap-1 rounded-md bg-white/8 px-2 py-1 text-[8px] font-semibold text-violet-400">📥 PDF</div>
+                                <div class="flex items-center gap-1 rounded-md bg-fuchsia-500/20 px-2 py-1 text-[8px] font-semibold text-fuchsia-300">💰 Sell</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-fuchsia-400">Step 3</p>
+                        <h3 class="mt-1 text-base font-extrabold">Read, Share &amp; Sell</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-violet-300">Open in the flipbook, share a link, download PDF, or sell your storybook as a digital product.</p>
+                    </div>
                 </div>
-                <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-400 text-2xl font-extrabold text-slate-900">4</div>
-                    <h3 class="font-bold text-slate-900">Export &amp; Share</h3>
-                    <p class="mt-2 text-xs text-slate-500">Share a link, download PDF, or publish — your story is ready today</p>
-                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- WHAT YOU GET -->
-    <section class="bg-slate-50 px-4 py-16 md:px-8">
+    <!-- ── WHAT YOU GET ────────────────────────────────────────── -->
+    <section class="bg-violet-50 px-4 py-16 md:px-8">
         <div class="mx-auto max-w-5xl">
             <div class="text-center mb-10">
-                <p class="text-xs font-semibold uppercase tracking-widest text-cyan-600">Everything Included</p>
+                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">Everything Included</p>
                 <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">What You Get With AI Storybook Studio</h2>
             </div>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
                     <p class="text-2xl mb-3">📝</p>
                     <h3 class="font-bold text-slate-900">Complete Story Generation</h3>
                     <p class="mt-2 text-sm text-slate-600">Multi-page stories with structured flow — created from one prompt in minutes, not hours.</p>
                 </div>
-                <div class="rounded-2xl border-2 border-cyan-400 bg-white p-6">
+                <div class="rounded-2xl border-2 border-violet-400 bg-white p-6 shadow-sm">
                     <p class="text-2xl mb-3">🎨</p>
                     <h3 class="font-bold text-slate-900">Matching Illustrations Per Page</h3>
                     <p class="mt-2 text-sm text-slate-600">Every page comes with AI-generated visuals matched to your scene — so your story feels like a real published book.</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
                     <p class="text-2xl mb-3">🎙️</p>
                     <h3 class="font-bold text-slate-900">Built-In Voice Narration</h3>
                     <p class="mt-2 text-sm text-slate-600">Add read-aloud narration with one click. Kids hear the story as they follow along — no extra tools needed.</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
                     <p class="text-2xl mb-3">📚</p>
                     <h3 class="font-bold text-slate-900">Beautiful Flipbook Reader</h3>
                     <p class="mt-2 text-sm text-slate-600">Share a link and anyone can read your story in a realistic page-flip reader. Professional quality instantly.</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
                     <p class="text-2xl mb-3">🧩</p>
                     <h3 class="font-bold text-slate-900">Interactive Quiz Pages</h3>
                     <p class="mt-2 text-sm text-slate-600">Add quiz and game pages inside your story — perfect for teachers and educators building engaging lessons.</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-white p-6">
+                <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
                     <p class="text-2xl mb-3">📤</p>
                     <h3 class="font-bold text-slate-900">Export &amp; Publish Ready</h3>
                     <p class="mt-2 text-sm text-slate-600">Download as PDF and publish anywhere — share a link, sell digitally, or prepare for print. <em>Video upgrade available.</em></p>
@@ -239,36 +437,36 @@ import { Head } from '@inertiajs/vue3';
         </div>
     </section>
 
-    <!-- WHO IT'S FOR -->
+    <!-- ── WHO IT'S FOR ────────────────────────────────────────── -->
     <section class="bg-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl">
             <div class="text-center mb-10">
-                <p class="text-xs font-semibold uppercase tracking-widest text-cyan-600">This Is For You If…</p>
+                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">This Is For You If…</p>
                 <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">Who AI Storybook Studio Is Perfect For</h2>
             </div>
             <div class="grid gap-4 md:grid-cols-2">
-                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
                     <span class="text-3xl shrink-0">👨‍👩‍👧</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Parents</h3>
                         <p class="mt-1 text-sm text-slate-600">Create personalised bedtime stories with your child's name and favourite themes — in minutes, not weeks.</p>
                     </div>
                 </div>
-                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
                     <span class="text-3xl shrink-0">👩‍🏫</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Teachers &amp; Educators</h3>
                         <p class="mt-1 text-sm text-slate-600">Build custom story-based lessons with quiz pages and illustrations — tailored to your class topic and age group.</p>
                     </div>
                 </div>
-                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
                     <span class="text-3xl shrink-0">🎬</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Content Creators</h3>
                         <p class="mt-1 text-sm text-slate-600">Produce kids' story content faster than ever. Build a library, run a channel, and publish consistently without burnout.</p>
                     </div>
                 </div>
-                <div class="flex items-start gap-4 rounded-2xl border border-slate-200 p-5">
+                <div class="flex items-start gap-4 rounded-2xl border border-fuchsia-100 bg-fuchsia-50/50 p-5">
                     <span class="text-3xl shrink-0">💰</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Digital Sellers</h3>
@@ -279,60 +477,64 @@ import { Head } from '@inertiajs/vue3';
         </div>
     </section>
 
-    <!-- PRICING -->
-    <section id="pricing" class="bg-slate-950 text-white px-4 py-20 md:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400">Special Launch Pricing</p>
+    <!-- ── PRICING ─────────────────────────────────────────────── -->
+    <section id="pricing" class="relative overflow-hidden bg-linear-to-br from-violet-950 via-indigo-950 to-purple-950 text-white px-4 py-20 md:px-8">
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div class="absolute -top-40 left-1/2 size-[600px] -translate-x-1/2 rounded-full bg-violet-600/20 blur-[120px]" />
+            <div class="absolute bottom-0 right-0 size-[400px] rounded-full bg-fuchsia-600/15 blur-[100px]" />
+        </div>
+        <div class="relative mx-auto max-w-2xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">Special Launch Pricing</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Get Instant Access Today</h2>
-            <p class="mt-3 text-slate-400 text-sm">One-time payment. No monthly fees. Price increases after launch.</p>
+            <p class="mt-3 text-violet-300 text-sm">One-time payment. No monthly fees. Price increases after launch.</p>
 
-            <div class="mt-10 rounded-2xl border-2 border-cyan-400/50 bg-white/5 p-8">
-                <p class="text-sm font-semibold text-slate-400 line-through">Regular price: $97</p>
-                <p class="mt-2 text-7xl font-extrabold text-cyan-400">$20</p>
-                <p class="mt-1 text-sm text-slate-400">One-time · Instant access · No recurring charges</p>
+            <div class="mt-10 rounded-2xl border-2 border-fuchsia-400/40 bg-white/6 p-8 shadow-2xl shadow-violet-950/60">
+                <p class="text-sm font-semibold text-violet-400 line-through">Regular price: $97</p>
+                <p class="mt-2 text-7xl font-extrabold bg-linear-to-r from-fuchsia-400 to-violet-400 bg-clip-text text-transparent">$20</p>
+                <p class="mt-1 text-sm text-violet-300">One-time · Instant access · No recurring charges</p>
 
-                <ul class="mt-6 space-y-2 text-left text-sm text-slate-300">
-                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Full story generation from prompts</li>
-                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> AI illustrations matched to every page</li>
-                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Built-in voice narration</li>
-                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Flipbook reader with shareable link</li>
-                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Interactive quiz &amp; game pages</li>
-                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> PDF export ready for KDP &amp; publishing</li>
-                    <li class="flex items-center gap-2"><span class="text-cyan-400">✔</span> Custom cover art &amp; branding</li>
+                <ul class="mt-6 space-y-2 text-left text-sm text-violet-200">
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✔</span> Full story generation from prompts</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✔</span> AI illustrations matched to every page</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✔</span> Built-in voice narration</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✔</span> Flipbook reader with shareable link</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✔</span> Interactive quiz &amp; game pages</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✔</span> PDF export ready for KDP &amp; publishing</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✔</span> Custom cover art &amp; branding</li>
                 </ul>
 
-                <a href="#" class="mt-8 block w-full rounded-full bg-cyan-400 py-4 text-center text-base font-bold text-slate-900 shadow-lg shadow-cyan-400/30 transition hover:bg-cyan-300">
+                <a href="#" class="mt-8 block w-full rounded-full bg-linear-to-r from-fuchsia-500 to-violet-600 py-4 text-center text-base font-bold text-white shadow-lg shadow-fuchsia-600/40 transition hover:from-fuchsia-400 hover:to-violet-500 active:scale-95">
                     👉 Get Instant Access &amp; Create Your First Story Today
                 </a>
-                <p class="mt-3 text-xs text-slate-500">⚠️ Launch pricing is temporary — price increases after window closes</p>
+                <p class="mt-3 text-xs text-violet-400">⚠️ Launch pricing is temporary — price increases after window closes</p>
             </div>
 
-            <div class="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-slate-400 text-left">
+            <div class="mt-8 rounded-2xl border border-violet-400/20 bg-white/6 p-6 text-sm text-violet-300 text-left">
                 <p class="font-semibold text-white mb-2">🔒 Satisfaction Guarantee</p>
                 <p>Try AI Storybook Studio risk-free. If you're not completely satisfied, we'll make it right. Your investment is protected.</p>
             </div>
         </div>
     </section>
 
-    <!-- URGENCY -->
-    <section class="bg-red-600 text-white px-4 py-8 text-center">
+    <!-- ── URGENCY ─────────────────────────────────────────────── -->
+    <section class="bg-linear-to-r from-fuchsia-600 to-violet-700 text-white px-4 py-8 text-center">
         <p class="text-base font-bold">⚠️ Launch pricing is temporary. Price will increase when the launch window closes.</p>
-        <p class="mt-1 text-sm text-red-100">Lock in your access now before the price goes up.</p>
-        <a href="#pricing" class="mt-4 inline-block rounded-full bg-white px-8 py-3 text-sm font-bold text-red-600 transition hover:bg-red-50">
+        <p class="mt-1 text-sm text-fuchsia-100">Lock in your access now before the price goes up.</p>
+        <a href="#pricing" class="mt-4 inline-block rounded-full bg-white px-8 py-3 text-sm font-bold text-violet-700 shadow-lg transition hover:bg-violet-50 active:scale-95">
             Secure My Access Now →
         </a>
     </section>
 
-    <!-- CREDIT USAGE NOTE -->
-    <section class="bg-slate-50 px-4 py-8 md:px-8">
-        <div class="mx-auto max-w-4xl rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
-            <p class="font-semibold text-slate-700">About Your Included Usage Credits</p>
+    <!-- ── CREDIT USAGE NOTE ───────────────────────────────────── -->
+    <section class="bg-violet-50 px-4 py-8 md:px-8">
+        <div class="mx-auto max-w-4xl rounded-xl border border-violet-200 bg-white p-5 text-sm text-slate-600 shadow-sm">
+            <p class="font-semibold text-violet-700">About Your Included Usage Credits</p>
             <p class="mt-2">Your purchase includes usage credits to generate stories, AI illustrations, and voice narration. These credits are enough to create your first complete storybooks and start publishing immediately. Additional credits can be purchased anytime inside the app if you want to create more — there are no forced recurring charges.</p>
         </div>
     </section>
 
-    <!-- DISCLAIMER -->
-    <section class="bg-slate-100 px-4 py-10 md:px-8">
+    <!-- ── DISCLAIMER ──────────────────────────────────────────── -->
+    <section class="bg-indigo-50 px-4 py-10 md:px-8">
         <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-2">
             <p class="font-semibold text-slate-600">Disclaimer</p>
             <p>This product does not guarantee income or business results. Outcomes vary by effort, traffic, positioning, and offer-market fit. Examples are illustrative and not promises of future performance.</p>

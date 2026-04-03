@@ -335,6 +335,23 @@ watch(
     },
 );
 
+const warnings = computed<string[]>(() => {
+    const list: string[] = [];
+    if (!form.include_narration && !canEnableNarration.value && pages.value > 0) {
+        list.push(`Not enough credits for narration — you can afford up to ${maxPagesWithNarration.value} page(s) with audio.`);
+    }
+    if (isPro && !form.include_video && !canEnableVideo.value && pages.value > 0) {
+        list.push(`Not enough credits for video — you can afford up to ${maxPagesWithVideo.value} page(s) with video.`);
+    }
+    if (!canSubmit.value) {
+        list.push(`Insufficient credits: need ${breakdown.value.total}, you have ${props.storyCredits}.`);
+    }
+    if (creationMode.value === 'template' && !selectedTemplate.value) {
+        list.push('Choose a template to continue.');
+    }
+    return list;
+});
+
 const lessonTypeOptions = [
     { value: 'moral', label: 'Moral lesson' },
     { value: 'science', label: 'Science concept' },
@@ -580,37 +597,67 @@ const illustrationStyleOptions = [
                         <div class="flex flex-col gap-3">
 
                             <!-- Quizzes toggle -->
-                            <label class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border/60 p-4 transition-colors hover:bg-muted/30">
-                                <div>
-                                    <p class="text-sm font-medium">Include Quizzes</p>
-                                    <p class="text-muted-foreground text-xs mt-0.5">Add a quiz question at the end of each page</p>
+                            <label
+                                class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border-2 p-4 transition-all"
+                                :class="form.include_quiz
+                                    ? 'border-violet-400 bg-violet-50/60 dark:border-violet-600 dark:bg-violet-950/20'
+                                    : 'border-border/50 bg-muted/20 opacity-70 hover:opacity-100 hover:border-border'"
+                            >
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors"
+                                        :class="form.include_quiz ? 'bg-violet-100 dark:bg-violet-900/40' : 'bg-muted'"
+                                    >
+                                        <svg class="size-4" :class="form.include_quiz ? 'text-violet-600' : 'text-muted-foreground'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold" :class="form.include_quiz ? 'text-violet-800 dark:text-violet-200' : ''">Include Quizzes</p>
+                                        <p class="text-xs mt-0.5" :class="form.include_quiz ? 'text-violet-700/70 dark:text-violet-400' : 'text-muted-foreground'">Add a quiz question at the end of each page</p>
+                                    </div>
                                 </div>
-                                <span class="relative inline-flex shrink-0">
-                                    <input v-model="form.include_quiz" type="checkbox" class="peer sr-only" />
-                                    <span class="bg-muted peer-checked:bg-violet-500 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                        <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                <span class="relative inline-flex shrink-0" @click.prevent="form.include_quiz = !form.include_quiz">
+                                    <span class="inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200"
+                                        :class="form.include_quiz ? 'bg-violet-500' : 'bg-muted'">
+                                        <span class="ml-0.5 size-5 rounded-full bg-white shadow transition-transform duration-200"
+                                            :class="form.include_quiz ? 'translate-x-5' : 'translate-x-0'" />
                                     </span>
                                 </span>
                             </label>
 
                             <!-- Narration toggle -->
-                            <label class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border/60 p-4 transition-colors hover:bg-muted/30">
-                                <div>
-                                    <p class="text-sm font-medium">
-                                        Include Narration
-                                        <span class="ml-1.5 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                                            {{ pages * costs.audio }} credits
-                                        </span>
-                                    </p>
-                                    <p class="text-muted-foreground text-xs mt-0.5">AI text-to-speech audio for every page</p>
-                                    <p v-if="!form.include_narration && !canEnableNarration" class="text-destructive text-xs mt-1">
-                                        Not enough credits — max {{ maxPagesWithNarration }} pages with narration
-                                    </p>
+                            <label
+                                class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border-2 p-4 transition-all"
+                                :class="form.include_narration
+                                    ? 'border-blue-400 bg-blue-50/60 dark:border-blue-600 dark:bg-blue-950/20'
+                                    : 'border-border/50 bg-muted/20 opacity-70 hover:opacity-100 hover:border-border'"
+                            >
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors"
+                                        :class="form.include_narration ? 'bg-blue-100 dark:bg-blue-900/40' : 'bg-muted'"
+                                    >
+                                        <svg class="size-4" :class="form.include_narration ? 'text-blue-600' : 'text-muted-foreground'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6v12m-3.536-9.536a5 5 0 000 7.072M8.464 8.464A7 7 0 003 12m18 0a7 7 0 00-5.536-6.857"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold flex flex-wrap items-center gap-1.5" :class="form.include_narration ? 'text-blue-800 dark:text-blue-200' : ''">
+                                            Include Narration
+                                            <span class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                                :class="form.include_narration ? 'bg-blue-200 text-blue-800 dark:bg-blue-800/40 dark:text-blue-300' : 'bg-muted text-muted-foreground'">
+                                                {{ pages * costs.audio }} credits
+                                            </span>
+                                        </p>
+                                        <p class="text-xs mt-0.5" :class="form.include_narration ? 'text-blue-700/70 dark:text-blue-400' : 'text-muted-foreground'">AI text-to-speech audio for every page</p>
+                                    </div>
                                 </div>
-                                <span class="relative inline-flex shrink-0">
-                                    <input v-model="form.include_narration" :disabled="!form.include_narration && !canEnableNarration" type="checkbox" class="peer sr-only" />
-                                    <span class="bg-muted peer-checked:bg-blue-500 peer-disabled:opacity-50 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                        <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                <span
+                                    class="relative inline-flex shrink-0"
+                                    :class="(!form.include_narration && !canEnableNarration) ? 'opacity-40 pointer-events-none' : 'cursor-pointer'"
+                                    @click.prevent="(!form.include_narration && !canEnableNarration) ? null : (form.include_narration = !form.include_narration)"
+                                >
+                                    <span class="inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200"
+                                        :class="form.include_narration ? 'bg-blue-500' : 'bg-muted'">
+                                        <span class="ml-0.5 size-5 rounded-full bg-white shadow transition-transform duration-200"
+                                            :class="form.include_narration ? 'translate-x-5' : 'translate-x-0'" />
                                     </span>
                                 </span>
                             </label>
@@ -618,25 +665,40 @@ const illustrationStyleOptions = [
                             <!-- Video toggle (Pro) -->
                             <label
                                 v-if="isPro"
-                                class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border/60 p-4 transition-colors hover:bg-muted/30"
+                                class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border-2 p-4 transition-all"
+                                :class="form.include_video
+                                    ? 'border-violet-400 bg-violet-50/60 dark:border-violet-600 dark:bg-violet-950/20'
+                                    : 'border-border/50 bg-muted/20 opacity-70 hover:opacity-100 hover:border-border'"
                             >
-                                <div>
-                                    <p class="text-sm font-medium flex items-center gap-1.5">
-                                        Include Page Video
-                                        <span class="rounded-full bg-violet-100 px-2 py-0.5 text-xs text-violet-700 dark:bg-violet-900/30 dark:text-violet-400">Pro</span>
-                                        <span class="rounded-full bg-violet-100 px-2 py-0.5 text-xs text-violet-700 dark:bg-violet-900/30 dark:text-violet-400">
-                                            {{ pages * costs.video }} credits
-                                        </span>
-                                    </p>
-                                    <p class="text-muted-foreground text-xs mt-0.5">AI-generated video for each illustrated page</p>
-                                    <p v-if="!canEnableVideo" class="text-destructive text-xs mt-1">
-                                        Not enough credits — max {{ maxPagesWithVideo }} pages with video
-                                    </p>
+                                <div class="flex items-start gap-3">
+                                    <div
+                                        class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors"
+                                        :class="form.include_video ? 'bg-violet-100 dark:bg-violet-900/40' : 'bg-muted'"
+                                    >
+                                        <svg class="size-4" :class="form.include_video ? 'text-violet-600' : 'text-muted-foreground'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold flex flex-wrap items-center gap-1.5" :class="form.include_video ? 'text-violet-800 dark:text-violet-200' : ''">
+                                            Include Page Video
+                                            <span class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                                :class="form.include_video ? 'bg-violet-200 text-violet-800 dark:bg-violet-800/40 dark:text-violet-300' : 'bg-muted text-muted-foreground'">Pro</span>
+                                            <span class="rounded-full px-2 py-0.5 text-xs font-medium"
+                                                :class="form.include_video ? 'bg-violet-200 text-violet-800 dark:bg-violet-800/40 dark:text-violet-300' : 'bg-muted text-muted-foreground'">
+                                                {{ pages * costs.video }} credits
+                                            </span>
+                                        </p>
+                                        <p class="text-xs mt-0.5" :class="form.include_video ? 'text-violet-700/70 dark:text-violet-400' : 'text-muted-foreground'">AI-generated video for each illustrated page</p>
+                                    </div>
                                 </div>
-                                <span class="relative inline-flex shrink-0">
-                                    <input v-model="form.include_video" :disabled="!form.include_video && !canEnableVideo" type="checkbox" class="peer sr-only" />
-                                    <span class="bg-muted peer-checked:bg-violet-500 peer-disabled:opacity-50 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                        <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                <span
+                                    class="relative inline-flex shrink-0"
+                                    :class="(!form.include_video && !canEnableVideo) ? 'opacity-40 pointer-events-none' : 'cursor-pointer'"
+                                    @click.prevent="(!form.include_video && !canEnableVideo) ? null : (form.include_video = !form.include_video)"
+                                >
+                                    <span class="inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200"
+                                        :class="form.include_video ? 'bg-violet-500' : 'bg-muted'">
+                                        <span class="ml-0.5 size-5 rounded-full bg-white shadow transition-transform duration-200"
+                                            :class="form.include_video ? 'translate-x-5' : 'translate-x-0'" />
                                     </span>
                                 </span>
                             </label>
@@ -664,6 +726,35 @@ const illustrationStyleOptions = [
                         <!-- Credit breakdown card -->
                         <div class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
                             <h3 class="mb-3 text-sm font-semibold">Credit Estimate</h3>
+
+                            <!-- Warnings panel — shown at the top so it's impossible to miss -->
+                            <transition name="warnings-fade">
+                                <div
+                                    v-if="warnings.length"
+                                    class="mb-4 rounded-xl border border-amber-300/70 bg-amber-50 px-3 py-2.5 dark:border-amber-700/50 dark:bg-amber-950/30"
+                                >
+                                    <div class="mb-1.5 flex items-center gap-1.5">
+                                        <svg class="size-4 shrink-0 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                        </svg>
+                                        <span class="text-xs font-semibold text-amber-700 dark:text-amber-400">Action needed</span>
+                                    </div>
+                                    <ul class="space-y-1">
+                                        <li v-for="(w, i) in warnings" :key="i" class="flex items-start gap-1.5 text-xs text-amber-800 dark:text-amber-300">
+                                            <span class="mt-0.5 shrink-0">•</span>
+                                            <span>{{ w }}</span>
+                                        </li>
+                                    </ul>
+                                    <button
+                                        v-if="!canSubmit"
+                                        type="button"
+                                        class="mt-2.5 w-full rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-amber-700"
+                                        @click="creditsModal.open()"
+                                    >
+                                        Buy Credits →
+                                    </button>
+                                </div>
+                            </transition>
 
                             <!-- Balance -->
                             <div class="mb-4 flex items-center justify-between rounded-xl bg-muted/50 px-3 py-2">
@@ -724,21 +815,6 @@ const illustrationStyleOptions = [
                             <Button variant="outline" type="button" class="w-full" as-child>
                                 <Link href="/stories">Cancel</Link>
                             </Button>
-                        </div>
-
-                        <!-- Validation messages -->
-                        <div class="flex flex-col gap-2 text-xs">
-                            <p v-if="creationMode === 'template' && !selectedTemplate" class="text-destructive">
-                                ⚠ Choose a template to continue.
-                            </p>
-                            <p v-if="!canSubmit" class="text-destructive">
-                                ⚠ Not enough credits. Need {{ breakdown.total }}, have {{ props.storyCredits }}.
-                            </p>
-                            <div v-if="!canSubmit">
-                                <Button type="button" variant="outline" size="sm" class="w-full" @click="creditsModal.open()">
-                                    Buy Credits
-                                </Button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -822,3 +898,18 @@ const illustrationStyleOptions = [
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+.warnings-fade-enter-active,
+.warnings-fade-leave-active {
+    transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.3s ease;
+    overflow: hidden;
+    max-height: 200px;
+}
+.warnings-fade-enter-from,
+.warnings-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+    max-height: 0;
+}
+</style>

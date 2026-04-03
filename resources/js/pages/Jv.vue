@@ -53,10 +53,6 @@ import { Head } from '@inertiajs/vue3';
                 <a href="#" class="hover:text-gray-600"> JV Home </a>
                    
                 <a href="#email-swipes" class="hover:text-gray-600"> Email Swipes </a>
-                <a href="#" class="hover:text-gray-600"> Commissions </a>
-                <!-- <a href="#" class="hover:text-gray-600">
-                Docs
-            </a> -->
                 <button
                     id="close-menu"
                     class="aspect-square rounded-md bg-gray-800 p-2 font-medium text-white transition hover:bg-black md:hidden"
@@ -232,6 +228,76 @@ import { Head } from '@inertiajs/vue3';
     </section>
 
     <main>
+
+        <!-- ── DEMO VIDEO ──────────────────────────────────────── -->
+        <section id="demo" class="bg-slate-900 px-4 py-16 text-white md:px-8 md:py-20">
+            <div class="mx-auto max-w-4xl text-center">
+                <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400">The Most Important 2 Minutes You'll Spend Today</p>
+                <h2 class="mt-3 text-2xl font-extrabold md:text-3xl">
+                    🎬 Show Your Audience This — They'll Want It Instantly
+                </h2>
+                <p class="mx-auto mt-3 max-w-xl text-sm text-slate-400">
+                    This 2-minute walkthrough shows the full transformation — one prompt to illustrated, narrated, flipbook-ready storybook.
+                    No explaining needed. The output sells itself.
+                </p>
+
+                <!-- Video embed / placeholder -->
+                <div class="relative mt-8 overflow-hidden rounded-2xl border-2 border-indigo-500/40 bg-slate-800 shadow-2xl shadow-indigo-950/60">
+                    <!-- Aspect ratio wrapper -->
+                    <div class="aspect-video flex items-center justify-center cursor-pointer group hover:border-indigo-400 transition">
+                        <!-- Play button overlay -->
+                        <div class="text-center">
+                            <div class="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-violet-600 text-white shadow-2xl shadow-indigo-600/50 transition group-hover:scale-110 group-hover:from-indigo-400 group-hover:to-violet-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-9 translate-x-0.5">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-200">Click to watch — 2 minutes</p>
+                            <p class="mt-1 text-xs text-slate-500">From one prompt → full illustrated storybook</p>
+                        </div>
+
+                        <!-- Mock screenshot overlay (decorative) -->
+                        <div class="pointer-events-none absolute inset-0 opacity-20">
+                            <div class="absolute inset-x-8 top-6 bottom-16 rounded-xl border border-white/20 bg-linear-to-br from-violet-900/60 to-indigo-900/60" />
+                            <div class="absolute inset-x-12 top-10 grid h-28 grid-cols-3 gap-2 px-4">
+                                <div class="rounded bg-violet-700/50" />
+                                <div class="rounded bg-indigo-700/50" />
+                                <div class="rounded bg-purple-700/50" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What the video shows — transformation steps -->
+                <div class="mt-8 grid grid-cols-2 gap-3 text-left md:grid-cols-4">
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
+                        <p class="text-2xl mb-2">✍️</p>
+                        <p class="text-sm font-semibold">1. One Prompt</p>
+                        <p class="mt-1 text-xs text-slate-400">Type a story idea in seconds</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
+                        <p class="text-2xl mb-2">🎨</p>
+                        <p class="text-sm font-semibold">2. Illustrations</p>
+                        <p class="mt-1 text-xs text-slate-400">Every page gets a matched visual</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
+                        <p class="text-2xl mb-2">🎙️</p>
+                        <p class="text-sm font-semibold">3. Narration</p>
+                        <p class="mt-1 text-xs text-slate-400">AI read-aloud voice added auto</p>
+                    </div>
+                    <div class="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-4 text-center">
+                        <p class="text-2xl mb-2">📚</p>
+                        <p class="text-sm font-semibold">4. Flipbook</p>
+                        <p class="mt-1 text-xs text-indigo-300">Shareable link — ready to sell</p>
+                    </div>
+                </div>
+
+                <p class="mt-6 text-sm font-bold text-indigo-400">
+                    👉 This demo is your #1 selling tool. Send traffic here first.
+                </p>
+            </div>
+        </section>
+
         <!-- Pain & Solution section (affiliate pitch) -->
         <section class="bg-white px-4 py-16 md:px-8">
             <div class="mx-auto max-w-5xl">
@@ -830,11 +896,70 @@ import { Head } from '@inertiajs/vue3';
             </div>
 
             <div class="flex flex-col items-center md:flex-row">
-                <img
-                    class="w-full max-w-2xl"
-                    src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/features/card-image-1.png"
-                    alt=""
-                />
+                <!-- App mockup: flipbook reader with two pages -->
+                <div class="w-full max-w-2xl shrink-0 p-6 lg:p-10">
+                    <div class="overflow-hidden rounded-2xl border border-indigo-200 bg-linear-to-br from-violet-950 to-indigo-950 shadow-2xl shadow-indigo-950/40">
+                        <!-- Browser bar -->
+                        <div class="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-2.5">
+                            <span class="size-3 rounded-full bg-red-500/60" />
+                            <span class="size-3 rounded-full bg-yellow-500/60" />
+                            <span class="size-3 rounded-full bg-green-500/60" />
+                            <div class="ml-3 flex-1 rounded bg-white/10 px-3 py-1 text-[10px] text-indigo-300/60">aistorybookstudio.com/read/the-dragon-who-lost-his-fire</div>
+                        </div>
+                        <!-- Two page spread -->
+                        <div class="grid grid-cols-2">
+                            <!-- Left page -->
+                            <div class="flex flex-col gap-2.5 border-r border-white/10 bg-linear-to-br from-violet-900/40 to-purple-900/30 p-4">
+                                <div class="aspect-4/3 w-full overflow-hidden rounded-lg bg-linear-to-br from-violet-800/50 to-indigo-800/50 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="size-14 opacity-30" fill="none"><rect x="8" y="8" width="48" height="48" rx="6" fill="#7c3aed"/><circle cx="22" cy="22" r="6" fill="#a78bfa"/><path d="M8 45 24 29a4 4 0 0 1 6 0l8 8 5-5a4 4 0 0 1 6 0l9 9" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round"/></svg>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="h-2 w-3/4 rounded bg-white/15" />
+                                    <div class="h-2 w-full rounded bg-white/15" />
+                                    <div class="h-2 w-4/5 rounded bg-white/15" />
+                                    <div class="h-2 w-2/3 rounded bg-white/15" />
+                                </div>
+                                <!-- Audio bar -->
+                                <div class="flex items-center gap-1.5 pt-0.5">
+                                    <div class="flex size-5 items-center justify-center rounded-full bg-fuchsia-500 text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-2.5"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                    <div class="h-1 flex-1 overflow-hidden rounded-full bg-white/15">
+                                        <div class="h-full w-2/5 rounded-full bg-fuchsia-400" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right page -->
+                            <div class="flex flex-col gap-2.5 bg-linear-to-br from-indigo-900/30 to-violet-900/20 p-4">
+                                <div class="aspect-4/3 w-full overflow-hidden rounded-lg bg-linear-to-br from-indigo-800/50 to-violet-800/40 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="size-12 opacity-30" fill="none"><rect x="4" y="14" width="36" height="28" rx="4" fill="#4f46e5"/><path d="M40 22l16 10-16 10V22z" fill="#818cf8"/></svg>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="h-2 w-full rounded bg-white/15" />
+                                    <div class="h-2 w-4/5 rounded bg-white/15" />
+                                    <div class="h-2 w-full rounded bg-white/15" />
+                                </div>
+                                <!-- Quiz chip -->
+                                <div class="rounded-md border border-yellow-400/25 bg-yellow-400/8 p-1.5">
+                                    <p class="text-[9px] font-bold text-yellow-300/80">🧩 Quiz</p>
+                                    <div class="mt-1 space-y-0.5">
+                                        <div class="h-1.5 w-4/5 rounded bg-white/10" />
+                                        <div class="h-1.5 w-3/5 rounded bg-white/10" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Status bar -->
+                        <div class="flex items-center justify-between border-t border-white/10 bg-black/20 px-4 py-2 text-[10px] text-indigo-300/60">
+                            <span>Page 3 of 12</span>
+                            <div class="flex gap-3">
+                                <span class="text-violet-400/80">✦ Illustrated</span>
+                                <span class="text-green-400/80">◉ Narrated</span>
+                                <span class="text-fuchsia-400/80">▶ Video</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="space-y-10 px-4 md:px-0">
                     <div
                         class="flex max-w-md items-center justify-center gap-6"
@@ -955,13 +1080,47 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="rounded-lg bg-white lg:mx-8 lg:flex lg:max-w-5xl lg:shadow-lg"
                 >
+                    <!-- Pricing stack mockup -->
                     <div class="lg:w-1/2">
-                        <div
-                            class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
-                            style="
-                                background-image: url('/images/card-kids-image.png');
-                            "
-                        ></div>
+                        <div class="flex h-80 items-center justify-center rounded-b-none border bg-linear-to-br from-indigo-50 to-violet-50 p-6 lg:h-full lg:rounded-lg lg:scale-105">
+                            <div class="w-full max-w-xs space-y-3">
+                                <p class="mb-4 text-center text-xs font-bold uppercase tracking-widest text-indigo-500">Full Funnel Stack</p>
+                                <!-- FE -->
+                                <div class="flex items-center justify-between rounded-xl border-2 border-indigo-400 bg-white px-4 py-3 shadow-sm">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-wide text-indigo-500">Front End</p>
+                                        <p class="text-base font-extrabold text-slate-900">$20</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-slate-500">You earn</p>
+                                        <p class="text-sm font-bold text-emerald-600">$10</p>
+                                    </div>
+                                </div>
+                                <!-- OTO1 -->
+                                <div class="flex items-center justify-between rounded-xl border-2 border-amber-300 bg-white px-4 py-3 shadow-sm">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-wide text-amber-500">OTO 1 — PRO Video</p>
+                                        <p class="text-base font-extrabold text-slate-900">$69</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-slate-500">Commission</p>
+                                        <p class="text-sm font-bold text-emerald-600">50%</p>
+                                    </div>
+                                </div>
+                                <!-- OTO2 -->
+                                <div class="flex items-center justify-between rounded-xl border border-rose-200 bg-white px-4 py-3 shadow-sm">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-wide text-rose-500">OTO 2 — DFY Pack</p>
+                                        <p class="text-base font-extrabold text-slate-900">TBA</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-slate-500">Commission</p>
+                                        <p class="text-sm font-bold text-emerald-600">50%</p>
+                                    </div>
+                                </div>
+                                <p class="pt-1 text-center text-xs font-semibold text-indigo-600">50% on every single step ✔</p>
+                            </div>
+                        </div>
                     </div>
                     <div
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
@@ -971,8 +1130,7 @@ import { Head } from '@inertiajs/vue3';
                             <span class="text-indigo-600">JVZoo-Friendly</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            Frontend at $20. Upsell 1: PRO
-                                video features at $69.
+                            Frontend at $20. Upsell 1: PRO video features at $69.
                         </p>
                         <p class="mt-3 text-sm text-gray-700">
                             Commission structure: frontend 50%, upsell 1 50%.
@@ -992,13 +1150,45 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="rounded-lg bg-white lg:mx-8 lg:flex lg:max-w-5xl lg:shadow-lg"
                 >
+                    <!-- Affiliate assets mockup -->
                     <div class="lg:w-1/2">
-                        <div
-                            class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
-                            style="
-                                background-image: url('/images/banner-childern-image.png');
-                            "
-                        ></div>
+                        <div class="flex h-80 items-center justify-center rounded-b-none border bg-linear-to-br from-slate-50 to-indigo-50 p-6 lg:h-full lg:rounded-lg lg:scale-105">
+                            <div class="w-full max-w-xs space-y-2.5">
+                                <p class="mb-4 text-center text-xs font-bold uppercase tracking-widest text-indigo-500">Promo Asset Pack</p>
+                                <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-base">📧</span>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-800">Email Swipes</p>
+                                        <p class="text-[10px] text-slate-500">3 angles — curiosity, problem/solution, urgency</p>
+                                    </div>
+                                    <span class="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">Ready</span>
+                                </div>
+                                <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-base">🎬</span>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-800">Demo Video</p>
+                                        <p class="text-[10px] text-slate-500">2-min walkthrough — the closer that converts</p>
+                                    </div>
+                                    <span class="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">Ready</span>
+                                </div>
+                                <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-base">🖼</span>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-800">Banners &amp; Graphics</p>
+                                        <p class="text-[10px] text-slate-500">Multiple sizes for social, email &amp; ads</p>
+                                    </div>
+                                    <span class="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold text-amber-700">Soon</span>
+                                </div>
+                                <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-base">📝</span>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-800">Short-form Scripts</p>
+                                        <p class="text-[10px] text-slate-500">Reels, TikTok &amp; YouTube Shorts angles</p>
+                                    </div>
+                                    <span class="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold text-amber-700">Soon</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
@@ -1031,13 +1221,46 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="rounded-lg bg-white lg:mx-8 lg:flex lg:max-w-5xl lg:shadow-lg"
                 >
+                    <!-- Bonus stack mockup -->
                     <div class="lg:w-1/2">
-                        <div
-                            class="h-80 rounded-b-none border bg-cover lg:h-full lg:scale-110 lg:rounded-lg"
-                            style="
-                                background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97');
-                            "
-                        ></div>
+                        <div class="flex h-80 items-center justify-center rounded-b-none border bg-linear-to-br from-violet-50 to-fuchsia-50 p-6 lg:h-full lg:rounded-lg lg:scale-105">
+                            <div class="w-full max-w-xs space-y-3">
+                                <p class="mb-4 text-center text-xs font-bold uppercase tracking-widest text-violet-600">Bonus Stack</p>
+                                <!-- Bonus 1 -->
+                                <div class="relative overflow-hidden rounded-xl border-2 border-violet-300 bg-white px-4 py-3 shadow-sm">
+                                    <div class="absolute right-2 top-2 rounded-full bg-violet-100 px-1.5 py-0.5 text-[9px] font-bold text-violet-700">BONUS 1</div>
+                                    <div class="flex items-start gap-2.5">
+                                        <span class="text-2xl">📚</span>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800">100 Story Prompts</p>
+                                            <p class="text-[10px] text-slate-500">Ready-to-use prompts covering popular kids niches — ages 3–12</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Bonus 2 -->
+                                <div class="relative overflow-hidden rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
+                                    <div class="absolute right-2 top-2 rounded-full bg-indigo-100 px-1.5 py-0.5 text-[9px] font-bold text-indigo-700">BONUS 2</div>
+                                    <div class="flex items-start gap-2.5">
+                                        <span class="text-2xl">📺</span>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800">Kids Channel Blueprint</p>
+                                            <p class="text-[10px] text-slate-500">YouTube &amp; Shorts strategy for faceless story channels</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Bonus 3 -->
+                                <div class="relative overflow-hidden rounded-xl border border-amber-200 bg-white px-4 py-3 shadow-sm">
+                                    <div class="absolute right-2 top-2 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">BONUS 3</div>
+                                    <div class="flex items-start gap-2.5">
+                                        <span class="text-2xl">💰</span>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800">Book Monetization Playbook</p>
+                                            <p class="text-[10px] text-slate-500">KDP publishing guide — from story to passive income</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div
                         class="max-w-xl rounded-t-none border px-6 py-12 lg:w-1/2 lg:max-w-5xl lg:rounded-lg lg:px-12"
@@ -1075,14 +1298,14 @@ import { Head } from '@inertiajs/vue3';
                 </p>
                 <div class="mt-8 flex flex-wrap justify-center gap-4">
                     <a
-                        href="mailto:jv@aistorybook.com"
+                        href="mailto:vickenconcept@gmail.com"
                         class="flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-black"
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                         Email Us
                     </a>
                     <a
-                        href="https://facebook.com"
+                        href="https://facebook.com/Vickenconcept"
                         target="_blank"
                         rel="noopener"
                         class="flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"

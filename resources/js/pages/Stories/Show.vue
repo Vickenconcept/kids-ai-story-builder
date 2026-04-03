@@ -671,7 +671,7 @@ onUnmounted(() => {
         @buy-credits="openCreditsModal"
     />
 
-    <div class="bg-background min-h-screen w-full">
+    <div class="min-h-screen w-full bg-muted/30 dark:bg-muted/10">
         <StorySetupTopBar
             :project="project"
             :story-credits="props.story_credits"
@@ -680,276 +680,275 @@ onUnmounted(() => {
             @update:view-mode="setViewMode($event)"
         />
 
-        <div class="mx-auto w-full max-w-440 space-y-4 px-4 py-3 sm:px-6">
+        <div class="mx-auto w-full max-w-440 space-y-5 px-4 py-4 sm:px-6">
+
+            <!-- Mobile view-mode toggle -->
             <div
                 v-if="!isDraftReviewStage"
-                class="bg-muted/60 flex rounded-lg border border-border p-0.5 text-xs font-medium sm:hidden"
+                class="bg-card flex rounded-xl border border-border p-1 text-xs font-medium shadow-sm sm:hidden"
                 role="group"
-                aria-label="View mode"
             >
                 <button
                     type="button"
-                    class="flex-1 rounded-md px-3 py-1.5 transition-colors"
-                    :class="
-                        viewMode === 'flip'
-                            ? 'bg-background text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                    "
+                    class="flex-1 rounded-lg px-3 py-2 transition-colors"
+                    :class="viewMode === 'flip' ? 'bg-violet-500 text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'"
                     @click="setViewMode('flip')"
                 >
                     Flip book
                 </button>
                 <button
                     type="button"
-                    class="flex-1 rounded-md px-3 py-1.5 transition-colors"
-                    :class="
-                        viewMode === 'scroll'
-                            ? 'bg-background text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                    "
+                    class="flex-1 rounded-lg px-3 py-2 transition-colors"
+                    :class="viewMode === 'scroll' ? 'bg-violet-500 text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'"
                     @click="setViewMode('scroll')"
                 >
-                    Scroll
+                    Scroll view
                 </button>
             </div>
 
+            <!-- Failed banner -->
             <div
                 v-if="project.status === 'failed'"
-                class="rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-2.5 text-sm"
+                class="flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm"
             >
-                Story text generation failed. Credits for completed steps were charged idempotently.
-                Create a new project to retry.
+                <svg class="mt-0.5 size-4 shrink-0 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <div>
+                    <p class="font-medium text-destructive">Generation failed</p>
+                    <p class="text-muted-foreground mt-0.5 text-xs">Credits for completed steps were charged. Create a new project to retry.</p>
+                </div>
             </div>
 
-            <section v-if="isDraftReviewStage" class="grid lg:grid-cols-5 gap-4 ">
-                 <div class="space-y-4 lg:col-span-3 col-span-1">
+            <!-- ── DRAFT REVIEW STAGE ── -->
+            <section v-if="isDraftReviewStage" class="grid gap-5 lg:grid-cols-5">
+
+                <!-- Page list -->
+                <div class="space-y-4 lg:col-span-3">
+                    <div class="flex items-center gap-2">
+                        <span class="flex size-6 items-center justify-center rounded-full bg-violet-500 text-xs font-bold text-white">1</span>
+                        <h2 class="font-semibold">Review &amp; edit story text</h2>
+                    </div>
+
                     <article
                         v-for="page in pages"
                         :key="page.uuid"
-                        class="rounded-xl border border-border bg-card/50 p-4"
+                        class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm dark:border-sidebar-border"
                     >
-                        <div class="mb-2 flex items-center justify-between gap-2">
-                            <h2 class="text-base font-semibold">Page {{ page.page_number }}</h2>
+                        <!-- Page header -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <span class="flex size-7 items-center justify-center rounded-full bg-muted text-xs font-bold">
+                                    {{ page.page_number }}
+                                </span>
+                                <span class="text-sm font-semibold">Page {{ page.page_number }}</span>
+                                <!-- save state pill -->
+                                <span
+                                    v-if="pageSaveState[page.uuid] === 'saved'"
+                                    class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                >Saved ✓</span>
+                                <span
+                                    v-else-if="pageSaveState[page.uuid] === 'unsaved'"
+                                    class="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                                >Unsaved</span>
+                                <span
+                                    v-else-if="pageSaveState[page.uuid] === 'error'"
+                                    class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                                >Save failed</span>
+                            </div>
                             <div class="flex items-center gap-2">
                                 <Button
                                     type="button"
                                     size="sm"
                                     variant="outline"
                                     :disabled="!canGenerateVideoForPage(page)"
+                                    :title="pageVideoActionHint"
                                     @click="generateVideoForPage(page)"
                                 >
-                                    <Clapperboard class="mr-1 size-4" />
-                                    {{ page.video_url ? 'Regenerate video' : 'Generate video' }}
+                                    <Clapperboard class="mr-1.5 size-3.5" />
+                                    {{ page.video_url ? 'Regen video' : 'Gen video' }}
                                 </Button>
                                 <Button
                                     type="button"
                                     size="sm"
-                                    variant="outline"
                                     :disabled="Boolean(pageSaveBusy[page.uuid])"
+                                    :class="pageSaveState[page.uuid] === 'unsaved' ? 'bg-violet-600 text-white hover:bg-violet-700' : ''"
+                                    :variant="pageSaveState[page.uuid] === 'unsaved' ? 'default' : 'outline'"
                                     @click="savePageText(page.uuid)"
                                 >
                                     {{ saveLabelFor(page.uuid) }}
                                 </Button>
                             </div>
                         </div>
-                        <p class="mb-2 text-xs text-muted-foreground">
-                            Per-page video costs {{ props.video_credit_cost }} credits.
-                        </p>
-                        <p v-if="!isPro" class="mb-2 text-xs text-amber-600">
-                            Upgrade to Pro to generate page video.
-                        </p>
-                        <p v-else-if="!canAffordSingleVideo" class="mb-2 text-xs text-destructive">
-                            Not enough credits for a page video.
-                        </p>
-                        <Button
-                            v-if="!canAffordSingleVideo"
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            class="mb-2"
-                            @click="openCreditsModal"
-                        >
-                            Buy Credits
-                        </Button>
-                        <p
-                            v-if="pageSaveState[page.uuid] === 'saved'"
-                            class="mb-2 text-xs text-emerald-600"
-                        >
-                            Saved
-                        </p>
-                        <p
-                            v-else-if="pageSaveState[page.uuid] === 'error'"
-                            class="mb-2 text-xs text-destructive"
-                        >
-                            Save failed. Please try again.
-                        </p>
-                        <textarea
-                            v-model="pageDraftText[page.uuid]"
-                            @input="markPageTextDirty(page.uuid)"
-                            rows="6"
-                            class="border-input bg-background w-full rounded-md border px-3 py-2 text-sm leading-relaxed"
-                        />
 
-                        <div v-if="project.include_quiz" class="mt-3 rounded-lg border border-border/60 bg-background/70 p-3">
-                            <div class="flex items-center justify-between gap-2">
-                                <p class="text-xs font-semibold tracking-wide uppercase">Quiz (editable)</p>
+                        <!-- Credit / pro hints -->
+                        <div class="px-4 pt-3 pb-1 flex flex-wrap gap-2 text-xs">
+                            <span class="text-muted-foreground">Video: {{ props.video_credit_cost }} credits/page</span>
+                            <span v-if="!isPro" class="text-amber-600">· Pro required for video</span>
+                            <span v-else-if="!canAffordSingleVideo" class="text-destructive">· Not enough credits</span>
+                            <button v-if="!canAffordSingleVideo" class="text-violet-600 hover:underline" type="button" @click="openCreditsModal">Buy credits</button>
+                        </div>
+
+                        <!-- Textarea -->
+                        <div class="px-4 pb-4 pt-2">
+                            <textarea
+                                v-model="pageDraftText[page.uuid]"
+                                rows="6"
+                                class="border-input bg-background focus-visible:ring-ring w-full rounded-xl border px-3 py-2.5 text-sm leading-relaxed focus-visible:outline-none focus-visible:ring-1"
+                                @input="markPageTextDirty(page.uuid)"
+                            />
+                        </div>
+
+                        <!-- Quiz section -->
+                        <div v-if="project.include_quiz" class="border-t border-border/60 px-4 py-3">
+                            <div class="mb-2 flex items-center justify-between gap-2">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Quiz</p>
                                 <Button type="button" size="sm" variant="outline" @click="addQuizQuestion(page.uuid)">
-                                    Add question
+                                    + Add question
                                 </Button>
                             </div>
-                            <div v-if="(pageDraftQuiz[page.uuid] ?? []).length > 0" class="mt-2 space-y-2.5">
+                            <div v-if="(pageDraftQuiz[page.uuid] ?? []).length > 0" class="space-y-3">
                                 <div
                                     v-for="(q, idx) in pageDraftQuiz[page.uuid]"
                                     :key="`${page.uuid}-q-${idx}`"
-                                    class="rounded-md border border-border/60 p-2.5"
+                                    class="rounded-xl border border-border/60 bg-muted/30 p-3"
                                 >
-                                    <div class="mb-2 flex items-center justify-between gap-2">
-                                        <p class="text-xs font-semibold">Question {{ idx + 1 }}</p>
-                                        <button
-                                            type="button"
-                                            class="text-destructive text-xs"
-                                            @click="removeQuizQuestion(page.uuid, idx)"
-                                        >
-                                            Remove
-                                        </button>
+                                    <div class="mb-2 flex items-center justify-between">
+                                        <p class="text-xs font-semibold">Q{{ idx + 1 }}</p>
+                                        <button type="button" class="text-xs text-destructive hover:underline" @click="removeQuizQuestion(page.uuid, idx)">Remove</button>
                                     </div>
                                     <input
                                         v-model="q.question"
-                                        @input="markPageQuizDirty(page.uuid)"
                                         type="text"
                                         placeholder="Question"
-                                        class="border-input bg-background mb-2 w-full rounded-md border px-2 py-1.5 text-sm"
+                                        class="border-input bg-background mb-2 w-full rounded-lg border px-2 py-1.5 text-sm"
+                                        @input="markPageQuizDirty(page.uuid)"
                                     />
-                                    <div class="space-y-1.5">
-                                        <div
-                                            v-for="(choice, cIdx) in q.choices"
-                                            :key="`${page.uuid}-q-${idx}-c-${cIdx}`"
-                                            class="flex items-center gap-2"
-                                        >
+                                    <div class="space-y-1.5 mb-2">
+                                        <div v-for="(choice, cIdx) in q.choices" :key="`${page.uuid}-q-${idx}-c-${cIdx}`" class="flex items-center gap-2">
                                             <input
                                                 v-model="q.choices[cIdx]"
-                                                @input="markPageQuizDirty(page.uuid)"
                                                 type="text"
                                                 :placeholder="`Choice ${cIdx + 1}`"
-                                                class="border-input bg-background w-full rounded-md border px-2 py-1.5 text-sm"
+                                                class="border-input bg-background w-full rounded-lg border px-2 py-1.5 text-sm"
+                                                @input="markPageQuizDirty(page.uuid)"
                                             />
-                                            <button
-                                                type="button"
-                                                class="text-muted-foreground text-xs"
-                                                @click="removeQuizChoice(page.uuid, idx, cIdx)"
-                                            >
-                                                Remove
-                                            </button>
+                                            <button type="button" class="text-xs text-muted-foreground hover:text-destructive" @click="removeQuizChoice(page.uuid, idx, cIdx)">✕</button>
                                         </div>
                                     </div>
-                                    <div class="mt-2 flex items-center justify-between">
-                                        <button
-                                            type="button"
-                                            class="text-xs font-medium"
-                                            @click="addQuizChoice(page.uuid, idx)"
-                                        >
-                                            + Add choice
-                                        </button>
-                                    </div>
+                                    <button type="button" class="text-xs font-medium text-violet-600 hover:underline" @click="addQuizChoice(page.uuid, idx)">+ Add choice</button>
                                     <input
                                         v-model="q.answer"
-                                        @input="markPageQuizDirty(page.uuid)"
                                         type="text"
                                         placeholder="Correct answer"
-                                        class="border-input bg-background mt-2 w-full rounded-md border px-2 py-1.5 text-sm"
+                                        class="border-input bg-background mt-2 w-full rounded-lg border px-2 py-1.5 text-sm"
+                                        @input="markPageQuizDirty(page.uuid)"
                                     />
                                 </div>
                             </div>
-                            <p v-else class="text-muted-foreground mt-2 text-xs">No quiz questions yet. Add one if needed.</p>
+                            <p v-else class="text-muted-foreground text-xs">No questions yet.</p>
                         </div>
                     </article>
                 </div>
 
-                <aside class="lg:col-span-2 border-border bg-card/70 top-20 h-fit rounded-xl border p-4 shadow-sm lg:sticky">
-                    <p class="text-sm font-semibold tracking-tight">Text review step</p>
-                    <p class="text-muted-foreground mt-1 text-sm">
-                        Edit your generated pages below, then continue to media generation.
-                    </p>
-                    <p class="text-muted-foreground mt-2 text-xs">
-                        Your create-page settings still apply. Use Advanced options if you want to adjust them.
-                    </p>
-
-                    <div class="mt-4 grid gap-2">
-                        <label class="hover:bg-muted/40 flex cursor-pointer items-center justify-between rounded-lg border border-border/60 p-2.5 transition-colors">
-                            <span class="text-sm">Generate illustrations</span>
-                            <span class="relative inline-flex">
-                                <input v-model="generateImages" :disabled="generateVideo" type="checkbox" class="peer sr-only" />
-                                <span class="bg-muted peer-checked:bg-primary/80 peer-disabled:opacity-60 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                    <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
-                                </span>
-                            </span>
-                        </label>
-                        <label class="hover:bg-muted/40 flex cursor-pointer items-center justify-between rounded-lg border border-border/60 p-2.5 transition-colors">
-                            <span class="text-sm">Generate narration (TTS)</span>
-                            <span class="relative inline-flex">
-                                <input v-model="generateAudio" type="checkbox" class="peer sr-only" />
-                                <span class="bg-muted peer-checked:bg-primary/80 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                    <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
-                                </span>
-                            </span>
-                        </label>
-                        <label
-                            class="hover:bg-muted/40 flex cursor-pointer items-center justify-between rounded-lg border border-border/60 p-2.5 transition-colors"
-                            :class="{ 'opacity-60': !project.include_video }"
-                        >
-                            <span class="text-sm">Generate page video (Pro)</span>
-                            <span class="relative inline-flex">
-                                <input v-model="generateVideo" :disabled="!project.include_video" type="checkbox" class="peer sr-only" />
-                                <span class="bg-muted peer-checked:bg-primary/80 peer-disabled:opacity-60 inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                                    <span class="bg-background ml-0.5 size-5 rounded-full transition-transform peer-checked:translate-x-5" />
-                                </span>
-                            </span>
-                        </label>
+                <!-- Settings sidebar -->
+                <aside class="lg:col-span-2 lg:sticky lg:top-20 h-fit space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="flex size-6 items-center justify-center rounded-full bg-violet-500 text-xs font-bold text-white">2</span>
+                        <h2 class="font-semibold">Choose media to generate</h2>
                     </div>
 
-                    <Button type="button" class="mt-4 w-full" @click="startMediaGeneration">
-                        {{ generateImages || generateAudio || generateVideo ? 'Continue: generate media' : 'Finish as text-only' }}
-                    </Button>
-                    <p v-if="hasUnsavedPageChanges" class="mt-2 text-xs text-amber-600">
-                        You have unsaved edits on {{ unsavedPagesCount }} page(s). Save them before continuing.
-                    </p>
+                    <div class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-4 dark:border-sidebar-border space-y-3">
+                        <p class="text-muted-foreground text-xs">Select what assets to generate for each page, then click Continue.</p>
 
-                    <details class="border-border bg-background/60 mt-4 group rounded-lg border">
-                        <summary class="hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium">
+                        <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-border/60 px-3 py-2.5 transition-colors hover:bg-muted/30">
+                            <div>
+                                <p class="text-sm font-medium">Illustrations</p>
+                                <p class="text-muted-foreground text-xs">AI image per page</p>
+                            </div>
+                            <span class="relative inline-flex shrink-0">
+                                <input v-model="generateImages" :disabled="generateVideo" type="checkbox" class="peer sr-only" />
+                                <span class="bg-muted peer-checked:bg-violet-500 peer-disabled:opacity-50 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                    <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                </span>
+                            </span>
+                        </label>
+
+                        <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-border/60 px-3 py-2.5 transition-colors hover:bg-muted/30">
+                            <div>
+                                <p class="text-sm font-medium">Narration (TTS)</p>
+                                <p class="text-muted-foreground text-xs">AI voice audio per page</p>
+                            </div>
+                            <span class="relative inline-flex shrink-0">
+                                <input v-model="generateAudio" type="checkbox" class="peer sr-only" />
+                                <span class="bg-muted peer-checked:bg-blue-500 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                    <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                </span>
+                            </span>
+                        </label>
+
+                        <label
+                            class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-border/60 px-3 py-2.5 transition-colors hover:bg-muted/30"
+                            :class="{ 'opacity-50 pointer-events-none': !project.include_video }"
+                        >
+                            <div>
+                                <p class="text-sm font-medium flex items-center gap-1.5">
+                                    Page Video
+                                    <span class="rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] text-violet-700 dark:bg-violet-900/30 dark:text-violet-400">Pro</span>
+                                </p>
+                                <p class="text-muted-foreground text-xs">AI video per illustration</p>
+                            </div>
+                            <span class="relative inline-flex shrink-0">
+                                <input v-model="generateVideo" :disabled="!project.include_video" type="checkbox" class="peer sr-only" />
+                                <span class="bg-muted peer-checked:bg-violet-500 peer-disabled:opacity-50 inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                                    <span class="bg-white ml-0.5 size-5 rounded-full shadow transition-transform peer-checked:translate-x-5" />
+                                </span>
+                            </span>
+                        </label>
+
+                        <Button type="button" class="w-full bg-violet-600 text-white hover:bg-violet-700" @click="startMediaGeneration">
+                            {{ generateImages || generateAudio || generateVideo ? '✨ Continue: generate media' : 'Finish as text-only' }}
+                        </Button>
+
+                        <p v-if="hasUnsavedPageChanges" class="text-xs text-amber-600">
+                            ⚠ {{ unsavedPagesCount }} page(s) have unsaved edits.
+                        </p>
+                    </div>
+
+                    <!-- Advanced options -->
+                    <details class="group rounded-2xl border border-sidebar-border/70 bg-card shadow-sm dark:border-sidebar-border overflow-hidden">
+                        <summary class="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-medium hover:bg-muted/30 transition-colors">
                             <span>Advanced options</span>
-                            <span class="text-muted-foreground text-xs transition-transform group-open:rotate-180">▼</span>
+                            <span class="text-muted-foreground transition-transform group-open:rotate-180">▾</span>
                         </summary>
-                        <div class="border-border space-y-3 border-t p-3">
+                        <div class="border-t border-border/60 space-y-3 p-4">
                             <div class="space-y-1.5">
-                                <label class="text-xs font-medium">Illustration style</label>
-                                <select v-model="selectedIllustrationStyle" class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm">
-                                    <option v-for="opt in illustrationStyleOptions" :key="opt.value" :value="opt.value">
-                                        {{ opt.label }}
-                                    </option>
+                                <label class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Illustration style</label>
+                                <select v-model="selectedIllustrationStyle" class="border-input bg-background w-full rounded-xl border px-3 py-2 text-sm">
+                                    <option v-for="opt in illustrationStyleOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                                 </select>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-xs font-medium">Narration voice</label>
-                                <select v-model="selectedTtsVoice" class="border-input bg-background w-full rounded-md border px-2 py-2 text-sm">
-                                    <option v-for="opt in ttsVoiceOptions" :key="opt.value" :value="opt.value">
-                                        {{ opt.label }}
-                                    </option>
+                                <label class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Narration voice</label>
+                                <select v-model="selectedTtsVoice" class="border-input bg-background w-full rounded-xl border px-3 py-2 text-sm">
+                                    <option v-for="opt in ttsVoiceOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
                                 </select>
                             </div>
                             <Button type="button" size="sm" variant="outline" class="w-full" :disabled="advancedSaveBusy" @click="saveAdvancedSettings">
-                                {{ advancedSaveBusy ? 'Saving...' : advancedDirty ? 'Save advanced settings' : 'Advanced settings saved' }}
+                                {{ advancedSaveBusy ? 'Saving…' : advancedDirty ? 'Save advanced settings' : '✓ Advanced settings saved' }}
                             </Button>
                         </div>
                     </details>
                 </aside>
             </section>
 
+            <!-- ── POST-DRAFT: FLIPBOOK / SCROLL ── -->
             <section class="min-w-0 space-y-4">
+
+                <!-- Flip view -->
                 <div
                     v-if="!isDraftReviewStage && viewMode === 'flip' && pages.length > 0"
                     ref="flipbookSectionRef"
                     tabindex="-1"
-                    class="border-border bg-card/30 relative w-full rounded-xl border p-3 shadow-sm"
+                    class="relative w-full rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-3 dark:border-sidebar-border"
                 >
                     <StoryFlipbook
                         :key="flipbookKey"
@@ -982,99 +981,117 @@ onUnmounted(() => {
                     </StoryFlipbook>
                 </div>
 
-            <p
-                v-else-if="!isDraftReviewStage && viewMode === 'flip' && pages.length === 0"
-                class="text-muted-foreground rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm"
-            >
-                Pages are not ready yet. Switch to Scroll or wait — the flip book appears once story text exists.
-            </p>
-
-            <div v-if="!isDraftReviewStage && viewMode === 'scroll'" class="flex flex-col gap-4">
-                <p v-if="pages.length === 0" class="text-muted-foreground text-sm">
-                    No pages yet — generation may still be running. This view will fill in when text and assets are
-                    ready.
-                </p>
-                <div v-else class="flex items-center justify-center gap-2">
-                    <Button type="button" size="sm" variant="outline" :disabled="!canScrollPrev" @click="goScrollPrev">
-                        Previous
-                    </Button>
-                    <p class="text-muted-foreground text-xs">
-                        Page {{ currentScrollPage?.page_number }} of {{ pages.length }}
-                    </p>
-                    <Button type="button" size="sm" variant="outline" :disabled="!canScrollNext" @click="goScrollNext">
-                        Next
-                    </Button>
-                </div>
-                <article
-                    v-if="currentScrollPage"
-                    :key="currentScrollPage.uuid"
-                    class="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border"
+                <div
+                    v-else-if="!isDraftReviewStage && viewMode === 'flip' && pages.length === 0"
+                    class="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-card/50 py-16 text-center shadow-sm"
                 >
-                    <div class="mb-3 flex items-center justify-between gap-2">
-                        <h2 class="text-lg font-medium">Page {{ currentScrollPage.page_number }}</h2>
-                        <Button
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            :disabled="!canGenerateVideoForPage(currentScrollPage)"
-                            @click="generateVideoForPage(currentScrollPage)"
-                        >
-                            <Clapperboard class="mr-1 size-4" />
-                            {{ currentScrollPage.video_url ? 'Regenerate video' : 'Generate video' }}
-                        </Button>
+                    <div class="flex size-12 items-center justify-center rounded-full bg-muted">
+                        <svg class="size-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     </div>
-                    <p class="mb-3 text-xs text-muted-foreground">Per-page video costs {{ props.video_credit_cost }} credits.</p>
+                    <p class="text-muted-foreground text-sm">Pages not ready yet — the flipbook appears once text is generated.</p>
+                </div>
 
-                    <div class="grid gap-6 lg:grid-cols-2">
-                        <div class="space-y-3 text-sm leading-relaxed">
-                            <p>{{ currentScrollPage.text_content }}</p>
-                            <div
-                                v-if="project.include_quiz && currentScrollPage.quiz_questions"
-                                class="bg-muted/40 rounded-lg p-3 text-xs"
-                            >
-                                <p class="font-medium">Quiz</p>
-                                <pre class="mt-1 overflow-x-auto whitespace-pre-wrap">{{
-                                    JSON.stringify(currentScrollPage.quiz_questions, null, 2)
-                                }}</pre>
+                <!-- Scroll view -->
+                <div v-if="!isDraftReviewStage && viewMode === 'scroll'" class="flex flex-col gap-4">
+                    <p v-if="pages.length === 0" class="text-muted-foreground rounded-2xl border border-dashed border-border bg-card/50 py-12 text-center text-sm">
+                        No pages yet — generation may still be running.
+                    </p>
+
+                    <template v-else>
+                        <!-- Page nav bar -->
+                        <div class="flex items-center justify-between gap-3 rounded-2xl border border-sidebar-border/70 bg-card shadow-sm px-4 py-2.5 dark:border-sidebar-border">
+                            <Button type="button" size="sm" variant="outline" :disabled="!canScrollPrev" @click="goScrollPrev">
+                                ← Prev
+                            </Button>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-semibold">Page {{ currentScrollPage?.page_number }}</span>
+                                <span class="text-muted-foreground text-xs">of {{ pages.length }}</span>
                             </div>
-                            <div
-                                v-if="currentScrollPage.asset_errors && Object.keys(currentScrollPage.asset_errors).length"
-                                class="text-destructive text-xs"
-                            >
-                                <p class="font-medium">Asset errors</p>
-                                <ul class="list-inside list-disc">
-                                    <li v-for="(msg, key) in currentScrollPage.asset_errors" :key="key">
-                                        {{ key }}: {{ msg }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-3">
-                            <div v-if="currentScrollPage.video_url" class="overflow-hidden rounded-lg border bg-black">
-                                <video
-                                    :src="currentScrollPage.video_url"
-                                    controls
-                                    playsinline
-                                    class="max-h-80 w-full object-contain"
+                            <!-- dot indicators -->
+                            <div class="hidden sm:flex items-center gap-1">
+                                <button
+                                    v-for="(p, i) in pages"
+                                    :key="p.uuid"
+                                    type="button"
+                                    class="size-2 rounded-full transition-all"
+                                    :class="i === scrollCarouselIndex ? 'bg-violet-500 scale-125' : 'bg-muted-foreground/30 hover:bg-muted-foreground/60'"
+                                    :title="`Page ${p.page_number}`"
+                                    @click="scrollCarouselIndex = i"
                                 />
                             </div>
-                            <div v-else-if="currentScrollPage.image_url" class="overflow-hidden rounded-lg border">
-                                <img
-                                    :src="currentScrollPage.image_url"
-                                    :alt="`Illustration page ${currentScrollPage.page_number}`"
-                                    draggable="false"
-                                    class="max-h-80 w-full select-none object-contain [-webkit-user-drag:none]"
-                                />
-                            </div>
-                            <div v-else class="text-muted-foreground text-sm">Image pending…</div>
-                            <audio v-if="currentScrollPage.audio_url" :src="currentScrollPage.audio_url" controls class="w-full" />
-                            <p v-else-if="project.include_narration" class="text-muted-foreground text-sm">
-                                Audio pending…
-                            </p>
+                            <Button type="button" size="sm" variant="outline" :disabled="!canScrollNext" @click="goScrollNext">
+                                Next →
+                            </Button>
                         </div>
-                    </div>
-                </article>
-            </div>
+
+                        <!-- Page card -->
+                        <article
+                            v-if="currentScrollPage"
+                            :key="currentScrollPage.uuid"
+                            class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm overflow-hidden dark:border-sidebar-border"
+                        >
+                            <!-- Card header -->
+                            <div class="flex items-center justify-between gap-2 border-b border-border/60 bg-muted/30 px-5 py-3">
+                                <h2 class="font-semibold">Page {{ currentScrollPage.page_number }}</h2>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-muted-foreground text-xs">Video: {{ props.video_credit_cost }} cr</span>
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="outline"
+                                        :disabled="!canGenerateVideoForPage(currentScrollPage)"
+                                        :title="pageVideoActionHint"
+                                        @click="generateVideoForPage(currentScrollPage)"
+                                    >
+                                        <Clapperboard class="mr-1.5 size-3.5" />
+                                        {{ currentScrollPage.video_url ? 'Regen video' : 'Gen video' }}
+                                    </Button>
+                                </div>
+                            </div>
+
+                            <!-- Card body -->
+                            <div class="grid gap-0 lg:grid-cols-2">
+                                <!-- Text + quiz -->
+                                <div class="space-y-4 p-5 border-b lg:border-b-0 lg:border-r border-border/60">
+                                    <p class="text-sm leading-relaxed">{{ currentScrollPage.text_content }}</p>
+
+                                    <div v-if="project.include_quiz && currentScrollPage.quiz_questions" class="rounded-xl bg-muted/40 p-3 text-xs">
+                                        <p class="font-semibold mb-1">Quiz</p>
+                                        <pre class="overflow-x-auto whitespace-pre-wrap">{{ JSON.stringify(currentScrollPage.quiz_questions, null, 2) }}</pre>
+                                    </div>
+
+                                    <div v-if="currentScrollPage.asset_errors && Object.keys(currentScrollPage.asset_errors).length" class="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive">
+                                        <p class="font-semibold mb-1">Asset errors</p>
+                                        <ul class="list-inside list-disc space-y-0.5">
+                                            <li v-for="(msg, key) in currentScrollPage.asset_errors" :key="key">{{ key }}: {{ msg }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Media -->
+                                <div class="flex flex-col gap-3 p-5">
+                                    <div v-if="currentScrollPage.video_url" class="overflow-hidden rounded-xl border bg-black">
+                                        <video :src="currentScrollPage.video_url" controls playsinline class="max-h-72 w-full object-contain" />
+                                    </div>
+                                    <div v-else-if="currentScrollPage.image_url" class="overflow-hidden rounded-xl border">
+                                        <img
+                                            :src="currentScrollPage.image_url"
+                                            :alt="`Illustration page ${currentScrollPage.page_number}`"
+                                            draggable="false"
+                                            class="max-h-72 w-full select-none object-contain [-webkit-user-drag:none]"
+                                        />
+                                    </div>
+                                    <div v-else class="flex h-40 items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
+                                        Image pending…
+                                    </div>
+
+                                    <audio v-if="currentScrollPage.audio_url" :src="currentScrollPage.audio_url" controls class="w-full rounded-lg" />
+                                    <p v-else-if="project.include_narration" class="text-xs text-muted-foreground text-center">Audio pending…</p>
+                                </div>
+                            </div>
+                        </article>
+                    </template>
+                </div>
             </section>
         </div>
     </div>

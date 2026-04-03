@@ -694,22 +694,14 @@ function setVideoButtonState(pageUuid: string, playing: boolean): void {
         return;
     }
 
-    const label = button.querySelector('span');
-
     if (playing) {
-        button.classList.add('bg-transparent');
-        button.classList.remove('bg-black/20');
-        if (label) {
-            label.textContent = '⏸ Pause';
-            label.classList.add('opacity-0');
-        }
+        // Hide the overlay while the video is playing — let the video run unobstructed
+        button.style.opacity = '0';
+        button.style.pointerEvents = 'none';
     } else {
-        button.classList.remove('bg-transparent');
-        button.classList.add('bg-black/20');
-        if (label) {
-            label.textContent = '▶ Play video';
-            label.classList.remove('opacity-0');
-        }
+        // Show the play-circle overlay when paused or ended
+        button.style.opacity = '1';
+        button.style.pointerEvents = '';
     }
 }
 
@@ -1172,8 +1164,10 @@ async function initTurn(): Promise<void> {
                     mediaWrap.append(videoEl);
                     mediaWrap.append(
                         jq(
-                            `<button type="button" class="story-video-play-btn absolute inset-0 z-20 grid place-items-center bg-black/20 transition hover:bg-black/30" data-action="toggle-page-video" data-page-uuid="${p.uuid}" aria-label="Play video for page ${p.page_number}">` +
-                                '<span class="inline-flex items-center justify-center rounded-full bg-background/95 px-4 py-2 text-sm font-semibold shadow-lg">▶ Play video</span>' +
+                            `<button type="button" class="story-video-play-btn absolute inset-0 z-20 grid place-items-center bg-black/30 backdrop-blur-[1px] transition-all duration-200 hover:bg-black/40" data-action="toggle-page-video" data-page-uuid="${p.uuid}" aria-label="Play video for page ${p.page_number}">` +
+                                '<span class="inline-flex size-16 items-center justify-center rounded-full bg-white/95 shadow-2xl ring-4 ring-white/30 transition-transform duration-200 hover:scale-110">' +
+                                '<svg class="size-7 translate-x-0.5 text-violet-600" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' +
+                                '</span>' +
                             '</button>',
                         ),
                     );
@@ -1192,11 +1186,31 @@ async function initTurn(): Promise<void> {
                     );
                 }
 
-                if (p.video_url) {
-                    const mediaLabel = showVideo ? 'Show image' : 'Show video';
-                    mediaWrap.append(
+                // --- icon action buttons grouped in a floating pill stack ---
+                const $actionGroup = jq(
+                    `<div class="absolute top-2 ${buttonSideClass} z-20 flex flex-col gap-1" />`,
+                );
+
+                if (p.video_url && props.setupMode) {
+                    const imgSvg =
+                        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<rect width="18" height="18" x="3" y="3" rx="2"/>` +
+                        `<circle cx="9" cy="9" r="2"/>` +
+                        `<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>` +
+                        `</svg>`;
+                    const vidSvg =
+                        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<path d="m22 8-6 4 6 4V8z"/>` +
+                        `<rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>` +
+                        `</svg>`;
+                    const mediaIcon = showVideo ? imgSvg : vidSvg;
+                    const mediaTitle = showVideo ? 'Switch to image' : 'Switch to video';
+                    $actionGroup.append(
                         jq(
-                            `<button type="button" class="absolute top-2 left-1/2 z-20 -translate-x-1/2 rounded-md border border-border/80 bg-background/90 px-2.5 py-1 text-[11px] font-semibold shadow-sm backdrop-blur-sm transition hover:bg-background" data-action="toggle-page-media" data-page-uuid="${p.uuid}">${mediaLabel}</button>`,
+                            `<button type="button" ` +
+                            `class="inline-flex size-7 items-center justify-center rounded-full border border-border/80 bg-background/95 text-foreground/60 shadow-md backdrop-blur-sm transition hover:bg-background hover:text-foreground active:scale-95" ` +
+                            `data-action="toggle-page-media" data-page-uuid="${p.uuid}" title="${mediaTitle}">` +
+                            `${mediaIcon}</button>`,
                         ),
                     );
                 }
@@ -1210,24 +1224,43 @@ async function initTurn(): Promise<void> {
                             ? 'Generate an image first.'
                             : '';
                     const label = pageBusy
-                        ? 'Generating...'
+                        ? 'Generating…'
                         : p.video_url
                           ? 'Regenerate video'
                           : 'Generate video';
 
-                    const button = jq(
-                        `<button type="button" class="absolute top-2 ${buttonSideClass} z-20 rounded-md border border-border/80 bg-background/90 px-2.5 py-1 text-[11px] font-semibold shadow-sm backdrop-blur-sm transition hover:bg-background disabled:cursor-not-allowed disabled:opacity-50" data-action="generate-page-video" data-page-uuid="${p.uuid}">${label}</button>`,
+                    const genSvg =
+                        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<path d="m22 8-6 4 6 4V8z"/>` +
+                        `<rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>` +
+                        `</svg>`;
+                    const reSvg =
+                        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>` +
+                        `<path d="M21 3v5h-5"/>` +
+                        `<path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>` +
+                        `<path d="M8 16H3v5"/>` +
+                        `</svg>`;
+                    const busySvg =
+                        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<path d="M21 12a9 9 0 1 1-6.219-8.56"/>` +
+                        `</svg>`;
+                    const btnIcon = pageBusy ? busySvg : p.video_url ? reSvg : genSvg;
+
+                    const $vBtn = jq(
+                        `<button type="button" ` +
+                        `class="inline-flex size-7 items-center justify-center rounded-full border border-violet-300/80 bg-violet-50/95 text-violet-600 shadow-md backdrop-blur-sm transition hover:bg-violet-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50" ` +
+                        `data-action="generate-page-video" data-page-uuid="${p.uuid}" title="${disabledReason || label}">` +
+                        `${btnIcon}</button>`,
                     );
-
                     if (!canGenerateThisPage) {
-                        button.attr('disabled', 'true');
-
-                        if (disabledReason) {
-                            button.attr('title', disabledReason);
-                        }
+                        $vBtn.attr('disabled', 'true');
                     }
+                    $actionGroup.append($vBtn);
+                }
 
-                    mediaWrap.append(button);
+                if ($actionGroup.children().length) {
+                    mediaWrap.append($actionGroup);
                 }
 
                 inner.append(mediaWrap);

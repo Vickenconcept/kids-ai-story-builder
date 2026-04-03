@@ -26,7 +26,7 @@ class DashboardController extends Controller
             'failed'     => $projects->where('status', StoryProjectStatus::Failed)->count(),
         ];
 
-        $recentProjects = $projects->take(6)->map(fn ($p) => [
+        $recentProjects = $projects->take(3)->map(fn ($p) => [
             'uuid'            => $p->uuid,
             'title'           => $p->title,
             'topic'           => $p->topic,
