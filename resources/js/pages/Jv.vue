@@ -17,7 +17,7 @@ import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="DreamForge AI — JV Partner Page" />
+    <Head title="DreamForge AI � JV Partner Page" />
 
     <section
         class="w-full bg-[url('https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/gridBackground.png')] bg-cover bg-center bg-no-repeat pb-44 text-sm"
@@ -87,7 +87,7 @@ import { Head } from '@inertiajs/vue3';
             class="mx-auto mt-40 flex w-max items-center gap-2 rounded-full border border-slate-300 px-4 py-2 hover:border-slate-400/70 md:mt-32"
         >
             <span class="font-semibold text-indigo-600">DreamForge AI</span>
-            <span class="text-slate-400">·</span>
+            <span class="text-slate-400">�</span>
             <span>Launch window open now for early affiliates</span>
             <button class="flex items-center gap-1 font-medium">
                 <span>Request JV Access</span>
@@ -117,8 +117,8 @@ import { Head } from '@inertiajs/vue3';
         <p
             class="mx-auto mt-6 max-w-2xl text-center text-sm max-md:px-2 md:text-base"
         >
-            A visual transformation product â€” not just another AI writer. Turn one prompt into a full illustrated,
-            narrated storybook. <strong>Earn 50% across the entire funnel â€” frontend + all upsells included.</strong>
+            A visual transformation product — not just another AI writer. Turn one prompt into a full illustrated,
+            narrated storybook. <strong>Earn 50% across the entire funnel — frontend + all upsells included.</strong>
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3 flex-wrap">
@@ -130,7 +130,7 @@ import { Head } from '@inertiajs/vue3';
             <button
                 class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-6 py-3 hover:bg-white"
             >
-                <span>ðŸŽ¬ Watch The 2-Minute Demo That Sells This For You</span>
+                <span>🎬 Watch The 2-Minute Demo That Sells This For You</span>
                 <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.25.5 4.75 4l-3.5 3.5" stroke="#050040" stroke-opacity=".4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -141,19 +141,19 @@ import { Head } from '@inertiajs/vue3';
         <div class="mx-auto mt-6 max-w-xl rounded-2xl border border-slate-200 bg-white/80 px-6 py-5 text-sm backdrop-blur-sm text-center">
             <p class="font-semibold text-slate-800 mb-3">See a blank idea turn into:</p>
             <div class="grid grid-cols-2 gap-2 text-left max-w-sm mx-auto">
-                <p class="text-slate-700">âœ” Full story pages</p>
-                <p class="text-slate-700">âœ” Matching illustrations</p>
-                <p class="text-slate-700">âœ” Read-aloud narration</p>
-                <p class="text-slate-700">âœ” Animated video output</p>
+                <p class="text-slate-700">✔ Full story pages</p>
+                <p class="text-slate-700">✔ Matching illustrations</p>
+                <p class="text-slate-700">✔ Read-aloud narration</p>
+                <p class="text-slate-700">✔ Animated video output</p>
             </div>
-            <p class="mt-3 font-semibold text-indigo-600">ðŸ‘‰ This is what converts the sale.</p>
+            <p class="mt-3 font-semibold text-indigo-600">👉 This is what converts the sale.</p>
         </div>
 
         <!-- Launch quick-stats bar -->
         <div class="mx-auto mt-10 flex w-full max-w-3xl flex-wrap justify-center gap-3 px-4">
             <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
                 <span class="font-semibold text-slate-900">Launch Date:</span>
-                <span class="text-slate-600">TBA â€” Early access open now</span>
+                <span class="text-slate-600">TBA — Early access open now</span>
             </div>
             <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
                 <span class="font-semibold text-slate-900">FE Price:</span>
@@ -193,7 +193,7 @@ import { Head } from '@inertiajs/vue3';
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
                     Fresher traffic, less competition, higher EPC. The launch
-                    window is open now â€” request your link before the crowd arrives.
+                    window is open now — request your link before the crowd arrives.
                 </p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -201,7 +201,7 @@ import { Head } from '@inertiajs/vue3';
                     Core Positioning
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    A Visual Transformation Product â€” Not Just Another AI Writer
+                    A Visual Transformation Product — Not Just Another AI Writer
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
                     AI + kids + visual content = high engagement and fast conversions.
@@ -213,15 +213,15 @@ import { Head } from '@inertiajs/vue3';
 
     <main>
 
-        <!-- â”€â”€ DEMO VIDEO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ── DEMO VIDEO ──────────────────────────────────────── -->
         <section id="demo" class="bg-slate-900 px-4 py-16 text-white md:px-8 md:py-20">
             <div class="mx-auto max-w-4xl text-center">
                 <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400">The Most Important 2 Minutes You'll Spend Today</p>
                 <h2 class="mt-3 text-2xl font-extrabold md:text-3xl">
-                    ðŸŽ¬ Show Your Audience This â€” They'll Want It Instantly
+                    🎬 Show Your Audience This — They'll Want It Instantly
                 </h2>
                 <p class="mx-auto mt-3 max-w-xl text-sm text-slate-400">
-                    This 2-minute walkthrough shows the full transformation â€” one prompt to illustrated, narrated, flipbook-ready storybook.
+                    This 2-minute walkthrough shows the full transformation — one prompt to illustrated, narrated, flipbook-ready storybook.
                     No explaining needed. The output sells itself.
                 </p>
 
@@ -236,8 +236,8 @@ import { Head } from '@inertiajs/vue3';
                                     <path d="M8 5v14l11-7z"/>
                                 </svg>
                             </div>
-                            <p class="text-sm font-semibold text-slate-200">Click to watch â€” 2 minutes</p>
-                            <p class="mt-1 text-xs text-slate-500">From one prompt â†’ full illustrated storybook</p>
+                            <p class="text-sm font-semibold text-slate-200">Click to watch — 2 minutes</p>
+                            <p class="mt-1 text-xs text-slate-500">From one prompt → full illustrated storybook</p>
                         </div>
 
                         <!-- Mock screenshot overlay (decorative) -->
@@ -252,32 +252,32 @@ import { Head } from '@inertiajs/vue3';
                     </div>
                 </div>
 
-                <!-- What the video shows â€” transformation steps -->
+                <!-- What the video shows — transformation steps -->
                 <div class="mt-8 grid grid-cols-2 gap-3 text-left md:grid-cols-4">
                     <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                        <p class="text-2xl mb-2">âœï¸</p>
+                        <p class="text-2xl mb-2">✍️</p>
                         <p class="text-sm font-semibold">1. One Prompt</p>
                         <p class="mt-1 text-xs text-slate-400">Type a story idea in seconds</p>
                     </div>
                     <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                        <p class="text-2xl mb-2">ðŸŽ¨</p>
+                        <p class="text-2xl mb-2">🎨</p>
                         <p class="text-sm font-semibold">2. Illustrations</p>
                         <p class="mt-1 text-xs text-slate-400">Every page gets a matched visual</p>
                     </div>
                     <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                        <p class="text-2xl mb-2">ðŸŽ™ï¸</p>
+                        <p class="text-2xl mb-2">🎙️</p>
                         <p class="text-sm font-semibold">3. Narration</p>
                         <p class="mt-1 text-xs text-slate-400">AI read-aloud voice added auto</p>
                     </div>
                     <div class="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-4 text-center">
-                        <p class="text-2xl mb-2">ðŸ“š</p>
+                        <p class="text-2xl mb-2">📚</p>
                         <p class="text-sm font-semibold">4. Flipbook</p>
-                        <p class="mt-1 text-xs text-indigo-300">Shareable link â€” ready to sell</p>
+                        <p class="mt-1 text-xs text-indigo-300">Shareable link — ready to sell</p>
                     </div>
                 </div>
 
                 <p class="mt-6 text-sm font-bold text-indigo-400">
-                    ðŸ‘‰ This demo is your #1 selling tool. Send traffic here first.
+                    👉 This demo is your #1 selling tool. Send traffic here first.
                 </p>
             </div>
         </section>
@@ -291,26 +291,26 @@ import { Head } from '@inertiajs/vue3';
                 </div>
                 <div class="grid gap-6 md:grid-cols-2">
                     <div class="rounded-2xl border border-red-100 bg-red-50 p-6">
-                        <p class="mb-4 text-sm font-bold uppercase tracking-wide text-red-600">âŒ The Pains They Feel Right Now</p>
+                        <p class="mb-4 text-sm font-bold uppercase tracking-wide text-red-600">❌ The Pains They Feel Right Now</p>
                         <ul class="space-y-3 text-sm text-slate-700">
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">âœ—</span> Spending hours writing and illustrating a story from scratch with no design skills</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">âœ—</span> Paying expensive freelancers $50â€“$200+ per story with no guarantee of quality</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">âœ—</span> AI tools that only generate raw text, leaving images, narration and video to figure out manually</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">âœ—</span> Kids content creators stuck at bottleneck: content takes longer to produce than to consume</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">âœ—</span> Educators wanting custom stories for each lesson but lack the tools or budget to create them</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">âœ—</span> Digital sellers who want high-perceived-value products but have no art or voice-over skills</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Spending hours writing and illustrating a story from scratch with no design skills</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Paying expensive freelancers $50–$200+ per story with no guarantee of quality</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> AI tools that only generate raw text, leaving images, narration and video to figure out manually</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Kids content creators stuck at bottleneck: content takes longer to produce than to consume</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Educators wanting custom stories for each lesson but lack the tools or budget to create them</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Digital sellers who want high-perceived-value products but have no art or voice-over skills</li>
                         </ul>
                     </div>
                     <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
-                        <p class="mb-4 text-sm font-bold uppercase tracking-wide text-emerald-600">âœ… What This App Solves Instantly</p>
+                        <p class="mb-4 text-sm font-bold uppercase tracking-wide text-emerald-600">✅ What This App Solves Instantly</p>
                         <ul class="space-y-3 text-sm text-slate-700">
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">âœ“</span> Type a prompt â†’ full illustrated storybook in minutes, zero design skills needed</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">âœ“</span> AI generates unique illustrations for every page, matched to the story mood and age group</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">âœ“</span> Built-in narration engine adds a read-aloud voice track automatically</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">âœ“</span> Flipbook reader built in â€” share a link, buyers see it the same day they purchase</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">âœ“</span> Quiz / interactive layers for educators â€” turns a passive story into an engaging lesson</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">âœ“</span> Download as PDF and publish on <strong>Amazon KDP</strong> â€” turn one story into a passive income product</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">âœ“</span> PRO upgrade: animated page videos buyers can publish to YouTube, Reels, TikTok, or sell</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Type a prompt → full illustrated storybook in minutes, zero design skills needed</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> AI generates unique illustrations for every page, matched to the story mood and age group</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Built-in narration engine adds a read-aloud voice track automatically</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Flipbook reader built in — share a link, buyers see it the same day they purchase</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Quiz / interactive layers for educators — turns a passive story into an engaging lesson</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> Download as PDF and publish on <strong>Amazon KDP</strong> — turn one story into a passive income product</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-emerald-500">✓</span> PRO upgrade: animated page videos buyers can publish to YouTube, Reels, TikTok, or sell</li>
                         </ul>
                     </div>
                 </div>
@@ -320,24 +320,24 @@ import { Head } from '@inertiajs/vue3';
         <!-- Amazon KDP callout -->
         <section class="bg-amber-50 border-y border-amber-200 px-4 py-12 md:px-8">
             <div class="mx-auto max-w-4xl flex flex-col md:flex-row items-center gap-8">
-                <div class="text-5xl shrink-0">ðŸ“¦</div>
+                <div class="text-5xl shrink-0">📦</div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-widest text-amber-700">Passive Income Angle â€” Huge Selling Hook</p>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-amber-700">Passive Income Angle — Huge Selling Hook</p>
                     <h2 class="mt-2 text-xl font-bold text-slate-900 md:text-2xl">
                         Buyers Can Publish Their Stories on Amazon KDP and Sell Them
                     </h2>
                     <p class="mt-3 text-sm text-slate-700 max-w-2xl">
-                        The app generates a fully illustrated, narrated storybook â€” and buyers can
+                        The app generates a fully illustrated, narrated storybook — and buyers can
                         <strong>download it as a print-ready PDF</strong> and list it on Amazon Kindle Direct Publishing (KDP),
-                        Etsy, or Gumroad. That means your audience is not just buying a tool â€”
+                        Etsy, or Gumroad. That means your audience is not just buying a tool —
                         they are buying a <strong>business asset</strong> that can generate royalties passively.
                         This angle converts strongly to side-hustle seekers, parents and digital product creators.
                     </p>
                     <div class="mt-4 flex flex-wrap gap-3 text-sm">
-                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">ðŸ“š Amazon KDP</span>
-                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">ðŸ› Etsy</span>
-                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">ðŸ’» Gumroad</span>
-                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">ðŸ‘©â€ðŸ’¼ Client Work</span>
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">📚 Amazon KDP</span>
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">🛍 Etsy</span>
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">💻 Gumroad</span>
+                        <span class="rounded-full bg-amber-100 border border-amber-300 px-4 py-1.5 font-medium text-amber-800">👩‍💼 Client Work</span>
                     </div>
                 </div>
             </div>
@@ -349,7 +349,7 @@ import { Head } from '@inertiajs/vue3';
                 <div class="mb-8 text-center">
                     <p class="text-xs font-semibold tracking-widest text-indigo-600 uppercase">Full Funnel Map</p>
                     <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Your earnings per customer at every stage</h2>
-                    <p class="mt-2 text-sm text-slate-500">50% commission across the funnel. Every upsell is a natural next step â€” easier to close, higher EPC for you.</p>
+                    <p class="mt-2 text-sm text-slate-500">50% commission across the funnel. Every upsell is a natural next step — easier to close, higher EPC for you.</p>
                 </div>
                 <div class="grid gap-4 md:grid-cols-3">
                     <div class="rounded-2xl border-2 border-indigo-300 bg-white p-6 text-center shadow-sm">
@@ -359,7 +359,7 @@ import { Head } from '@inertiajs/vue3';
                         <p class="mt-3 text-xs text-slate-500 leading-relaxed">Full story creation: text, illustrations, narration, flipbook reader &amp; quiz. One-time payment.</p>
                     </div>
                     <div class="rounded-2xl border-2 border-amber-300 bg-white p-6 text-center shadow-sm">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-amber-500">OTO 1 â€” PRO Video</p>
+                        <p class="text-xs font-semibold uppercase tracking-wide text-amber-500">OTO 1 — PRO Video</p>
                         <p class="mt-2 text-3xl font-extrabold text-slate-900">TBA</p>
                         <p class="mt-1 text-sm font-semibold text-emerald-600">50% comm.</p>
                         <p class="mt-3 text-xs text-slate-500 leading-relaxed">
@@ -369,7 +369,7 @@ import { Head } from '@inertiajs/vue3';
                         </p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-rose-500">OTO 2 â€” DFY Pack</p>
+                        <p class="text-xs font-semibold uppercase tracking-wide text-rose-500">OTO 2 — DFY Pack</p>
                         <p class="mt-2 text-3xl font-extrabold text-slate-900">TBA</p>
                         <p class="mt-1 text-sm font-semibold text-emerald-600">50% comm.</p>
                         <p class="mt-3 text-xs text-slate-500 leading-relaxed">100 ready-to-publish story prompts, KDP publishing guide, kids channel blueprint &amp; monetization playbook.</p>
@@ -390,35 +390,35 @@ import { Head } from '@inertiajs/vue3';
                     Message us now to lock your spot.
                 </p>
                 <div class="mt-6 flex flex-wrap justify-center gap-3">
-                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">ðŸ¥‡ 1st Place â€” Cash Prize</div>
-                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">ðŸ¥ˆ 2nd Place â€” Cash Prize</div>
-                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">ðŸ¥‰ 3rd Place â€” Cash Prize</div>
+                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">🥇 1st Place — Cash Prize</div>
+                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">🥈 2nd Place — Cash Prize</div>
+                    <div class="rounded-xl bg-white/15 px-6 py-3 text-sm font-semibold">🥉 3rd Place — Cash Prize</div>
                 </div>
                 <p class="mt-4 text-xs text-indigo-200">Prize amounts confirmed on registration. Get in touch to qualify.</p>
             </div>
         </section>
 
-        <!-- ðŸ’° Why Buyers Pull Out Their Card -->
+        <!-- 💰 Why Buyers Pull Out Their Card -->
         <section class="bg-white px-4 py-16 md:px-8">
             <div class="mx-auto max-w-4xl">
                 <div class="mb-8 text-center">
                     <p class="text-xs font-semibold uppercase tracking-widest text-amber-600">Money Angle</p>
-                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">ðŸ’° Why Buyers Pull Out Their Card Fast</h2>
-                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">This is not just a tool â€” it creates something buyers can actually use, share, and profit from.</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">💰 Why Buyers Pull Out Their Card Fast</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">This is not just a tool — it creates something buyers can actually use, share, and profit from.</p>
                 </div>
                 <div class="grid gap-4 md:grid-cols-3">
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center">
-                        <p class="text-3xl mb-3">ðŸ“–</p>
+                        <p class="text-3xl mb-3">📖</p>
                         <h3 class="font-bold text-slate-900">Use It</h3>
-                        <p class="mt-2 text-sm text-slate-600">Bedtime stories, classroom reads, personal projects â€” immediate real-world utility on day one.</p>
+                        <p class="mt-2 text-sm text-slate-600">Bedtime stories, classroom reads, personal projects — immediate real-world utility on day one.</p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center">
-                        <p class="text-3xl mb-3">ðŸ“£</p>
+                        <p class="text-3xl mb-3">📣</p>
                         <h3 class="font-bold text-slate-900">Share It</h3>
-                        <p class="mt-2 text-sm text-slate-600">Story videos ready for YouTube, Shorts, Reels and TikTok â€” built-in social content machine.</p>
+                        <p class="mt-2 text-sm text-slate-600">Story videos ready for YouTube, Shorts, Reels and TikTok — built-in social content machine.</p>
                     </div>
                     <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-6 text-center">
-                        <p class="text-3xl mb-3">ðŸ’µ</p>
+                        <p class="text-3xl mb-3">💵</p>
                         <h3 class="font-bold text-slate-900">Sell It</h3>
                         <p class="mt-2 text-sm text-slate-600">
                             Download as a print-ready PDF and publish on <strong class="text-slate-800">Amazon KDP</strong>,
@@ -427,33 +427,33 @@ import { Head } from '@inertiajs/vue3';
                         </p>
                     </div>
                 </div>
-                <p class="mt-6 text-center text-sm font-semibold text-indigo-700">That combination increases perceived value and conversion rate â€” automatically.</p>
+                <p class="mt-6 text-center text-sm font-semibold text-indigo-700">That combination increases perceived value and conversion rate — automatically.</p>
             </div>
         </section>
 
-        <!-- ðŸŽ¯ Why This Is Easy To Sell -->
+        <!-- 🎯 Why This Is Easy To Sell -->
         <section class="bg-slate-50 px-4 py-16 md:px-8">
             <div class="mx-auto max-w-4xl">
                 <div class="mb-8 text-center">
                     <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">For Affiliates</p>
-                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">ðŸŽ¯ Why This Is Easy To Promote</h2>
-                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">Affiliates think: "Will this convert for ME?" â€” here's the answer.</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">🎯 Why This Is Easy To Promote</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">Affiliates think: "Will this convert for ME?" — here's the answer.</p>
                 </div>
                 <div class="grid gap-3 md:grid-cols-2 max-w-2xl mx-auto">
                     <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-                        <span class="text-emerald-500 font-bold text-lg mt-0.5">âœ”</span>
-                        <p class="text-sm text-slate-700">No complex explanation needed â€” the output speaks for itself</p>
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
+                        <p class="text-sm text-slate-700">No complex explanation needed — the output speaks for itself</p>
                     </div>
                     <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-                        <span class="text-emerald-500 font-bold text-lg mt-0.5">âœ”</span>
-                        <p class="text-sm text-slate-700">Visual transformation sells itself â€” see it, get it, want it</p>
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
+                        <p class="text-sm text-slate-700">Visual transformation sells itself — see it, get it, want it</p>
                     </div>
                     <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-                        <span class="text-emerald-500 font-bold text-lg mt-0.5">âœ”</span>
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
                         <p class="text-sm text-slate-700">The demo does most of the selling before the copy even loads</p>
                     </div>
                     <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-                        <span class="text-emerald-500 font-bold text-lg mt-0.5">âœ”</span>
+                        <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
                         <p class="text-sm text-slate-700">Works across multiple audiences: parents, educators, creators, agencies</p>
                     </div>
                 </div>
@@ -461,19 +461,19 @@ import { Head } from '@inertiajs/vue3';
             </div>
         </section>
 
-        <!-- ðŸ”¥ Quick Promo Plan -->
+        <!-- 🔥 Quick Promo Plan -->
         <section class="bg-white px-4 py-16 md:px-8">
             <div class="mx-auto max-w-3xl">
                 <div class="mb-8 text-center">
                     <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">Promo Strategy</p>
-                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">ðŸ”¥ Simple Promo Plan (Copy This)</h2>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">🔥 Simple Promo Plan (Copy This)</h2>
                     <p class="mx-auto mt-3 max-w-xl text-sm text-slate-500">This is enough to start generating commissions from day one. No complicated funnels needed.</p>
                 </div>
                 <div class="grid gap-4 md:grid-cols-4">
                     <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
                         <p class="text-2xl font-extrabold text-violet-600 mb-2">1</p>
                         <h3 class="font-bold text-slate-900 text-sm">Send Curiosity Email</h3>
-                        <p class="mt-2 text-xs text-slate-500">Tease the transformation. Don't reveal the product name â€” let the demo do the work.</p>
+                        <p class="mt-2 text-xs text-slate-500">Tease the transformation. Don't reveal the product name — let the demo do the work.</p>
                     </div>
                     <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
                         <p class="text-2xl font-extrabold text-violet-600 mb-2">2</p>
@@ -925,7 +925,7 @@ import { Head } from '@inertiajs/vue3';
                                 </div>
                                 <!-- Quiz chip -->
                                 <div class="rounded-md border border-yellow-400/25 bg-yellow-400/8 p-1.5">
-                                    <p class="text-[9px] font-bold text-yellow-300/80">ðŸ§© Quiz</p>
+                                    <p class="text-[9px] font-bold text-yellow-300/80">🧩 Quiz</p>
                                     <div class="mt-1 space-y-0.5">
                                         <div class="h-1.5 w-4/5 rounded bg-white/10" />
                                         <div class="h-1.5 w-3/5 rounded bg-white/10" />
@@ -937,9 +937,9 @@ import { Head } from '@inertiajs/vue3';
                         <div class="flex items-center justify-between border-t border-white/10 bg-black/20 px-4 py-2 text-[10px] text-indigo-300/60">
                             <span>Page 3 of 12</span>
                             <div class="flex gap-3">
-                                <span class="text-violet-400/80">âœ¦ Illustrated</span>
-                                <span class="text-green-400/80">â—‰ Narrated</span>
-                                <span class="text-fuchsia-400/80">â–¶ Video</span>
+                                <span class="text-violet-400/80">✦ Illustrated</span>
+                                <span class="text-green-400/80">◉ Narrated</span>
+                                <span class="text-fuchsia-400/80">▶ Video</span>
                             </div>
                         </div>
                     </div>
@@ -1083,7 +1083,7 @@ import { Head } from '@inertiajs/vue3';
                                 <!-- OTO1 -->
                                 <div class="flex items-center justify-between rounded-xl border-2 border-amber-300 bg-white px-4 py-3 shadow-sm">
                                     <div>
-                                        <p class="text-[10px] font-bold uppercase tracking-wide text-amber-500">OTO 1 â€” PRO Video</p>
+                                        <p class="text-[10px] font-bold uppercase tracking-wide text-amber-500">OTO 1 — PRO Video</p>
                                         <p class="text-base font-extrabold text-slate-900">$69</p>
                                     </div>
                                     <div class="text-right">
@@ -1094,7 +1094,7 @@ import { Head } from '@inertiajs/vue3';
                                 <!-- OTO2 -->
                                 <div class="flex items-center justify-between rounded-xl border border-rose-200 bg-white px-4 py-3 shadow-sm">
                                     <div>
-                                        <p class="text-[10px] font-bold uppercase tracking-wide text-rose-500">OTO 2 â€” DFY Pack</p>
+                                        <p class="text-[10px] font-bold uppercase tracking-wide text-rose-500">OTO 2 — DFY Pack</p>
                                         <p class="text-base font-extrabold text-slate-900">TBA</p>
                                     </div>
                                     <div class="text-right">
@@ -1102,7 +1102,7 @@ import { Head } from '@inertiajs/vue3';
                                         <p class="text-sm font-bold text-emerald-600">50%</p>
                                     </div>
                                 </div>
-                                <p class="pt-1 text-center text-xs font-semibold text-indigo-600">50% on every single step âœ”</p>
+                                <p class="pt-1 text-center text-xs font-semibold text-indigo-600">50% on every single step ✔</p>
                             </div>
                         </div>
                     </div>
@@ -1140,23 +1140,23 @@ import { Head } from '@inertiajs/vue3';
                             <div class="w-full max-w-xs space-y-2.5">
                                 <p class="mb-4 text-center text-xs font-bold uppercase tracking-widest text-indigo-500">Promo Asset Pack</p>
                                 <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
-                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-base">ðŸ“§</span>
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-base">📧</span>
                                     <div>
                                         <p class="text-xs font-bold text-slate-800">Email Swipes</p>
-                                        <p class="text-[10px] text-slate-500">3 angles â€” curiosity, problem/solution, urgency</p>
+                                        <p class="text-[10px] text-slate-500">3 angles — curiosity, problem/solution, urgency</p>
                                     </div>
                                     <span class="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">Ready</span>
                                 </div>
                                 <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
-                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-base">ðŸŽ¬</span>
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-base">🎬</span>
                                     <div>
                                         <p class="text-xs font-bold text-slate-800">Demo Video</p>
-                                        <p class="text-[10px] text-slate-500">2-min walkthrough â€” the closer that converts</p>
+                                        <p class="text-[10px] text-slate-500">2-min walkthrough — the closer that converts</p>
                                     </div>
                                     <span class="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">Ready</span>
                                 </div>
                                 <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
-                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-base">ðŸ–¼</span>
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-base">🖼</span>
                                     <div>
                                         <p class="text-xs font-bold text-slate-800">Banners &amp; Graphics</p>
                                         <p class="text-[10px] text-slate-500">Multiple sizes for social, email &amp; ads</p>
@@ -1164,7 +1164,7 @@ import { Head } from '@inertiajs/vue3';
                                     <span class="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold text-amber-700">Soon</span>
                                 </div>
                                 <div class="flex items-center gap-3 rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
-                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-base">ðŸ“</span>
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-base">📝</span>
                                     <div>
                                         <p class="text-xs font-bold text-slate-800">Short-form Scripts</p>
                                         <p class="text-[10px] text-slate-500">Reels, TikTok &amp; YouTube Shorts angles</p>
@@ -1214,10 +1214,10 @@ import { Head } from '@inertiajs/vue3';
                                 <div class="relative overflow-hidden rounded-xl border-2 border-violet-300 bg-white px-4 py-3 shadow-sm">
                                     <div class="absolute right-2 top-2 rounded-full bg-violet-100 px-1.5 py-0.5 text-[9px] font-bold text-violet-700">BONUS 1</div>
                                     <div class="flex items-start gap-2.5">
-                                        <span class="text-2xl">ðŸ“š</span>
+                                        <span class="text-2xl">📚</span>
                                         <div>
                                             <p class="text-xs font-bold text-slate-800">100 Story Prompts</p>
-                                            <p class="text-[10px] text-slate-500">Ready-to-use prompts covering popular kids niches â€” ages 3â€“12</p>
+                                            <p class="text-[10px] text-slate-500">Ready-to-use prompts covering popular kids niches — ages 3–12</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1225,7 +1225,7 @@ import { Head } from '@inertiajs/vue3';
                                 <div class="relative overflow-hidden rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-sm">
                                     <div class="absolute right-2 top-2 rounded-full bg-indigo-100 px-1.5 py-0.5 text-[9px] font-bold text-indigo-700">BONUS 2</div>
                                     <div class="flex items-start gap-2.5">
-                                        <span class="text-2xl">ðŸ“º</span>
+                                        <span class="text-2xl">📺</span>
                                         <div>
                                             <p class="text-xs font-bold text-slate-800">Kids Channel Blueprint</p>
                                             <p class="text-[10px] text-slate-500">YouTube &amp; Shorts strategy for faceless story channels</p>
@@ -1236,10 +1236,10 @@ import { Head } from '@inertiajs/vue3';
                                 <div class="relative overflow-hidden rounded-xl border border-amber-200 bg-white px-4 py-3 shadow-sm">
                                     <div class="absolute right-2 top-2 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">BONUS 3</div>
                                     <div class="flex items-start gap-2.5">
-                                        <span class="text-2xl">ðŸ’°</span>
+                                        <span class="text-2xl">💰</span>
                                         <div>
                                             <p class="text-xs font-bold text-slate-800">Book Monetization Playbook</p>
-                                            <p class="text-[10px] text-slate-500">KDP publishing guide â€” from story to passive income</p>
+                                            <p class="text-[10px] text-slate-500">KDP publishing guide — from story to passive income</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1346,29 +1346,29 @@ import { Head } from '@inertiajs/vue3';
             </div>
         </section>
 
-        <!-- ðŸš€ Final Push CTA -->
+        <!-- 🚀 Final Push CTA -->
         <section class="bg-linear-to-br from-slate-900 to-indigo-950 px-4 py-20 text-white md:px-8">
             <div class="mx-auto max-w-3xl text-center">
                 <p class="text-xs font-semibold uppercase tracking-widest text-indigo-300">You're One Click Away</p>
-                <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">ðŸš€ Ready To Promote?</h2>
+                <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🚀 Ready To Promote?</h2>
                 <p class="mx-auto mt-4 max-w-xl text-base text-slate-300">Early affiliates usually win the most. Request your link, grab the assets, and start sending traffic today.</p>
                 <div class="mt-8 grid gap-4 max-w-sm mx-auto text-left">
                     <div class="flex items-start gap-3">
                         <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-sm font-bold">1</span>
-                        <p class="text-sm text-slate-200 pt-1">Request your affiliate link â€” approved same day</p>
+                        <p class="text-sm text-slate-200 pt-1">Request your affiliate link — approved same day</p>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-sm font-bold">2</span>
-                        <p class="text-sm text-slate-200 pt-1">Download promo assets â€” swipes, banners, scripts</p>
+                        <p class="text-sm text-slate-200 pt-1">Download promo assets — swipes, banners, scripts</p>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-sm font-bold">3</span>
-                        <p class="text-sm text-slate-200 pt-1">Start sending traffic today â€” commissions stack fast</p>
+                        <p class="text-sm text-slate-200 pt-1">Start sending traffic today — commissions stack fast</p>
                     </div>
                 </div>
                 <div class="mt-10 flex flex-wrap justify-center gap-4">
                     <a href="#" class="rounded-full bg-white px-8 py-3 font-bold text-slate-900 transition hover:bg-indigo-50 text-sm">
-                        Request JV Approval Now â†’
+                        Request JV Approval Now →
                     </a>
                     <a href="mailto:jv@dreamforge .ai" class="rounded-full border border-white/30 px-8 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
                         Contact Us Directly
@@ -1428,7 +1428,7 @@ import { Head } from '@inertiajs/vue3';
     <footer
         class="flex w-full flex-col items-center justify-around gap-3 bg-black py-4 text-sm text-white/70 md:flex-row"
     >
-        <p>Copyright Â© 2026 JV Launch Assets. All rights reserved.</p>
+        <p>Copyright © 2026 JV Launch Assets. All rights reserved.</p>
         <div class="flex items-center gap-4">
             <a href="#" class="transition-all hover:text-white"> JV Support </a>
             <div class="h-8 w-px bg-white/20"></div>

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import {
     BookOpen,
@@ -141,7 +141,7 @@ function progressPercent(project: RecentProject) {
                     <CardContent>
                         <p class="text-3xl font-bold">{{ stats.total }}</p>
                         <p class="text-muted-foreground mt-0.5 text-xs">
-                            {{ stats.draft }} draft Â· {{ stats.failed }} failed
+                            {{ stats.draft }} draft · {{ stats.failed }} failed
                         </p>
                     </CardContent>
                 </Card>
