@@ -152,6 +152,69 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         </div>
     </section>
 
+    <!-- -- 3D BOOK SHOWCASE (text left, visuals right) ---------- -->
+    <section class="bg-white px-4 py-16 md:px-8">
+        <div class="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-14">
+            <div class="order-2 md:order-1">
+                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">Real book feel</p>
+                <h2 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">
+                    See your story as a finished, share-ready book
+                </h2>
+                <p class="mt-4 text-base leading-relaxed text-slate-600">
+                    DreamForge turns one idea into structured pages, matching illustrations, and narration — so the output
+                    looks like something you would buy on a shelf, not a plain document. Share the flipbook link, export for
+                    print, or keep building your library.
+                </p>
+                <ul class="mt-6 space-y-3 text-sm text-slate-700">
+                    <li class="flex gap-2">
+                        <span class="mt-0.5 font-bold text-violet-600">✓</span>
+                        <span>Cover-to-cover layout that feels like a real children’s storybook</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="mt-0.5 font-bold text-violet-600">✓</span>
+                        <span>Illustrations aligned to each scene — not random stock art</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="mt-0.5 font-bold text-violet-600">✓</span>
+                        <span>One link to read, gift, or sell — no extra tools required</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="order-1 flex flex-col items-center justify-center gap-6 md:order-2 md:flex-row md:gap-4">
+                <img
+                    src="/images/3d-book%20image.png"
+                    alt="DreamForge AI storybook mockup"
+                    class="w-full max-w-[220px] drop-shadow-2xl md:max-w-[260px]"
+                    loading="lazy"
+                    width="260"
+                    height="340"
+                />
+                <img
+                    src="/images/3d-book2.png"
+                    alt="DreamForge AI second storybook mockup"
+                    class="w-full max-w-[220px] drop-shadow-2xl md:max-w-[260px]"
+                    loading="lazy"
+                    width="260"
+                    height="340"
+                />
+            </div>
+        </div>
+    </section>
+
+    <!-- -- PROMO BANNER ----------------------------------------- -->
+    <section class="bg-violet-50 px-4 py-10 md:px-8">
+        <div class="mx-auto max-w-6xl overflow-hidden rounded-2xl border border-violet-200 shadow-lg shadow-violet-200/50">
+            <img
+                src="/images/banner-childern-image.png"
+                alt="Create and sell children’s books with AI — stories with images, voice and video"
+                class="h-auto w-full object-cover"
+                loading="lazy"
+                width="1200"
+                height="400"
+            />
+        </div>
+    </section>
+
     <!-- -- DEMO SECTION ------------------------------------------ -->
     <section id="demo" class="bg-indigo-950 text-white px-4 py-20 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
@@ -193,6 +256,45 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 </div>
             </div>
             <p class="mt-6 text-sm font-bold text-fuchsia-400">This is what converts the sale.</p>
+        </div>
+    </section>
+
+    <!-- -- KIDS & FAMILIES (card visual) ------------------------ -->
+    <section class="bg-linear-to-b from-indigo-950 to-violet-950 px-4 py-16 text-white md:px-8">
+        <div class="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-14">
+            <div class="flex justify-center md:justify-start">
+                <img
+                    src="/images/card-kids-image.png"
+                    alt="Children enjoying illustrated AI storybooks"
+                    class="w-full max-w-md rounded-2xl border border-violet-400/30 shadow-2xl shadow-violet-950/60"
+                    loading="lazy"
+                    width="480"
+                    height="360"
+                />
+            </div>
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-300">Built for kids’ content</p>
+                <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Stories kids actually want to read — and listen to</h2>
+                <p class="mt-4 text-base leading-relaxed text-violet-200">
+                    Parents, teachers, and creators use DreamForge to ship polished storybooks fast: age-appropriate tone,
+                    visuals on every page, and read-aloud audio so young readers can follow along. Use them at home, in class,
+                    or as digital products your audience can buy.
+                </p>
+                <ul class="mt-6 space-y-3 text-sm text-violet-100">
+                    <li class="flex gap-2">
+                        <span class="text-fuchsia-400">✓</span>
+                        <span>Bedtime stories, classroom projects, and faceless kids channels</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="text-fuchsia-400">✓</span>
+                        <span>Share a single link — no app install required for readers</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="text-fuchsia-400">✓</span>
+                        <span>Optional video upgrade for Shorts, Reels, and YouTube</span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </section>
 
