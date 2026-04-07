@@ -277,7 +277,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 
             <div class="mt-10 rounded-2xl border-2 border-emerald-400/50 bg-white/5 p-8">
                 <p class="text-sm font-semibold text-slate-400 line-through">Total value: $178</p>
-                <p class="mt-2 text-7xl font-extrabold text-emerald-400">TBA</p>
+                <p class="mt-2 text-4xl font-extrabold text-emerald-400 md:text-6xl">One-Time Upgrade</p>
                 <p class="mt-1 text-sm text-slate-400">One-time · Instant access · No monthly fees</p>
 
                 <ul class="mt-6 space-y-2 text-left text-sm text-slate-300">
@@ -294,9 +294,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <p class="mt-4 text-xs text-slate-500">⚠️ This offer disappears when you leave this page</p>
             </div>
 
-            <a href="#" class="mt-6 block text-xs text-slate-600 hover:text-slate-400 transition">
-                No thanks, I'll figure out how to monetize on my own — skip this
-            </a>
+            <p class="mt-6 text-xs text-slate-500">
+                No thanks, I'll figure out how to monetize on my own - skip this.
+            </p>
         </div>
     </section>
 

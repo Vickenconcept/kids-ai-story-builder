@@ -38,9 +38,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <a href="https://www.jvzoo.com/b/116189/437351/3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center">
                     <img src="https://i.jvzoo.com/116189/437351/3" alt="DreamForge AI" border="0" />
                 </a>
-                <!-- <a href="#demo" class="flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-7 py-4 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/20 hover:text-white">
-                    Watch 2-Min Demo
-                </a> -->
+                
             </div>
             <p class="mt-4 text-xs text-violet-400/70">One-time payment - No monthly fees - Instant access</p>
         </div>
@@ -528,9 +526,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
     <section class="bg-linear-to-r from-fuchsia-600 to-violet-700 text-white px-4 py-8 text-center">
         <p class="text-base font-bold">Launch pricing is temporary. Price will increase when the launch window closes.</p>
         <p class="mt-1 text-sm text-fuchsia-100">Lock in your access now before the price goes up.</p>
-        <a href="#pricing" class="mt-4 inline-block rounded-full bg-white px-8 py-3 text-sm font-bold text-violet-700 shadow-lg transition hover:bg-violet-50 active:scale-95">
-            Secure My Access Now ?
-        </a>
+        <span class="mt-4 inline-block rounded-full bg-white px-8 py-3 text-sm font-bold text-violet-700 shadow-lg">
+            Secure My Access Now
+        </span>
     </section>
 
     <!-- -- CREDIT USAGE NOTE ------------------------------------- -->

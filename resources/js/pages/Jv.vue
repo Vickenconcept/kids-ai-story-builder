@@ -26,17 +26,17 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         <nav
             class="flex w-full items-center justify-between p-4 md:px-16 md:py-6 lg:px-24 xl:px-32"
         >
-            <a href="#" class="flex items-center gap-3">
+            <div class="flex items-center gap-3">
                 <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-16 w-auto object-contain" />
                 <span class="text-lg font-semibold text-slate-900">{{ appName }}</span>
-            </a>
+            </div>
             <div
                 id="menu"
                 class="flex items-center gap-8 font-medium max-md:absolute max-md:top-0 max-md:left-0 max-md:h-full max-md:w-0 max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-white/50 max-md:backdrop-blur max-md:transition-all max-md:duration-300"
             >
-                <a href="#" class="hover:text-gray-600"> JV Home </a>
+                <span class="text-gray-600"> JV Home </span>
                    
-                <a href="#email-swipes" class="hover:text-gray-600"> Email Swipes </a>
+                <span class="text-gray-600"> Email Swipes </span>
                 <button
                     id="close-menu"
                     class="aspect-square rounded-md bg-gray-800 p-2 font-medium text-white transition hover:bg-black md:hidden"
@@ -1111,10 +1111,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                             Commission structure: frontend 50%, upsell 1 50%.
                         </p>
                         <div class="mt-8">
-                            <a
-                                href="#"
-                                class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >Open Pricing Stack</a
+                            <span
+                                class="inline-block rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
+                                >Open Pricing Stack</span
                             >
                         </div>
                     </div>
@@ -1182,10 +1181,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                             today, not next week.
                         </p>
                         <div class="mt-8">
-                            <a
-                                href="#email-swipes"
-                                class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >View Asset Checklist</a
+                            <span
+                                class="inline-block rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
+                                >View Asset Checklist</span
                             >
                         </div>
                     </div>
@@ -1250,10 +1248,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                             monetization playbook to increase conversion rates.
                         </p>
                         <div class="mt-8">
-                            <a
-                                href="#"
-                                class="rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
-                                >See Bonus Stack</a
+                            <span
+                                class="inline-block rounded bg-gray-900 px-5 py-3 font-semibold text-gray-100"
+                                >See Bonus Stack</span
                             >
                         </div>
                     </div>
@@ -1452,15 +1449,15 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
     >
         <p>Copyright © 2026 JV Launch Assets. All rights reserved.</p>
         <div class="flex items-center gap-4">
-            <a href="#" class="transition-all hover:text-white"> JV Support </a>
+            <span class="transition-all hover:text-white"> JV Support </span>
             <div class="h-8 w-px bg-white/20"></div>
-            <a href="#" class="transition-all hover:text-white">
+            <span class="transition-all hover:text-white">
                 Affiliate Terms
-            </a>
+            </span>
             <div class="h-8 w-px bg-white/20"></div>
-            <a href="#" class="transition-all hover:text-white">
+            <span class="transition-all hover:text-white">
                 Promo Compliance
-            </a>
+            </span>
         </div>
     </footer>
 </template>
