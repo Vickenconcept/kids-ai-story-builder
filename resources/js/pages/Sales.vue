@@ -78,10 +78,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <!-- Two-page spread -->
                 <div class="grid grid-cols-2 gap-0">
                     <div class="flex flex-col gap-3 border-r border-white/8 bg-linear-to-br from-violet-900/40 to-purple-900/40 p-6">
-                        <div class="aspect-4/3 w-full rounded-xl bg-linear-to-br from-violet-800/40 to-purple-800/40 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-10 text-violet-400/40" stroke-width="1">
-                                <rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                            </svg>
+                        <div class="aspect-4/3 w-full overflow-hidden rounded-xl bg-linear-to-br from-violet-800/40 to-purple-800/40">
+                            <img
+                                src="/images/card-kids-image.png"
+                                alt="Storybook preview page illustration"
+                                class="h-full w-full object-cover"
+                                loading="lazy"
+                            />
                         </div>
                         <div class="space-y-2">
                             <div class="h-2.5 w-3/4 rounded bg-white/10" />
@@ -99,10 +102,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                         </div>
                     </div>
                     <div class="flex flex-col gap-3 bg-linear-to-br from-indigo-900/40 to-violet-900/30 p-6">
-                        <div class="aspect-4/3 w-full rounded-xl bg-linear-to-br from-indigo-800/40 to-violet-800/40 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-10 text-indigo-400/40" stroke-width="1">
-                                <path d="m22 8-6 4 6 4V8z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>
-                            </svg>
+                        <div class="aspect-4/3 w-full overflow-hidden rounded-xl bg-linear-to-br from-indigo-800/40 to-violet-800/40">
+                            <img
+                                src="/images/banner-childern-image.png"
+                                alt="Storybook preview second page"
+                                class="h-full w-full object-cover"
+                                loading="lazy"
+                            />
                         </div>
                         <div class="space-y-2">
                             <div class="h-2.5 w-full rounded bg-white/10" />
