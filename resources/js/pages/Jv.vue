@@ -57,11 +57,14 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     </svg>
                 </button>
             </div>
-            <button
+            <a
+                href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351"
+                target="_blank"
+                rel="noopener noreferrer"
                 class="hidden rounded-full bg-gray-800 px-6 py-3 font-medium text-white transition hover:bg-black md:block"
             >
                 Request JV Access
-            </button>
+            </a>
 
             <button
                 id="open-menu"
@@ -91,7 +94,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             <span class="font-semibold text-indigo-600">DreamForge AI</span>
             <span class="text-slate-400">�</span>
             <span>Launch window open now for early affiliates</span>
-            <button class="flex items-center gap-1 font-medium">
+            <a href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 font-medium">
                 <span>Request JV Access</span>
                 <svg
                     width="19"
@@ -108,7 +111,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                         stroke-linejoin="round"
                     />
                 </svg>
-            </button>
+            </a>
         </div>
         <h5
             class="mx-auto mt-8 max-w-[850px] text-center text-4xl font-medium md:text-7xl"
@@ -1355,7 +1358,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     </div>
                 </div>
                 <div class="mt-10 flex flex-wrap justify-center gap-4">
-                    <a href="#" class="rounded-full bg-white px-8 py-3 font-bold text-slate-900 transition hover:bg-indigo-50 text-sm">
+                    <a href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351" target="_blank" rel="noopener noreferrer" class="rounded-full bg-white px-8 py-3 font-bold text-slate-900 transition hover:bg-indigo-50 text-sm">
                         Request JV Approval Now →
                     </a>
                     <a href="mailto:jv@dreamforge .ai" class="rounded-full border border-white/30 px-8 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
@@ -1390,7 +1393,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 </div>
 
                 <div class="mt-6 flex justify-center">
-                    <a href="https://docs.google.com/document/d/15YR8Cefaz4YP7TIKQowz-urYZxNuZf7FUOFyOuwkjE0" target="_blank" rel="noopener noreferrer" class="inline-flex w-full max-w-2xl items-center justify-center rounded-xl bg-linear-to-r from-slate-700 to-slate-600 px-6 py-4 text-xl font-bold text-white transition hover:from-slate-600 hover:to-slate-500">
+                    <a href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351" target="_blank" rel="noopener noreferrer" class="inline-flex w-full max-w-2xl items-center justify-center rounded-xl bg-linear-to-r from-slate-700 to-slate-600 px-6 py-4 text-xl font-bold text-white transition hover:from-slate-600 hover:to-slate-500">
                         Get Your Affiliate Link here
                     </a>
                 </div>

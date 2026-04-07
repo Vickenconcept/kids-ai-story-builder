@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\JvzooIpnController;
 use App\Http\Controllers\Admin\CreditPackController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Billing\CreditPurchaseController;
@@ -18,6 +19,8 @@ Route::inertia('/jv', 'Jv')->name('jv');
 Route::inertia('/sales', 'Sales')->name('sales');
 Route::inertia('/oto1', 'Oto1')->name('oto1');
 Route::inertia('/oto2', 'Oto2')->name('oto2');
+Route::inertia('/thank-you', 'ThankYou')->name('thank-you');
+Route::post('/api/ipn/jvzoo', JvzooIpnController::class)->name('api.ipn.jvzoo');
 
 Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('stories.public.show');
 

@@ -35,12 +35,12 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 Just enter an idea - and your complete story comes to life.
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
-                <a href="#pricing" class="rounded-full bg-linear-to-r from-fuchsia-500 to-violet-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-fuchsia-600/40 transition hover:from-fuchsia-400 hover:to-violet-500 active:scale-95">
-                    Create Your First Storybook Now
+                <a href="https://www.jvzoo.com/b/116189/437351/3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center">
+                    <img src="https://i.jvzoo.com/116189/437351/3" alt="DreamForge AI" border="0" />
                 </a>
-                <a href="#demo" class="flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-7 py-4 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/20 hover:text-white">
+                <!-- <a href="#demo" class="flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-7 py-4 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/20 hover:text-white">
                     Watch 2-Min Demo
-                </a>
+                </a> -->
             </div>
             <p class="mt-4 text-xs text-violet-400/70">One-time payment - No monthly fees - Instant access</p>
         </div>
@@ -508,12 +508,11 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Built-in voice narration</li>
                     <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Flipbook reader with shareable link</li>
                     <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Interactive quiz &amp; game pages</li>
-                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> PDF export ready for KDP &amp; publishing</li>
                     <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Custom cover art &amp; branding</li>
                 </ul>
 
-                <a href="#" class="mt-8 block w-full rounded-full bg-linear-to-r from-fuchsia-500 to-violet-600 py-4 text-center text-base font-bold text-white shadow-lg shadow-fuchsia-600/40 transition hover:from-fuchsia-400 hover:to-violet-500 active:scale-95">
-                    Get Instant Access &amp; Create Your First Story Today
+                <a href="https://www.jvzoo.com/b/116189/437351/3" target="_blank" rel="noopener noreferrer" class="mt-8 block text-center">
+                    <img src="https://i.jvzoo.com/116189/437351/3" alt="DreamForge AI" border="0" class="mx-auto" />
                 </a>
                 <p class="mt-3 text-xs text-violet-400">Launch pricing is temporary - price increases after window closes</p>
             </div>

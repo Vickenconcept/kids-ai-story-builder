@@ -226,8 +226,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <li class="flex items-center gap-2"><span class="text-yellow-400">✓</span> Priority rendering queue</li>
                 </ul>
 
-                <a href="#" class="mt-8 block w-full rounded-full bg-yellow-400 py-4 text-center text-base font-bold text-slate-900 shadow-lg shadow-yellow-400/30 transition hover:bg-yellow-300">
-                    🎬 YES — Upgrade To PRO Video Now
+                <a href="https://www.jvzoo.com/b/116189/437355/3" target="_blank" rel="noopener noreferrer" class="mt-8 block text-center">
+                    <img src="https://i.jvzoo.com/116189/437355/3" alt="DreamForge PRO Video" border="0" class="mx-auto" />
                 </a>
                 <p class="mt-4 text-xs text-slate-500">⚠️ This offer disappears when you leave this page</p>
             </div>
