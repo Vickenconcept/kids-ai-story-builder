@@ -116,6 +116,8 @@ class GenerateStoryPageImageJob implements ShouldQueue
             || str_contains($message, 'timeout')
             || str_contains($message, 'connection')
             || str_contains($message, 'temporarily unavailable')
-            || str_contains($message, 'rate limit');
+            || str_contains($message, 'rate limit')
+            || str_contains($message, 'blank or black')
+            || str_contains($message, 'blank image');
     }
 }

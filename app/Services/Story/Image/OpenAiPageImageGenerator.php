@@ -54,9 +54,74 @@ class OpenAiPageImageGenerator implements PageImageGenerator
             throw new RuntimeException('Image API returned no image data.');
         }
 
+        if ($this->looksLikeBlankImage($binary)) {
+            throw new RuntimeException('Generated image appears blank or black.');
+        }
+
         $name = 'page-'.uniqid('', true).'.png';
 
         return $this->media->storeBytes($binary, $storageDirectory, $name, 'image');
+    }
+
+    private function looksLikeBlankImage(string $binary): bool
+    {
+        if (! function_exists('imagecreatefromstring') || ! function_exists('imagecolorat')) {
+            return false;
+        }
+
+        $img = @imagecreatefromstring($binary);
+        if ($img === false) {
+            return false;
+        }
+
+        try {
+            $width = imagesx($img);
+            $height = imagesy($img);
+
+            if ($width < 1 || $height < 1) {
+                return true;
+            }
+
+            $stepX = max(1, (int) floor($width / 32));
+            $stepY = max(1, (int) floor($height / 32));
+            $opaqueSamples = 0;
+            $darkSamples = 0;
+            $luminanceSum = 0.0;
+
+            for ($x = 0; $x < $width; $x += $stepX) {
+                for ($y = 0; $y < $height; $y += $stepY) {
+                    $argb = imagecolorat($img, $x, $y);
+                    $alpha = ($argb & 0x7F000000) >> 24;
+
+                    if ($alpha >= 126) {
+                        continue;
+                    }
+
+                    $r = ($argb >> 16) & 0xFF;
+                    $g = ($argb >> 8) & 0xFF;
+                    $b = $argb & 0xFF;
+                    $lum = (0.2126 * $r) + (0.7152 * $g) + (0.0722 * $b);
+
+                    $opaqueSamples++;
+                    $luminanceSum += $lum;
+
+                    if ($lum < 20) {
+                        $darkSamples++;
+                    }
+                }
+            }
+
+            if ($opaqueSamples === 0) {
+                return true;
+            }
+
+            $averageLuminance = $luminanceSum / $opaqueSamples;
+            $darkRatio = $darkSamples / $opaqueSamples;
+
+            return $averageLuminance < 12 || $darkRatio >= 0.98;
+        } finally {
+            imagedestroy($img);
+        }
     }
 
     /**

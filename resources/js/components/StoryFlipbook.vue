@@ -699,20 +699,22 @@ function setVideoButtonState(pageUuid: string, playing: boolean): void {
     }
 
     const selector = `button[data-action="toggle-page-video"][data-page-uuid="${pageUuid}"]`;
-    const button = flipRoot.value.querySelector(selector) as HTMLButtonElement | null;
+    const buttons = Array.from(flipRoot.value.querySelectorAll(selector)) as HTMLButtonElement[];
 
-    if (!button) {
+    if (buttons.length === 0) {
         return;
     }
 
-    if (playing) {
-        // Hide the overlay while the video is playing — let the video run unobstructed
-        button.style.opacity = '0';
-        button.style.pointerEvents = 'none';
-    } else {
-        // Show the play-circle overlay when paused or ended
-        button.style.opacity = '1';
-        button.style.pointerEvents = '';
+    for (const button of buttons) {
+        if (playing) {
+            // Hide the overlay while the video is playing — let the video run unobstructed
+            button.style.opacity = '0';
+            button.style.pointerEvents = 'none';
+        } else {
+            // Show the play-circle overlay when paused or ended
+            button.style.opacity = '1';
+            button.style.pointerEvents = '';
+        }
     }
 }
 
@@ -762,9 +764,15 @@ function playVideoByPageUuid(pageUuid: string): void {
         }
     }
 
-    void target.play().catch(() => {
-        // Autoplay can be blocked by browser policy; user can use manual play button.
-    });
+    const playAttempt = target.play();
+    if (playAttempt && typeof playAttempt.then === 'function') {
+        void playAttempt
+            .then(() => setVideoButtonState(pageUuid, true))
+            .catch(() => {
+                // Autoplay can be blocked by browser policy; user can use manual play button.
+                setVideoButtonState(pageUuid, false);
+            });
+    }
 }
 
 function playVideoForSpread(view: number[]): void {
@@ -979,6 +987,7 @@ function onTurned(_e: unknown, pageOrView?: unknown, viewMaybe?: unknown): void 
     updateCurrentContentPageNumbers(view);
     emitVisiblePageUuid(view);
     playSpreadNarration(view);
+    bindVideoOverlayEvents();
     playVideoForSpread(view);
     scheduleTimerAdvance(view);
     syncBookHorizontalNudge();
