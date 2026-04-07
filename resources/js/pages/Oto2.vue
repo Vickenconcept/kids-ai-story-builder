@@ -289,7 +289,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 </ul>
 
                 <a href="https://www.jvzoo.com/b/116189/437357/3" target="_blank" rel="noopener noreferrer" class="mt-8 block text-center">
-                    <img src="https://i.jvzoo.com/116189/437357/3" alt="DreamForge DFY pack" border="0" class="mx-auto" />
+                    <img src="https://i.jvzoo.com/116189/437357/3" alt="DreamForge DFY pack" border="0" class="mx-auto block h-auto max-w-full" loading="lazy" decoding="async" />
                 </a>
                 <p class="mt-4 text-xs text-slate-500">⚠️ This offer disappears when you leave this page</p>
             </div>

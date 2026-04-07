@@ -36,7 +36,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
                 <a href="https://www.jvzoo.com/b/116189/437351/3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center">
-                    <img src="https://i.jvzoo.com/116189/437351/3" alt="DreamForge AI" border="0" />
+                    <img src="https://i.jvzoo.com/116189/437351/3" alt="DreamForge AI" border="0" class="block h-auto max-w-full" loading="eager" decoding="async" />
                 </a>
                 
             </div>
@@ -612,7 +612,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 </ul>
 
                 <a href="https://www.jvzoo.com/b/116189/437351/3" target="_blank" rel="noopener noreferrer" class="mt-8 block text-center">
-                    <img src="https://i.jvzoo.com/116189/437351/3" alt="DreamForge AI" border="0" class="mx-auto" />
+                    <img src="https://i.jvzoo.com/116189/437351/3" alt="DreamForge AI" border="0" class="mx-auto block h-auto max-w-full" loading="lazy" decoding="async" />
                 </a>
                 <p class="mt-3 text-xs text-violet-400">Launch pricing is temporary - price increases after window closes</p>
             </div>
