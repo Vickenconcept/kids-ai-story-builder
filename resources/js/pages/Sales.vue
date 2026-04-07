@@ -46,12 +46,12 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         <!-- Trust bar -->
         <div class="relative border-t border-white/10 bg-white/5">
             <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-4 py-5 text-xs font-medium text-violet-300">
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">?</span> Full illustrated story pages</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">?</span> AI-generated visuals per page</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">?</span> Built-in voice narration</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">?</span> Flipbook reader included</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">?</span> KDP-ready export</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">?</span> Interactive quiz layers</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Full illustrated story pages</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> AI-generated visuals per page</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Built-in voice narration</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Flipbook reader included</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> KDP-ready export</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Interactive quiz layers</span>
             </div>
         </div>
     </section>
@@ -72,7 +72,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <span class="size-3 rounded-full bg-yellow-500/70" />
                     <span class="size-3 rounded-full bg-green-500/70" />
                     <div class="ml-3 flex-1 rounded-md bg-violet-900/60 px-3 py-1 text-left text-[11px] text-violet-400/60">
-                        dreamforge .ai/read/the-dragon-who-lost-his-fire
+                        https://dreamforge.ai/read/the-dragon-who-lost-his-fire
                     </div>
                 </div>
                 <!-- Two-page spread -->
@@ -308,9 +308,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </p>
             <p class="mt-5 text-lg font-bold text-slate-900">No writing stress. No hiring illustrators. No tech headaches.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 text-sm">
-                <span class="rounded-full bg-slate-100 border border-slate-200 px-4 py-2 text-slate-700">Just enter an idea ?</span>
-                <span class="rounded-full bg-violet-50 border border-violet-200 text-violet-700 px-4 py-2">Your story comes to life ?</span>
-                <span class="rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2">Share it today ?</span>
+                <span class="rounded-full bg-slate-100 border border-slate-200 px-4 py-2 text-slate-700">Just enter an idea</span>
+                <span class="rounded-full bg-violet-50 border border-violet-200 text-violet-700 px-4 py-2">Your story comes to life</span>
+                <span class="rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2">Share it today</span>
             </div>
         </div>
     </section>
@@ -324,19 +324,19 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </div>
             <div class="grid gap-3 md:grid-cols-2">
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
-                    <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
                     <p class="text-sm text-slate-700">Writing a good story from scratch takes hours - and most people give up after the first page</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
-                    <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
                     <p class="text-sm text-slate-700">Hiring illustrators costs $50-$200+ per story with zero guarantee of quality or speed</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
-                    <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
                     <p class="text-sm text-slate-700">Other AI tools give you raw text only - you still have to figure out images, voice, and layout yourself</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
-                    <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
+                    <span class="text-red-500 font-bold mt-0.5 shrink-0">✗</span>
                     <p class="text-sm text-slate-700">Great story ideas stay stuck in your head because producing them feels too complicated and expensive</p>
                 </div>
             </div>
@@ -448,8 +448,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                                 </div>
                             </div>
                             <div class="space-y-1">
-                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">?</span><span class="text-violet-200">Story text generated</span></div>
-                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">?</span><span class="text-violet-200">Illustrations created</span></div>
+                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">✓</span><span class="text-violet-200">Story text generated</span></div>
+                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">✓</span><span class="text-violet-200">Illustrations created</span></div>
                                 <div class="flex items-center gap-1.5 text-[9px]"><span class="text-fuchsia-400 animate-pulse">•</span><span class="text-violet-300">Adding narration...</span></div>
                             </div>
                         </div>
@@ -603,12 +603,12 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <p class="mt-1 text-sm text-violet-300">One-time - Instant access - No recurring charges</p>
 
                 <ul class="mt-6 space-y-2 text-left text-sm text-violet-200">
-                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Full story generation from prompts</li>
-                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> AI illustrations matched to every page</li>
-                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Built-in voice narration</li>
-                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Flipbook reader with shareable link</li>
-                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Interactive quiz &amp; game pages</li>
-                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Custom cover art &amp; branding</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✓</span> Full story generation from prompts</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✓</span> AI illustrations matched to every page</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✓</span> Built-in voice narration</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✓</span> Flipbook reader with shareable link</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✓</span> Interactive quiz &amp; game pages</li>
+                    <li class="flex items-center gap-2"><span class="text-fuchsia-400">✓</span> Custom cover art &amp; branding</li>
                 </ul>
 
                 <a href="https://www.jvzoo.com/b/116189/437351/3" target="_blank" rel="noopener noreferrer" class="mt-8 block text-center">
