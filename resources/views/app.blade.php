@@ -32,6 +32,10 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        @if (filled(config('services.google.site_verification')))
+            <meta name="google-site-verification" content="{{ config('services.google.site_verification') }}">
+        @endif
+
         <link rel="icon" href="/favicon.png" type="image/png">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 

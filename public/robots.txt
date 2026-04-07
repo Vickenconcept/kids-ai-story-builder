@@ -1,2 +1,17 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Do not index authenticated app areas (login/register/sales are allowed above)
+Disallow: /dashboard
+Disallow: /stories/
+Disallow: /credits/
+Disallow: /settings/
+Disallow: /admin/
+
+Allow: /sales
+Allow: /thank-you
+Allow: /login
+Allow: /register
+Allow: /read/
+
+Sitemap: https://dreamforge.phanrise.com/sitemap.xml

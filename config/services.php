@@ -76,4 +76,11 @@ return [
         'sandbox' => filter_var(env('PAYPAL_SANDBOX', true), FILTER_VALIDATE_BOOL),
     ],
 
+    /*
+    | Google Search Console — paste the content value from the HTML tag verification method.
+    */
+    'google' => [
+        'site_verification' => env('GOOGLE_SITE_VERIFICATION'),
+    ],
+
 ];
