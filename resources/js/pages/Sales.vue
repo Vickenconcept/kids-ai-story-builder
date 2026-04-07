@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+
+const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 </script>
 
 <template>
-    <Head title="Create Storybooks in Minutes � DreamForge AI" />
+    <Head title="Create Storybooks in Minutes - DreamForge AI" />
 
     <!-- -- HERO ------------------------------------------------- -->
     <section class="relative overflow-hidden bg-linear-to-br from-violet-950 via-indigo-950 to-purple-950 text-white">
@@ -15,9 +17,13 @@ import { Head } from '@inertiajs/vue3';
         </div>
 
         <div class="relative mx-auto max-w-5xl px-4 pt-16 pb-10 md:px-8 md:pt-24 text-center">
+            <div class="mb-6 flex items-center justify-center gap-3">
+                <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-12 w-auto object-contain" />
+                <span class="text-lg font-bold tracking-wide text-white">{{ appName }}</span>
+            </div>
             <p class="inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-fuchsia-300">
                 <span class="size-1.5 animate-pulse rounded-full bg-fuchsia-400" />
-                ?? Now Live � Special Launch Price
+                Now Live - Special Launch Price
             </p>
             <h1 class="mt-6 text-4xl font-extrabold leading-tight md:text-6xl lg:text-7xl">
                 Turn One Idea Into a Fully<br class="hidden md:block" />
@@ -26,17 +32,17 @@ import { Head } from '@inertiajs/vue3';
             </h1>
             <p class="mx-auto mt-6 max-w-2xl text-base text-violet-200 md:text-lg">
                 No writing skills. No design skills. No tech knowledge.<br />
-                Just enter an idea � and your complete story comes to life.
+                Just enter an idea - and your complete story comes to life.
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
                 <a href="#pricing" class="rounded-full bg-linear-to-r from-fuchsia-500 to-violet-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-fuchsia-600/40 transition hover:from-fuchsia-400 hover:to-violet-500 active:scale-95">
-                    ?? Create Your First Storybook Now
+                    Create Your First Storybook Now
                 </a>
                 <a href="#demo" class="flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-7 py-4 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/20 hover:text-white">
-                    ?? Watch 2-Min Demo
+                    Watch 2-Min Demo
                 </a>
             </div>
-            <p class="mt-4 text-xs text-violet-400/70">One-time payment � No monthly fees � Instant access</p>
+            <p class="mt-4 text-xs text-violet-400/70">One-time payment - No monthly fees - Instant access</p>
         </div>
 
         <!-- Trust bar -->
@@ -142,8 +148,8 @@ import { Head } from '@inertiajs/vue3';
                 <span class="text-xs font-semibold text-violet-200">Story generated in 42 seconds</span>
             </div>
             <div class="absolute -bottom-4 right-6 flex items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-900 px-3 py-2 shadow-xl shadow-violet-950/60">
-                <span class="text-base">??</span>
-                <span class="text-xs font-semibold text-violet-200">12 pages � Full illustrations</span>
+                <span class="text-base">📘</span>
+                <span class="text-xs font-semibold text-violet-200">12 pages - Full illustrations</span>
             </div>
         </div>
     </section>
@@ -152,50 +158,53 @@ import { Head } from '@inertiajs/vue3';
     <section id="demo" class="bg-indigo-950 text-white px-4 py-20 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
             <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">The Most Important 2 Minutes You'll Spend Today</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">?? Watch This: From One Prompt ? Complete Storybook in Minutes</h2>
-            <p class="mx-auto mt-4 max-w-xl text-sm text-indigo-300">No explaining needed � they see it, they want it.</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch This: From One Prompt to Complete Storybook in Minutes</h2>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-indigo-300">No explaining needed - they see it, they want it.</p>
 
-            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-violet-900/40 aspect-video flex items-center justify-center cursor-pointer group hover:border-fuchsia-400/60 transition">
-                <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br from-fuchsia-500 to-violet-600 text-white text-3xl shadow-lg shadow-fuchsia-600/40 group-hover:scale-110 transition">?</div>
-                    <p class="text-sm font-semibold text-violet-200">Click to watch demo</p>
-                    <p class="text-xs text-violet-400 mt-1">~2 minutes</p>
-                </div>
+            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-violet-900/40 aspect-video">
+                <iframe
+                    class="h-full w-full"
+                    src="https://www.youtube.com/embed/RlErCkHnTto"
+                    title="DreamForge demo video"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen
+                />
             </div>
 
             <div class="mt-8 grid grid-cols-2 gap-3 max-w-lg mx-auto text-sm text-left md:grid-cols-4">
                 <div class="rounded-xl border border-violet-500/20 bg-violet-500/10 p-3 text-center">
-                    <p class="text-2xl mb-1">??</p>
+                    <p class="text-2xl mb-1">✍️</p>
                     <p class="font-semibold text-white">Prompt</p>
                     <p class="text-xs text-violet-300 mt-1">Type your idea</p>
                 </div>
                 <div class="rounded-xl border border-violet-500/20 bg-violet-500/10 p-3 text-center">
-                    <p class="text-2xl mb-1">??</p>
+                    <p class="text-2xl mb-1">📖</p>
                     <p class="font-semibold text-white">Story Pages</p>
                     <p class="text-xs text-violet-300 mt-1">Full structured story</p>
                 </div>
                 <div class="rounded-xl border border-violet-500/20 bg-violet-500/10 p-3 text-center">
-                    <p class="text-2xl mb-1">??</p>
+                    <p class="text-2xl mb-1">🎨</p>
                     <p class="font-semibold text-white">Illustrations</p>
                     <p class="text-xs text-violet-300 mt-1">Matched to each page</p>
                 </div>
                 <div class="rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/10 p-3 text-center">
-                    <p class="text-2xl mb-1">???</p>
+                    <p class="text-2xl mb-1">🎙️</p>
                     <p class="font-semibold text-white">Narration</p>
                     <p class="text-xs text-fuchsia-300 mt-1">Read-aloud voice</p>
                 </div>
             </div>
-            <p class="mt-6 text-sm font-bold text-fuchsia-400">?? This is what converts the sale.</p>
+            <p class="mt-6 text-sm font-bold text-fuchsia-400">This is what converts the sale.</p>
         </div>
     </section>
 
     <!-- -- BIG PROMISE ------------------------------------------- -->
     <section class="bg-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
-            <h2 class="text-3xl font-extrabold text-slate-900 md:text-4xl">Imagine This�</h2>
+            <h2 class="text-3xl font-extrabold text-slate-900 md:text-4xl">Imagine This...</h2>
             <p class="mx-auto mt-5 max-w-2xl text-base text-slate-600 leading-relaxed">
-                You type a simple idea like <em>"A brave rabbit learns to share"</em>�<br />
-                And in minutes, you have a <strong>complete multi-page storybook</strong> � with matching illustrations on every page, a read-aloud voice your kids will love, and a flipbook reader you can share with one link.
+                You type a simple idea like <em>"A brave rabbit learns to share"</em>...<br />
+                And in minutes, you have a <strong>complete multi-page storybook</strong> - with matching illustrations on every page, a read-aloud voice your kids will love, and a flipbook reader you can share with one link.
             </p>
             <p class="mt-5 text-lg font-bold text-slate-900">No writing stress. No hiring illustrators. No tech headaches.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 text-sm">
@@ -216,22 +225,22 @@ import { Head } from '@inertiajs/vue3';
             <div class="grid gap-3 md:grid-cols-2">
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
                     <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
-                    <p class="text-sm text-slate-700">Writing a good story from scratch takes hours � and most people give up after the first page</p>
+                    <p class="text-sm text-slate-700">Writing a good story from scratch takes hours - and most people give up after the first page</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
                     <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
-                    <p class="text-sm text-slate-700">Hiring illustrators costs $50�$200+ per story with zero guarantee of quality or speed</p>
+                    <p class="text-sm text-slate-700">Hiring illustrators costs $50-$200+ per story with zero guarantee of quality or speed</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
                     <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
-                    <p class="text-sm text-slate-700">Other AI tools give you raw text only � you still have to figure out images, voice, and layout yourself</p>
+                    <p class="text-sm text-slate-700">Other AI tools give you raw text only - you still have to figure out images, voice, and layout yourself</p>
                 </div>
                 <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
                     <span class="text-red-500 font-bold mt-0.5 shrink-0">?</span>
                     <p class="text-sm text-slate-700">Great story ideas stay stuck in your head because producing them feels too complicated and expensive</p>
                 </div>
             </div>
-            <p class="mt-8 text-center text-base font-semibold text-slate-800">You end up with ideas� but no finished product.</p>
+            <p class="mt-8 text-center text-base font-semibold text-slate-800">You end up with ideas... but no finished product.</p>
             <p class="mt-2 text-center text-lg font-bold text-violet-600">Until now.</p>
         </div>
     </section>
@@ -246,22 +255,22 @@ import { Head } from '@inertiajs/vue3';
             <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">The Solution</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Introducing: DreamForge AI</h2>
             <p class="mx-auto mt-5 max-w-xl text-base text-violet-200">
-                The first AI app that turns <strong class="text-white">one prompt</strong> into a complete story experience �
-                pages, illustrations, voice narration, and a shareable flipbook � <strong class="text-fuchsia-300">all in minutes</strong>.
+                The first AI app that turns <strong class="text-white">one prompt</strong> into a complete story experience -
+                pages, illustrations, voice narration, and a shareable flipbook - <strong class="text-fuchsia-300">all in minutes</strong>.
             </p>
             <div class="mt-10 grid gap-4 md:grid-cols-3 text-left">
                 <div class="rounded-2xl border border-white/10 bg-white/8 p-6">
-                    <p class="text-3xl mb-3">??</p>
+                    <p class="text-3xl mb-3">📚</p>
                     <h3 class="font-bold text-white">Every Page Comes Alive</h3>
-                    <p class="mt-2 text-sm text-violet-200">Your story gets structured pages with matching AI illustrations � so it feels like a <em>finished book</em>, not raw text.</p>
+                    <p class="mt-2 text-sm text-violet-200">Your story gets structured pages with matching AI illustrations - so it feels like a <em>finished book</em>, not raw text.</p>
                 </div>
                 <div class="rounded-2xl border border-fuchsia-400/30 bg-fuchsia-400/8 p-6">
-                    <p class="text-3xl mb-3">???</p>
+                    <p class="text-3xl mb-3">🎙️</p>
                     <h3 class="font-bold text-white">Voice That Reads It For You</h3>
                     <p class="mt-2 text-sm text-violet-200">Built-in narration turns your story into a read-along audio experience kids actually sit down and listen to.</p>
                 </div>
                 <div class="rounded-2xl border border-white/10 bg-white/8 p-6">
-                    <p class="text-3xl mb-3">??</p>
+                    <p class="text-3xl mb-3">🔗</p>
                     <h3 class="font-bold text-white">Ready to Share in One Click</h3>
                     <p class="mt-2 text-sm text-violet-200">Share a flipbook link, download as PDF, or publish. You go from prompt to published the same day.</p>
                 </div>
@@ -269,13 +278,13 @@ import { Head } from '@inertiajs/vue3';
         </div>
     </section>
 
-    <!-- -- HOW IT WORKS � Illustrated Cards --------------------- -->
+    <!-- -- HOW IT WORKS - Illustrated Cards --------------------- -->
     <section class="bg-linear-to-b from-violet-950 to-indigo-950 text-white px-4 py-20 md:py-28 md:px-8">
         <div class="mx-auto max-w-5xl">
             <div class="mb-14 text-center">
                 <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-fuchsia-400">So Simple Anyone Can Do It</p>
                 <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">From Blank Page to Finished Story in 3 Steps</h2>
-                <p class="mx-auto mt-3 max-w-xl text-sm text-violet-300">No tech skills needed. No design experience. Just your idea � the AI handles everything else.</p>
+                <p class="mx-auto mt-3 max-w-xl text-sm text-violet-300">No tech skills needed. No design experience. Just your idea - the AI handles everything else.</p>
             </div>
 
             <div class="grid gap-6 md:grid-cols-3">
@@ -289,11 +298,11 @@ import { Head } from '@inertiajs/vue3';
                         <div class="relative rounded-xl border border-violet-400/20 bg-violet-950/80 p-4 shadow-xl backdrop-blur-sm">
                             <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-fuchsia-400">New Story</p>
                             <div class="mb-3 rounded-lg border border-violet-400/20 bg-violet-500/10 p-2.5">
-                                <p class="text-[11px] text-violet-200">A brave dragon who learns to share his fire�</p>
+                                <p class="text-[11px] text-violet-200">A brave dragon who learns to share his fire...</p>
                                 <div class="mt-1.5 h-1.5 w-2/3 rounded bg-fuchsia-400/30" />
                             </div>
                             <div class="mb-3 grid grid-cols-3 gap-1.5">
-                                <div class="rounded-md border border-fuchsia-400/40 bg-fuchsia-400/15 px-1.5 py-1 text-center text-[9px] font-semibold text-fuchsia-300">Ages 4�8</div>
+                                <div class="rounded-md border border-fuchsia-400/40 bg-fuchsia-400/15 px-1.5 py-1 text-center text-[9px] font-semibold text-fuchsia-300">Ages 4-8</div>
                                 <div class="rounded-md border border-violet-400/20 bg-violet-500/10 px-1.5 py-1 text-center text-[9px] text-violet-300">Watercolor</div>
                                 <div class="rounded-md border border-violet-400/20 bg-violet-500/10 px-1.5 py-1 text-center text-[9px] text-violet-300">12 pages</div>
                             </div>
@@ -318,7 +327,7 @@ import { Head } from '@inertiajs/vue3';
                         </div>
                         <div class="relative rounded-xl border border-violet-400/20 bg-violet-950/80 p-4 shadow-xl backdrop-blur-sm">
                             <div class="mb-3 flex items-center justify-between">
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-fuchsia-400">Generating�</p>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-fuchsia-400">Generating...</p>
                                 <span class="rounded-full bg-violet-400/20 px-2 py-0.5 text-[9px] font-bold text-violet-200">8 / 12 pages</span>
                             </div>
                             <div class="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-violet-800/60">
@@ -341,7 +350,7 @@ import { Head } from '@inertiajs/vue3';
                             <div class="space-y-1">
                                 <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">?</span><span class="text-violet-200">Story text generated</span></div>
                                 <div class="flex items-center gap-1.5 text-[9px]"><span class="text-green-400">?</span><span class="text-violet-200">Illustrations created</span></div>
-                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-fuchsia-400 animate-pulse">?</span><span class="text-violet-300">Adding narration�</span></div>
+                                <div class="flex items-center gap-1.5 text-[9px]"><span class="text-fuchsia-400 animate-pulse">•</span><span class="text-violet-300">Adding narration...</span></div>
                             </div>
                         </div>
                     </div>
@@ -361,7 +370,7 @@ import { Head } from '@inertiajs/vue3';
                         <div class="relative rounded-xl border border-violet-400/20 bg-violet-950/80 shadow-xl backdrop-blur-sm overflow-hidden">
                             <div class="flex items-center gap-1.5 border-b border-violet-400/15 bg-violet-900/40 px-3 py-1.5">
                                 <span class="size-1.5 rounded-full bg-red-500/60" /><span class="size-1.5 rounded-full bg-yellow-500/60" /><span class="size-1.5 rounded-full bg-green-500/60" />
-                                <div class="ml-1.5 flex-1 rounded bg-violet-800/60 px-2 py-0.5 text-[8px] text-violet-500">dreamforge .ai/read/�</div>
+                                <div class="ml-1.5 flex-1 rounded bg-violet-800/60 px-2 py-0.5 text-[8px] text-violet-500">dreamforge.ai/read/...</div>
                             </div>
                             <div class="grid grid-cols-2 gap-0 p-2">
                                 <div class="rounded-l-md border border-violet-400/15 bg-linear-to-br from-violet-800/40 to-purple-800/40 p-1.5">
@@ -378,9 +387,9 @@ import { Head } from '@inertiajs/vue3';
                                 </div>
                             </div>
                             <div class="flex items-center justify-center gap-2 border-t border-violet-400/15 px-3 py-2">
-                                <div class="flex items-center gap-1 rounded-md bg-violet-500/20 px-2 py-1 text-[8px] font-semibold text-violet-300">?? Share</div>
-                                <div class="flex items-center gap-1 rounded-md bg-white/8 px-2 py-1 text-[8px] font-semibold text-violet-400">?? PDF</div>
-                                <div class="flex items-center gap-1 rounded-md bg-fuchsia-500/20 px-2 py-1 text-[8px] font-semibold text-fuchsia-300">?? Sell</div>
+                                <div class="flex items-center gap-1 rounded-md bg-violet-500/20 px-2 py-1 text-[8px] font-semibold text-violet-300">Share</div>
+                                <div class="flex items-center gap-1 rounded-md bg-white/8 px-2 py-1 text-[8px] font-semibold text-violet-400">PDF</div>
+                                <div class="flex items-center gap-1 rounded-md bg-fuchsia-500/20 px-2 py-1 text-[8px] font-semibold text-fuchsia-300">Sell</div>
                             </div>
                         </div>
                     </div>
@@ -404,34 +413,34 @@ import { Head } from '@inertiajs/vue3';
             </div>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
-                    <p class="text-2xl mb-3">??</p>
+                    <p class="text-2xl mb-3">📝</p>
                     <h3 class="font-bold text-slate-900">Complete Story Generation</h3>
-                    <p class="mt-2 text-sm text-slate-600">Multi-page stories with structured flow � created from one prompt in minutes, not hours.</p>
+                    <p class="mt-2 text-sm text-slate-600">Multi-page stories with structured flow - created from one prompt in minutes, not hours.</p>
                 </div>
                 <div class="rounded-2xl border-2 border-violet-400 bg-white p-6 shadow-sm">
-                    <p class="text-2xl mb-3">??</p>
+                    <p class="text-2xl mb-3">🖼️</p>
                     <h3 class="font-bold text-slate-900">Matching Illustrations Per Page</h3>
-                    <p class="mt-2 text-sm text-slate-600">Every page comes with AI-generated visuals matched to your scene � so your story feels like a real published book.</p>
+                    <p class="mt-2 text-sm text-slate-600">Every page comes with AI-generated visuals matched to your scene - so your story feels like a real published book.</p>
                 </div>
                 <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
-                    <p class="text-2xl mb-3">???</p>
+                    <p class="text-2xl mb-3">🔊</p>
                     <h3 class="font-bold text-slate-900">Built-In Voice Narration</h3>
-                    <p class="mt-2 text-sm text-slate-600">Add read-aloud narration with one click. Kids hear the story as they follow along � no extra tools needed.</p>
+                    <p class="mt-2 text-sm text-slate-600">Add read-aloud narration with one click. Kids hear the story as they follow along - no extra tools needed.</p>
                 </div>
                 <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
-                    <p class="text-2xl mb-3">??</p>
+                    <p class="text-2xl mb-3">📖</p>
                     <h3 class="font-bold text-slate-900">Beautiful Flipbook Reader</h3>
                     <p class="mt-2 text-sm text-slate-600">Share a link and anyone can read your story in a realistic page-flip reader. Professional quality instantly.</p>
                 </div>
                 <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
-                    <p class="text-2xl mb-3">??</p>
+                    <p class="text-2xl mb-3">🧩</p>
                     <h3 class="font-bold text-slate-900">Interactive Quiz Pages</h3>
-                    <p class="mt-2 text-sm text-slate-600">Add quiz and game pages inside your story � perfect for teachers and educators building engaging lessons.</p>
+                    <p class="mt-2 text-sm text-slate-600">Add quiz and game pages inside your story - perfect for teachers and educators building engaging lessons.</p>
                 </div>
                 <div class="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
-                    <p class="text-2xl mb-3">??</p>
+                    <p class="text-2xl mb-3">📦</p>
                     <h3 class="font-bold text-slate-900">Export &amp; Publish Ready</h3>
-                    <p class="mt-2 text-sm text-slate-600">Download as PDF and publish anywhere � share a link, sell digitally, or prepare for print. <em>Video upgrade available.</em></p>
+                    <p class="mt-2 text-sm text-slate-600">Download as PDF and publish anywhere - share a link, sell digitally, or prepare for print. <em>Video upgrade available.</em></p>
                 </div>
             </div>
         </div>
@@ -441,33 +450,33 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl">
             <div class="text-center mb-10">
-                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">This Is For You If�</p>
+                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600">This Is For You If...</p>
                 <h2 class="mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">Who DreamForge AI Is Perfect For</h2>
             </div>
             <div class="grid gap-4 md:grid-cols-2">
                 <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
-                    <span class="text-3xl shrink-0">????????</span>
+                    <span class="text-3xl shrink-0">👨‍👩‍👧‍👦</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Parents</h3>
-                        <p class="mt-1 text-sm text-slate-600">Create personalised bedtime stories with your child's name and favourite themes � in minutes, not weeks.</p>
+                        <p class="mt-1 text-sm text-slate-600">Create personalised bedtime stories with your child's name and favourite themes - in minutes, not weeks.</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
-                    <span class="text-3xl shrink-0">?????</span>
+                    <span class="text-3xl shrink-0">👩‍🏫</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Teachers &amp; Educators</h3>
-                        <p class="mt-1 text-sm text-slate-600">Build custom story-based lessons with quiz pages and illustrations � tailored to your class topic and age group.</p>
+                        <p class="mt-1 text-sm text-slate-600">Build custom story-based lessons with quiz pages and illustrations - tailored to your class topic and age group.</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
-                    <span class="text-3xl shrink-0">??</span>
+                    <span class="text-3xl shrink-0">🎥</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Content Creators</h3>
                         <p class="mt-1 text-sm text-slate-600">Produce kids' story content faster than ever. Build a library, run a channel, and publish consistently without burnout.</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-4 rounded-2xl border border-fuchsia-100 bg-fuchsia-50/50 p-5">
-                    <span class="text-3xl shrink-0">??</span>
+                    <span class="text-3xl shrink-0">💼</span>
                     <div>
                         <h3 class="font-bold text-slate-900">Digital Sellers</h3>
                         <p class="mt-1 text-sm text-slate-600">Create high-perceived-value storybook products to sell on Etsy, Gumroad, or Amazon KDP. One tool, real income potential.</p>
@@ -491,7 +500,7 @@ import { Head } from '@inertiajs/vue3';
             <div class="mt-10 rounded-2xl border-2 border-fuchsia-400/40 bg-white/6 p-8 shadow-2xl shadow-violet-950/60">
                 <p class="text-sm font-semibold text-violet-400 line-through">Regular price: $97</p>
                 <p class="mt-2 text-7xl font-extrabold bg-linear-to-r from-fuchsia-400 to-violet-400 bg-clip-text text-transparent">$20</p>
-                <p class="mt-1 text-sm text-violet-300">One-time � Instant access � No recurring charges</p>
+                <p class="mt-1 text-sm text-violet-300">One-time - Instant access - No recurring charges</p>
 
                 <ul class="mt-6 space-y-2 text-left text-sm text-violet-200">
                     <li class="flex items-center gap-2"><span class="text-fuchsia-400">?</span> Full story generation from prompts</li>
@@ -504,13 +513,13 @@ import { Head } from '@inertiajs/vue3';
                 </ul>
 
                 <a href="#" class="mt-8 block w-full rounded-full bg-linear-to-r from-fuchsia-500 to-violet-600 py-4 text-center text-base font-bold text-white shadow-lg shadow-fuchsia-600/40 transition hover:from-fuchsia-400 hover:to-violet-500 active:scale-95">
-                    ?? Get Instant Access &amp; Create Your First Story Today
+                    Get Instant Access &amp; Create Your First Story Today
                 </a>
-                <p class="mt-3 text-xs text-violet-400">?? Launch pricing is temporary � price increases after window closes</p>
+                <p class="mt-3 text-xs text-violet-400">Launch pricing is temporary - price increases after window closes</p>
             </div>
 
             <div class="mt-8 rounded-2xl border border-violet-400/20 bg-white/6 p-6 text-sm text-violet-300 text-left">
-                <p class="font-semibold text-white mb-2">?? Satisfaction Guarantee</p>
+                <p class="font-semibold text-white mb-2">Satisfaction Guarantee</p>
                 <p>Try DreamForge AI risk-free. If you're not completely satisfied, we'll make it right. Your investment is protected.</p>
             </div>
         </div>
@@ -518,7 +527,7 @@ import { Head } from '@inertiajs/vue3';
 
     <!-- -- URGENCY ----------------------------------------------- -->
     <section class="bg-linear-to-r from-fuchsia-600 to-violet-700 text-white px-4 py-8 text-center">
-        <p class="text-base font-bold">?? Launch pricing is temporary. Price will increase when the launch window closes.</p>
+        <p class="text-base font-bold">Launch pricing is temporary. Price will increase when the launch window closes.</p>
         <p class="mt-1 text-sm text-fuchsia-100">Lock in your access now before the price goes up.</p>
         <a href="#pricing" class="mt-4 inline-block rounded-full bg-white px-8 py-3 text-sm font-bold text-violet-700 shadow-lg transition hover:bg-violet-50 active:scale-95">
             Secure My Access Now ?
@@ -529,7 +538,7 @@ import { Head } from '@inertiajs/vue3';
     <section class="bg-violet-50 px-4 py-8 md:px-8">
         <div class="mx-auto max-w-4xl rounded-xl border border-violet-200 bg-white p-5 text-sm text-slate-600 shadow-sm">
             <p class="font-semibold text-violet-700">About Your Included Usage Credits</p>
-            <p class="mt-2">Your purchase includes usage credits to generate stories, AI illustrations, and voice narration. These credits are enough to create your first complete storybooks and start publishing immediately. Additional credits can be purchased anytime inside the app if you want to create more � there are no forced recurring charges.</p>
+            <p class="mt-2">Your purchase includes usage credits to generate stories, AI illustrations, and voice narration. These credits are enough to create your first complete storybooks and start publishing immediately. Additional credits can be purchased anytime inside the app if you want to create more - there are no forced recurring charges.</p>
         </div>
     </section>
 
@@ -538,7 +547,7 @@ import { Head } from '@inertiajs/vue3';
         <div class="mx-auto max-w-4xl text-xs text-slate-500 space-y-3">
             <p class="font-semibold text-slate-600">Disclaimer</p>
             <p>Please note that this product does not provide any guarantee of income or success. The results achieved by the product owner or any other individuals mentioned are not indicative of future success or earnings. This website is not affiliated with FaceBook or any of its associated entities. Once you navigate away from FaceBook, the responsibility for the content and its usage lies solely with the user. All content on this website, including but not limited to text, images, and multimedia, is protected by copyright law and the Digital Millennium Copyright Act. Unauthorized copying, duplication, modification, or theft, whether intentional or unintentional, is strictly prohibited. Violators will be prosecuted to the fullest extent of the law.</p>
-            <p>We want to clarify that JVZoo serves as the retailer for the products featured on this site. JVZoo� is a registered trademark of BBC Systems Inc., a Florida corporation located at 1809 E. Broadway Street, Suite 125, Oviedo, FL 32765, USA, and is used with permission. The role of JVZoo as a retailer does not constitute an endorsement, approval, or review of these products or any claims, statements, or opinions used in their promotion.</p>
+            <p>We want to clarify that JVZoo serves as the retailer for the products featured on this site. JVZoo is a registered trademark of BBC Systems Inc., a Florida corporation located at 1809 E. Broadway Street, Suite 125, Oviedo, FL 32765, USA, and is used with permission. The role of JVZoo as a retailer does not constitute an endorsement, approval, or review of these products or any claims, statements, or opinions used in their promotion.</p>
             <p>This product does not guarantee income or business results. Outcomes vary by effort, traffic, positioning, and offer-market fit. Examples are illustrative and not promises of future performance.</p>
             <p>Product names and third-party platform references (Amazon KDP, Etsy, Gumroad) are used for informational context only. Publication eligibility and policy compliance are the responsibility of the user.</p>
         </div>

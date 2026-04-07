@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-</script>
 
+const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
+</script>
 <template>
     <Head title="You Now Have Content — Here's How To Turn It Into Income" />
 
@@ -13,6 +14,10 @@ import { Head } from '@inertiajs/vue3';
     <!-- HERO -->
     <section class="bg-slate-950 text-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
+            <div class="mb-6 flex items-center justify-center gap-3">
+                <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-12 w-auto object-contain" />
+                <span class="text-lg font-bold tracking-wide text-white">{{ appName }}</span>
+            </div>
             <p class="inline-block rounded-full border border-emerald-400/40 bg-emerald-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-300">
                 💰 Final Step — Monetization System
             </p>
@@ -25,6 +30,25 @@ import { Head } from '@inertiajs/vue3';
                 but because they don't know <strong class="text-white">what to do next</strong>.<br/>
                 This upgrade removes all the guesswork.
             </p>
+        </div>
+    </section>
+
+    <!-- DEMO -->
+    <section class="bg-slate-900 text-white px-4 py-14 md:px-8">
+        <div class="mx-auto max-w-4xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400">Quick Demo</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch The Product Demo</h2>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">See how the story funnel works in action.</p>
+            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-emerald-400/40 bg-slate-800 aspect-video">
+                <iframe
+                    class="h-full w-full"
+                    src="https://www.youtube.com/embed/RlErCkHnTto"
+                    title="Product demo video"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen
+                />
+            </div>
         </div>
     </section>
 

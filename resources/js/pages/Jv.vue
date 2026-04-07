@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 
 // const menu = document.getElementById('menu');
 // const closeMenu = document.getElementById('close-menu');
@@ -25,8 +26,9 @@ import { Head } from '@inertiajs/vue3';
         <nav
             class="flex w-full items-center justify-between p-4 md:px-16 md:py-6 lg:px-24 xl:px-32"
         >
-            <a href="#" class="flex items-center">
+            <a href="#" class="flex items-center gap-3">
                 <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-16 w-auto object-contain" />
+                <span class="text-lg font-semibold text-slate-900">{{ appName }}</span>
             </a>
             <div
                 id="menu"
@@ -225,30 +227,16 @@ import { Head } from '@inertiajs/vue3';
                     No explaining needed. The output sells itself.
                 </p>
 
-                <!-- Video embed / placeholder -->
                 <div class="relative mt-8 overflow-hidden rounded-2xl border-2 border-indigo-500/40 bg-slate-800 shadow-2xl shadow-indigo-950/60">
-                    <!-- Aspect ratio wrapper -->
-                    <div class="aspect-video flex items-center justify-center cursor-pointer group hover:border-indigo-400 transition">
-                        <!-- Play button overlay -->
-                        <div class="text-center">
-                            <div class="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-violet-600 text-white shadow-2xl shadow-indigo-600/50 transition group-hover:scale-110 group-hover:from-indigo-400 group-hover:to-violet-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-9 translate-x-0.5">
-                                    <path d="M8 5v14l11-7z"/>
-                                </svg>
-                            </div>
-                            <p class="text-sm font-semibold text-slate-200">Click to watch — 2 minutes</p>
-                            <p class="mt-1 text-xs text-slate-500">From one prompt → full illustrated storybook</p>
-                        </div>
-
-                        <!-- Mock screenshot overlay (decorative) -->
-                        <div class="pointer-events-none absolute inset-0 opacity-20">
-                            <div class="absolute inset-x-8 top-6 bottom-16 rounded-xl border border-white/20 bg-linear-to-br from-violet-900/60 to-indigo-900/60" />
-                            <div class="absolute inset-x-12 top-10 grid h-28 grid-cols-3 gap-2 px-4">
-                                <div class="rounded bg-violet-700/50" />
-                                <div class="rounded bg-indigo-700/50" />
-                                <div class="rounded bg-purple-700/50" />
-                            </div>
-                        </div>
+                    <div class="aspect-video">
+                        <iframe
+                            class="h-full w-full"
+                            src="https://www.youtube.com/embed/RlErCkHnTto"
+                            title="JV demo video"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen
+                        />
                     </div>
                 </div>
 
@@ -1375,6 +1363,37 @@ import { Head } from '@inertiajs/vue3';
                     </a>
                 </div>
                 <p class="mt-6 text-xs text-slate-400">Earn 50% on frontend + all upsells. Commission paid via JVZoo.</p>
+            </div>
+        </section>
+
+        <!-- Promo tools cards -->
+        <section class="bg-black px-4 py-14 text-white md:px-8">
+            <div class="mx-auto max-w-5xl">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold md:text-5xl">Choose from Professionally Created Promo Tools<br class="hidden md:block" />And Bank BIG Commissions</h2>
+                    <p class="mt-3 text-sm text-slate-300">High-Converting Swipes &amp; Webinar Details</p>
+                </div>
+
+                <div class="mt-10 grid gap-4 md:grid-cols-3">
+                    <a href="https://docs.google.com/document/d/15YR8Cefaz4YP7TIKQowz-urYZxNuZf7FUOFyOuwkjE0" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-slate-800 bg-black p-6 text-center transition hover:border-slate-600 hover:bg-slate-950">
+                        <p class="text-3xl">📄</p>
+                        <p class="mt-3 text-lg font-semibold text-white">Launch Doc</p>
+                    </a>
+                    <a href="https://docs.google.com/document/d/15YR8Cefaz4YP7TIKQowz-urYZxNuZf7FUOFyOuwkjE0" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-slate-800 bg-black p-6 text-center transition hover:border-slate-600 hover:bg-slate-950">
+                        <p class="text-3xl">🖼️</p>
+                        <p class="mt-3 text-lg font-semibold text-white">Marketing Graphics &amp; Ads</p>
+                    </a>
+                    <a href="https://docs.google.com/document/d/15YR8Cefaz4YP7TIKQowz-urYZxNuZf7FUOFyOuwkjE0" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-slate-800 bg-black p-6 text-center transition hover:border-slate-600 hover:bg-slate-950">
+                        <p class="text-3xl">🧾</p>
+                        <p class="mt-3 text-lg font-semibold text-white">Salespage Preview</p>
+                    </a>
+                </div>
+
+                <div class="mt-6 flex justify-center">
+                    <a href="https://docs.google.com/document/d/15YR8Cefaz4YP7TIKQowz-urYZxNuZf7FUOFyOuwkjE0" target="_blank" rel="noopener noreferrer" class="inline-flex w-full max-w-2xl items-center justify-center rounded-xl bg-linear-to-r from-slate-700 to-slate-600 px-6 py-4 text-xl font-bold text-white transition hover:from-slate-600 hover:to-slate-500">
+                        Get Your Affiliate Link here
+                    </a>
+                </div>
             </div>
         </section>
 

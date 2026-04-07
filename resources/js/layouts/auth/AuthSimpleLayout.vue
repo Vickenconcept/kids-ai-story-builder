@@ -2,6 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { home } from '@/routes';
+const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 
 defineProps<{
     title?: string;
@@ -18,10 +19,9 @@ defineProps<{
                 <div class="flex flex-col items-center gap-4">
                     <Link
                         :href="home()"
-                        class="flex flex-col items-center gap-2 font-medium"
+                        class="flex items-center gap-3 font-medium"
                     >
                         <AppLogoIcon class="h-20 w-auto object-contain" />
-                        <span class="sr-only">{{ title }}</span>
                     </Link>
                     <div class="space-y-2 text-center">
                         <h1 class="text-xl font-medium">{{ title }}</h1>

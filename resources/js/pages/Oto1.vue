@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+
+const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 </script>
 
 <template>
@@ -13,6 +15,10 @@ import { Head } from '@inertiajs/vue3';
     <!-- HERO -->
     <section class="bg-slate-950 text-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
+            <div class="mb-6 flex items-center justify-center gap-3">
+                <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-12 w-auto object-contain" />
+                <span class="text-lg font-bold tracking-wide text-white">{{ appName }}</span>
+            </div>
             <p class="inline-block rounded-full border border-red-400/40 bg-red-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-red-300">
                 🚨 One-Time Upgrade — This Page Will Not Appear Again
             </p>
@@ -93,12 +99,15 @@ import { Head } from '@inertiajs/vue3';
             <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">See The Difference</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🎬 Watch: Your Story Becomes a Video</h2>
             <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">Every story page transforms into a dynamic animated video scene — synced with your narration automatically.</p>
-            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-yellow-400/40 bg-slate-800 aspect-video flex items-center justify-center cursor-pointer group hover:border-yellow-400 transition">
-                <div class="text-center">
-                    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-400 text-slate-900 text-3xl shadow-lg shadow-yellow-400/30 group-hover:scale-110 transition">▶</div>
-                    <p class="text-sm font-semibold text-slate-300">Watch: Story → Video in seconds</p>
-                    <p class="text-xs text-slate-500 mt-1">~90 seconds</p>
-                </div>
+            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-yellow-400/40 bg-slate-800 aspect-video">
+                <iframe
+                    class="h-full w-full"
+                    src="https://www.youtube.com/embed/RlErCkHnTto"
+                    title="Story to video demo"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen
+                />
             </div>
         </div>
     </section>
