@@ -314,8 +314,9 @@ class StoryProjectController extends Controller
         StoryProject $story,
         StoryPage $page,
         StoryCreditService $credits,
-    ): RedirectResponse {
+    ): RedirectResponse|JsonResponse {
         $this->authorize('update', $story);
+        $expectsJson = $request->expectsJson() || $request->ajax();
 
         if ($page->story_project_id !== $story->id) {
             abort(404);
@@ -323,11 +324,19 @@ class StoryProjectController extends Controller
 
         $user = $request->user();
         if (! $user->feature_tier?->isPro()) {
-            return back()->with('error', 'Page video generation requires Pro tier or above.');
+            $message = 'Page video generation requires Pro tier or above.';
+
+            return $expectsJson
+                ? response()->json(['ok' => false, 'message' => $message], 422)
+                : back()->with('error', $message);
         }
 
         if (! filled($page->image_path)) {
-            return back()->with('error', 'Generate image first before creating video for this page.');
+            $message = 'Generate image first before creating video for this page.';
+
+            return $expectsJson
+                ? response()->json(['ok' => false, 'message' => $message], 422)
+                : back()->with('error', $message);
         }
 
         $inFlight = StoryAiJob::query()
@@ -338,12 +347,20 @@ class StoryProjectController extends Controller
             ->exists();
 
         if ($inFlight) {
-            return back()->with('info', 'Video generation is already in progress for this page.');
+            $message = 'Video generation is already in progress for this page.';
+
+            return $expectsJson
+                ? response()->json(['ok' => true, 'queued' => true, 'message' => $message])
+                : back()->with('info', $message);
         }
 
         $needed = $credits->cost('video');
         if ((int) $user->story_credits < $needed) {
-            return back()->with('error', 'Not enough credits for page video. Required: '.$needed.' credits.');
+            $message = 'Not enough credits for page video. Required: '.$needed.' credits.';
+
+            return $expectsJson
+                ? response()->json(['ok' => false, 'message' => $message], 422)
+                : back()->with('error', $message);
         }
 
         StoryAiJob::create([
@@ -357,7 +374,17 @@ class StoryProjectController extends Controller
         GenerateStoryPageVideoJob::dispatch($page->id)
             ->onQueue(config('story.queues.video'));
 
-        return back()->with('success', 'Video generation queued for page '.$page->page_number.'.');
+        $message = 'Video generation queued for page '.$page->page_number.'.';
+
+        return $expectsJson
+            ? response()->json([
+                'ok' => true,
+                'queued' => true,
+                'message' => $message,
+                'page_uuid' => $page->uuid,
+                'story_credits' => (int) $user->story_credits,
+            ])
+            : back()->with('success', $message);
     }
 
     public function startMediaGeneration(

@@ -527,23 +527,64 @@ function canGenerateVideoForPage(page: PageRow): boolean {
     return Boolean(page.image_url);
 }
 
-function generateVideoForPage(page: PageRow): void {
+async function queuePageVideoGeneration(page: PageRow): Promise<void> {
     if (!canGenerateVideoForPage(page)) {
         return;
     }
 
     pageVideoBusy.value = { ...pageVideoBusy.value, [page.uuid]: true };
-    router.post(
-        `/stories/${props.project.uuid}/pages/${page.uuid}/generate-video`,
-        {},
-        {
-            preserveScroll: true,
-            preserveState: true,
-            onFinish: () => {
-                pageVideoBusy.value = { ...pageVideoBusy.value, [page.uuid]: false };
+
+    try {
+        const csrf = document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute('content') ?? '';
+
+        const response = await fetch(`/stories/${props.project.uuid}/pages/${page.uuid}/generate-video`, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrf,
             },
-        },
-    );
+            body: JSON.stringify({}),
+        });
+
+        const data = (await response.json().catch(() => null)) as
+            | { ok?: boolean; message?: string; story_credits?: number }
+            | null;
+
+        if (!response.ok || data?.ok === false) {
+            pageVideoBusy.value = { ...pageVideoBusy.value, [page.uuid]: false };
+
+            if ((data?.message ?? '').toLowerCase().includes('not enough credits')) {
+                openCreditsModal();
+            }
+
+            return;
+        }
+
+        if (typeof data?.story_credits === 'number') {
+            polledStoryCredits.value = data.story_credits;
+        }
+
+        pageMediaPoll.value = {
+            ...pageMediaPoll.value,
+            [page.uuid]: {
+                video_url: pageMediaPoll.value[page.uuid]?.video_url ?? page.video_url,
+                video_generating: true,
+            },
+        };
+
+        void fetchPageMediaStatus();
+    } catch {
+        pageVideoBusy.value = { ...pageVideoBusy.value, [page.uuid]: false };
+    }
+}
+
+function generateVideoForPage(page: PageRow): void {
+    void queuePageVideoGeneration(page);
 }
 
 function onFlipViewPageChange(pageUuid: string | null): void {
@@ -559,7 +600,7 @@ function onFlipbookGeneratePageVideo(pageUuid: string): void {
         return;
     }
 
-    generateVideoForPage(page);
+    void queuePageVideoGeneration(page);
 }
 
 function setViewMode(mode: 'flip' | 'scroll'): void {

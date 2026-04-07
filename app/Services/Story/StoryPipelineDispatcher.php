@@ -34,8 +34,10 @@ class StoryPipelineDispatcher
 
     public function dispatchPageAudio(StoryProject $project): void
     {
+        $voice = $this->resolveNarrationVoice($project);
+
         foreach ($project->pages as $page) {
-            GenerateStoryPageAudioJob::dispatch($page->id)
+            GenerateStoryPageAudioJob::dispatch($page->id, $voice)
                 ->onQueue(config('story.queues.audio'));
         }
     }
@@ -107,7 +109,7 @@ class StoryPipelineDispatcher
                 'project_id' => $project->id,
                 'page_id' => $page->id,
             ]);
-            GenerateStoryPageAudioJob::dispatch($page->id)
+            GenerateStoryPageAudioJob::dispatch($page->id, $this->resolveNarrationVoice($project))
                 ->onQueue(config('story.queues.audio'));
 
             return;
@@ -198,5 +200,12 @@ class StoryPipelineDispatcher
         }
 
         return $isPro;
+    }
+
+    private function resolveNarrationVoice(StoryProject $project): ?string
+    {
+        $voice = is_array($project->meta) ? ($project->meta['tts_voice'] ?? null) : null;
+
+        return is_string($voice) && $voice !== '' ? $voice : null;
     }
 }
