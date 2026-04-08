@@ -28,6 +28,17 @@ declare module '@inertiajs/core' {
                     price_cents: number;
                     currency: string;
                 }>;
+                storyPlans?: Array<{
+                    id: number;
+                    name: string;
+                    description: string | null;
+                    tier: string;
+                    included_credits: number;
+                    price_cents: number;
+                    currency: string;
+                    is_featured: boolean;
+                    feature_list: string[];
+                }>;
             };
             sidebarOpen: boolean;
             [key: string]: unknown;

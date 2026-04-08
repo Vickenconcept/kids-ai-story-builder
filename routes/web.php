@@ -2,18 +2,38 @@
 
 use App\Http\Controllers\Api\JvzooIpnController;
 use App\Http\Controllers\Admin\CreditPackController;
+use App\Http\Controllers\Admin\StoryPlanController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Billing\CreditPurchaseController;
+use App\Http\Controllers\Billing\PlanUpgradeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Story\PublicStoryController;
 use App\Http\Controllers\Story\StoryPageController;
 use App\Http\Controllers\Story\StoryProjectController;
+use App\Models\StoryPlan;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::inertia('/', 'Welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('home');
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canRegister' => Features::enabled(Features::registration()),
+        'plans' => StoryPlan::query()
+            ->active()
+            ->ordered()
+            ->get([
+                'id',
+                'name',
+                'description',
+                'tier',
+                'included_credits',
+                'price_cents',
+                'currency',
+                'is_featured',
+                'feature_list',
+            ]),
+    ]);
+})->name('home');
 
 Route::inertia('/jv', 'Jv')->name('jv');
 Route::inertia('/sales', 'Sales')->name('sales');
@@ -31,6 +51,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [CreditPurchaseController::class, 'index'])->name('index');
         Route::post('/paypal/order', [CreditPurchaseController::class, 'createPayPalOrder'])->name('paypal.order');
         Route::post('/paypal/capture', [CreditPurchaseController::class, 'capturePayPalOrder'])->name('paypal.capture');
+    });
+
+    Route::prefix('plans')->name('plans.')->group(function () {
+        Route::get('/', [PlanUpgradeController::class, 'index'])->name('index');
+        Route::post('/paypal/order', [PlanUpgradeController::class, 'createPayPalOrder'])->name('paypal.order');
+        Route::post('/paypal/capture', [PlanUpgradeController::class, 'capturePayPalOrder'])->name('paypal.capture');
     });
 
     Route::prefix('stories')->name('stories.')->group(function () {
@@ -55,6 +81,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [CreditPackController::class, 'store'])->name('store');
         Route::patch('/{pack}', [CreditPackController::class, 'update'])->name('update');
         Route::delete('/{pack}', [CreditPackController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('can:manage-plans')->prefix('admin/plans')->name('admin.plans.')->group(function () {
+        Route::get('/', [StoryPlanController::class, 'index'])->name('index');
+        Route::post('/', [StoryPlanController::class, 'store'])->name('store');
+        Route::patch('/{plan}', [StoryPlanController::class, 'update'])->name('update');
+        Route::delete('/{plan}', [StoryPlanController::class, 'destroy'])->name('destroy');
     });
 
     Route::middleware('can:manage-users')->prefix('admin/users')->name('admin.users.')->group(function () {

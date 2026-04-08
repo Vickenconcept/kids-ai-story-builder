@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedInteger('story_credits')->default(30)->after('remember_token');
+            $table->unsignedInteger('story_credits')->default(100)->after('remember_token');
             $table->string('feature_tier')->default('basic')->after('story_credits');
         });
     }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookMarked, Coins, LayoutGrid, Settings, ShieldCheck, Sparkles, Users, Zap } from 'lucide-vue-next';
+import { BookMarked, Coins, Crown, LayoutGrid, Settings, ShieldCheck, Sparkles, Users, Zap } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -28,6 +28,7 @@ const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
         { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
         { title: 'Stories', href: '/stories', icon: BookMarked },
+        { title: 'Plans', href: '/plans', icon: Crown },
         { title: 'Credits', href: '/credits', icon: Coins },
         { title: 'Settings', href: '/settings', icon: Settings },
     ];
@@ -38,6 +39,10 @@ const mainNavItems = computed<NavItem[]>(() => {
 
     if (page.props.auth?.canManageCreditPacks) {
         items.push({ title: 'Credit Packs', href: '/admin/credit-packs', icon: ShieldCheck });
+    }
+
+    if (page.props.auth?.canManagePlans) {
+        items.push({ title: 'Plans Admin', href: '/admin/plans', icon: ShieldCheck });
     }
 
     return items;

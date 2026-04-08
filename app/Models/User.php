@@ -45,4 +45,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CreditPurchase::class);
     }
+
+    public function planPurchases(): HasMany
+    {
+        return $this->hasMany(PlanPurchase::class);
+    }
 }

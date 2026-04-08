@@ -5,11 +5,29 @@ import { dashboard, login, register } from '@/routes';
 withDefaults(
     defineProps<{
         canRegister: boolean;
+        plans?: Array<{
+            id: number;
+            name: string;
+            description: string | null;
+            tier: 'basic' | 'pro' | 'elite';
+            included_credits: number;
+            price_cents: number;
+            currency: string;
+            is_featured: boolean;
+            feature_list: string[];
+        }>;
     }>(),
     {
         canRegister: true,
+        plans: () => [],
     },
 );
+
+const formatPrice = (amountCents: number, currency: string) =>
+    new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currency.toUpperCase(),
+    }).format(amountCents / 100);
 
 const features = [
     {
@@ -308,6 +326,79 @@ const steps = [
                         <h3 class="mb-1.5 text-sm font-bold">{{ f.title }}</h3>
                         <p class="text-xs leading-relaxed text-slate-400">{{ f.desc }}</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── PLANS ───────────────────────────────────────────── -->
+        <section class="px-5 py-20 md:py-28">
+            <div class="mx-auto max-w-6xl">
+                <div class="mb-14 text-center">
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-400">Plans & Access</p>
+                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Choose Your Creation Level</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-400">Start on Basic and upgrade to Pro or Elite anytime. Plans include access level plus a credit floor.</p>
+                </div>
+
+                <div v-if="plans.length === 0" class="rounded-2xl border border-white/8 bg-white/3 p-8 text-center text-sm text-slate-400">
+                    Plans are being prepared.
+                </div>
+
+                <div v-else class="grid gap-5 md:grid-cols-3">
+                    <article
+                        v-for="plan in plans"
+                        :key="plan.id"
+                        class="relative rounded-2xl border p-6 transition"
+                        :class="plan.is_featured
+                            ? 'border-violet-400/60 bg-violet-600/10 shadow-lg shadow-violet-900/30'
+                            : 'border-white/8 bg-white/3 hover:border-violet-500/30'"
+                    >
+                        <div
+                            v-if="plan.is_featured"
+                            class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-violet-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+                        >
+                            Most Popular
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs uppercase tracking-widest text-violet-300">{{ plan.tier }}</p>
+                            <h3 class="mt-1 text-2xl font-bold">{{ plan.name }}</h3>
+                            <p class="mt-2 text-sm text-slate-400">{{ plan.description }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-3xl font-extrabold">{{ formatPrice(plan.price_cents, plan.currency) }}</p>
+                            <p class="text-xs text-slate-500">Includes at least {{ plan.included_credits }} credits</p>
+                        </div>
+
+                        <ul class="mb-6 space-y-2 text-sm text-slate-300">
+                            <li v-for="feature in plan.feature_list" :key="feature" class="flex items-start gap-2">
+                                <span class="mt-0.5 text-violet-400">✓</span>
+                                <span>{{ feature }}</span>
+                            </li>
+                        </ul>
+
+                        <Link
+                            v-if="!$page.props.auth.user && canRegister"
+                            :href="register()"
+                            class="inline-flex w-full items-center justify-center rounded-full bg-violet-600 px-5 py-2.5 text-sm font-semibold transition hover:bg-violet-500"
+                        >
+                            Get {{ plan.name }}
+                        </Link>
+                        <Link
+                            v-else-if="$page.props.auth.user"
+                            :href="dashboard()"
+                            class="inline-flex w-full items-center justify-center rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-white/30"
+                        >
+                            Open Dashboard
+                        </Link>
+                        <Link
+                            v-else
+                            :href="login()"
+                            class="inline-flex w-full items-center justify-center rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-white/30"
+                        >
+                            Login to upgrade
+                        </Link>
+                    </article>
                 </div>
             </div>
         </section>

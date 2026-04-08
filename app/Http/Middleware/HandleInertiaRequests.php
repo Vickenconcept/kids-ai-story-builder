@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\CreditPack;
+use App\Models\StoryPlan;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -44,6 +45,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $user,
                 'canManageCreditPacks' => $user?->can('manage-credit-packs') ?? false,
+                'canManagePlans' => $user?->can('manage-plans') ?? false,
                 'canManageUsers' => $user?->can('manage-users') ?? false,
             ],
             'billing' => [
@@ -59,6 +61,22 @@ class HandleInertiaRequests extends Middleware
                             'credits',
                             'price_cents',
                             'currency',
+                        ])
+                    : [],
+                'storyPlans' => $user
+                    ? StoryPlan::query()
+                        ->active()
+                        ->ordered()
+                        ->get([
+                            'id',
+                            'name',
+                            'description',
+                            'tier',
+                            'included_credits',
+                            'price_cents',
+                            'currency',
+                            'is_featured',
+                            'feature_list',
                         ])
                     : [],
             ],

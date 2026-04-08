@@ -43,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         };
 
         Gate::define('manage-credit-packs', $storyAdminGate);
+        Gate::define('manage-plans', $storyAdminGate);
         Gate::define('manage-users', $storyAdminGate);
 
         Date::use(CarbonImmutable::class);
