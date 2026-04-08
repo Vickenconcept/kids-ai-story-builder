@@ -294,9 +294,11 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <p class="mt-4 text-xs text-slate-500">⚠️ This offer disappears when you leave this page</p>
             </div>
 
-            <p class="mt-6 text-xs text-slate-500">
-                No thanks, I'll figure out how to monetize on my own - skip this.
-            </p>
+            <div class="mt-6">
+                <a href="/thank-you" class="text-xs text-slate-500 underline underline-offset-2 transition hover:text-slate-300">
+                    No thanks, I'll figure out how to monetize on my own - continue
+                </a>
+            </div>
         </div>
     </section>
 

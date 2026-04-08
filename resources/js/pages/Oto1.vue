@@ -232,9 +232,11 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <p class="mt-4 text-xs text-slate-500">⚠️ This offer disappears when you leave this page</p>
             </div>
 
-            <p class="mt-6 text-xs text-slate-500">
-                No thanks, I'm okay with just basic story pages - skip this upgrade.
-            </p>
+            <div class="mt-6">
+                <a href="/oto2" class="text-xs text-slate-500 underline underline-offset-2 transition hover:text-slate-300">
+                    No thanks, I'm okay with just basic story pages - continue
+                </a>
+            </div>
         </div>
     </section>
 
