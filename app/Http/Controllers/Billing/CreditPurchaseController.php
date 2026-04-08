@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Billing;
 
 use App\Http\Controllers\Controller;
+use App\Mail\UserNotificationMail;
 use App\Models\CreditPack;
 use App\Models\CreditPurchase;
 use App\Models\PayPalCheckoutIntent;
@@ -11,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -205,6 +208,30 @@ class CreditPurchaseController extends Controller
 
             return false;
         });
+
+        if ($credited) {
+            try {
+                Mail::to($user->email)->send(
+                    new UserNotificationMail(
+                        subjectLine: 'Credits added to your account',
+                        headline: 'Your credit purchase is complete',
+                        lines: [
+                            sprintf('%d story credits were added to your account.', (int) $pack->credits),
+                            sprintf('Pack purchased: %s.', $pack->name),
+                        ],
+                        ctaLabel: 'Start Creating',
+                        ctaUrl: url('/dashboard'),
+                    )
+                );
+            } catch (\Throwable $e) {
+                Log::warning('Failed to send credits purchase email.', [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'pack_id' => $pack->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         return response()->json([
             'credited' => $credited,

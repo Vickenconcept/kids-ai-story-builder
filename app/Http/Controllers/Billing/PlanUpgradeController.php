@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Billing;
 
 use App\Enums\FeatureTier;
 use App\Http\Controllers\Controller;
+use App\Mail\UserNotificationMail;
 use App\Models\PayPalCheckoutIntent;
 use App\Models\PlanPurchase;
 use App\Models\StoryPlan;
@@ -12,6 +13,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -232,6 +235,30 @@ class PlanUpgradeController extends Controller
 
             return false;
         });
+
+        if ($upgraded) {
+            try {
+                Mail::to($user->email)->send(
+                    new UserNotificationMail(
+                        subjectLine: 'Plan upgrade successful',
+                        headline: 'Your plan has been upgraded',
+                        lines: [
+                            sprintf('You are now on the %s plan.', $plan->name),
+                            sprintf('Your account credits are now at least %d.', (int) $plan->included_credits),
+                        ],
+                        ctaLabel: 'Open Dashboard',
+                        ctaUrl: url('/dashboard'),
+                    )
+                );
+            } catch (\Throwable $e) {
+                Log::warning('Failed to send plan upgrade email.', [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'plan_id' => $plan->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         return response()->json([
             'upgraded' => $upgraded,

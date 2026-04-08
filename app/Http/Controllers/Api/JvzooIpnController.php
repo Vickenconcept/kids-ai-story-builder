@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\FeatureTier;
 use App\Http\Controllers\Controller;
+use App\Jobs\Email\SendCeoOnboardingEmailJob;
+use App\Mail\UserNotificationMail;
 use App\Models\JvzooIpnEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class JvzooIpnController extends Controller
@@ -127,6 +130,20 @@ class JvzooIpnController extends Controller
                 'product_id' => $productId,
             ]);
 
+            $this->sendLifecycleEmail(
+                $user->email,
+                'Your account is ready',
+                'Welcome! Your access has been activated',
+                [
+                    sprintf('Your %s access is now active.', ucfirst($tier->value)),
+                    'You can sign in and start creating immediately.',
+                ]
+            );
+
+            SendCeoOnboardingEmailJob::dispatch($user->id, 1)->delay(now()->addHour());
+            SendCeoOnboardingEmailJob::dispatch($user->id, 2)->delay(now()->addDay());
+            SendCeoOnboardingEmailJob::dispatch($user->id, 3)->delay(now()->addDays(3));
+
             return;
         }
 
@@ -150,6 +167,16 @@ class JvzooIpnController extends Controller
             'tier' => $finalTier->value,
             'product_id' => $productId,
         ]);
+
+        $this->sendLifecycleEmail(
+            $user->email,
+            'Your plan access was updated',
+            'Your account has been updated',
+            [
+                sprintf('Your current tier is now %s.', ucfirst($finalTier->value)),
+                sprintf('Your story credits are now %d.', (int) $user->story_credits),
+            ]
+        );
     }
 
     private function downgradeUserOnReversal(array $payload): void
@@ -210,6 +237,16 @@ class JvzooIpnController extends Controller
             'transaction_type' => strtoupper((string) ($payload['transaction_type'] ?? '')),
             'transaction_id' => $payload['transaction_id'] ?? null,
         ]);
+
+        $this->sendLifecycleEmail(
+            $user->email,
+            'Your account plan was adjusted',
+            'Your account tier has changed',
+            [
+                sprintf('Your account tier is now %s.', ucfirst($nextTier->value)),
+                sprintf('Your available credits are now %d.', (int) $user->story_credits),
+            ]
+        );
     }
 
     private function tierForProductId(string $productId): ?FeatureTier
@@ -347,5 +384,29 @@ class JvzooIpnController extends Controller
         JvzooIpnEvent::query()
             ->where('fingerprint', $fingerprint)
             ->update(['processed_at' => now()]);
+    }
+
+    /**
+     * @param  array<int, string>  $lines
+     */
+    private function sendLifecycleEmail(string $to, string $subject, string $headline, array $lines): void
+    {
+        try {
+            Mail::to($to)->send(
+                new UserNotificationMail(
+                    subjectLine: $subject,
+                    headline: $headline,
+                    lines: $lines,
+                    ctaLabel: 'Open Dashboard',
+                    ctaUrl: url('/dashboard'),
+                )
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Failed to send JVZoo lifecycle email.', [
+                'email' => $to,
+                'subject' => $subject,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

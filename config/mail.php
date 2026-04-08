@@ -115,4 +115,10 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    'onboarding' => [
+        'enabled' => filter_var(env('ONBOARDING_EMAILS_ENABLED', true), FILTER_VALIDATE_BOOL),
+        'ceo_name' => env('ONBOARDING_CEO_NAME', 'William Bicto'),
+        'from_address' => env('ONBOARDING_FROM_ADDRESS', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+    ],
+
 ];
