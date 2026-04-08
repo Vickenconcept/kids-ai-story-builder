@@ -40,6 +40,8 @@ Route::inertia('/sales', 'Sales')->name('sales');
 Route::inertia('/oto1', 'Oto1')->name('oto1');
 Route::inertia('/oto2', 'Oto2')->name('oto2');
 Route::inertia('/thank-you', 'ThankYou')->name('thank-you');
+Route::inertia('/terms', 'Terms')->name('terms');
+Route::inertia('/privacy-policy', 'PrivacyPolicy')->name('privacy-policy');
 Route::post('/api/ipn/jvzoo', JvzooIpnController::class)
     ->middleware('throttle:30,1')
     ->name('api.ipn.jvzoo');

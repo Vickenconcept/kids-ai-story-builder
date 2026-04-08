@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookMarked, Coins, Crown, LayoutGrid, Settings, ShieldCheck, Sparkles, Users, Zap } from 'lucide-vue-next';
+import { BookMarked, Coins, Crown, LayoutGrid, Monitor, Moon, Settings, ShieldCheck, Sparkles, Sun, Users, Zap } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
+import { useAppearance } from '@/composables/useAppearance';
 import { useCreditsModal } from '@/composables/useCreditsModal';
 import {
     Sidebar,
@@ -20,9 +21,25 @@ import type { NavItem } from '@/types';
 
 const page = usePage<any>();
 const creditsModal = useCreditsModal();
+const { appearance, updateAppearance } = useAppearance();
 
 const storyCredits = computed(() => page.props.auth?.user?.story_credits ?? 0);
 const featureTier = computed(() => page.props.auth?.user?.feature_tier ?? 'basic');
+const appearanceOptions = [
+    { value: 'light', label: 'Light', icon: Sun },
+    { value: 'dark', label: 'Dark', icon: Moon },
+    { value: 'system', label: 'System', icon: Monitor },
+] as const;
+
+const cycleAppearance = () => {
+    const next = appearance.value === 'light'
+        ? 'dark'
+        : appearance.value === 'dark'
+            ? 'system'
+            : 'light';
+
+    updateAppearance(next);
+};
 
 const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
@@ -89,6 +106,28 @@ const mainNavItems = computed<NavItem[]>(() => {
                 </div>
             </div>
 
+            <!-- Appearance quick switch -->
+            <div class="px-3 pb-2 group-data-[collapsible=icon]:hidden">
+                <div class="rounded-xl border border-sidebar-border/70 bg-card p-2 dark:border-sidebar-border">
+                    <p class="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Appearance</p>
+                    <div class="grid grid-cols-3 gap-1">
+                        <button
+                            v-for="item in appearanceOptions"
+                            :key="item.value"
+                            type="button"
+                            class="inline-flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-[11px] font-medium transition"
+                            :class="appearance === item.value
+                                ? 'bg-violet-600 text-white'
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'"
+                            @click="updateAppearance(item.value)"
+                        >
+                            <component :is="item.icon" class="size-3.5" />
+                            <span>{{ item.label }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Collapsed icon-only top-up button -->
             <div class="hidden px-2 pb-2 group-data-[collapsible=icon]:block">
                 <button
@@ -98,6 +137,20 @@ const mainNavItems = computed<NavItem[]>(() => {
                     @click="creditsModal.open()"
                 >
                     <Zap class="size-4" />
+                </button>
+            </div>
+
+            <!-- Collapsed icon-only appearance toggle -->
+            <div class="hidden px-2 pb-2 group-data-[collapsible=icon]:block">
+                <button
+                    type="button"
+                    class="flex w-full items-center justify-center rounded-lg border border-sidebar-border/70 bg-card p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground dark:border-sidebar-border"
+                    title="Switch appearance"
+                    @click="cycleAppearance()"
+                >
+                    <Sun v-if="appearance === 'light'" class="size-4" />
+                    <Moon v-else-if="appearance === 'dark'" class="size-4" />
+                    <Monitor v-else class="size-4" />
                 </button>
             </div>
         </SidebarContent>
