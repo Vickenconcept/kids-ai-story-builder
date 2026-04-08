@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PlanPurchase::class);
     }
+
+    public function storyCreditSpendEvents(): HasMany
+    {
+        return $this->hasMany(StoryCreditSpendEvent::class);
+    }
 }

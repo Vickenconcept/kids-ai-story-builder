@@ -40,7 +40,9 @@ Route::inertia('/sales', 'Sales')->name('sales');
 Route::inertia('/oto1', 'Oto1')->name('oto1');
 Route::inertia('/oto2', 'Oto2')->name('oto2');
 Route::inertia('/thank-you', 'ThankYou')->name('thank-you');
-Route::post('/api/ipn/jvzoo', JvzooIpnController::class)->name('api.ipn.jvzoo');
+Route::post('/api/ipn/jvzoo', JvzooIpnController::class)
+    ->middleware('throttle:30,1')
+    ->name('api.ipn.jvzoo');
 
 Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('stories.public.show');
 

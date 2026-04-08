@@ -325,7 +325,7 @@ function progressPercent(project: RecentProject) {
                             Unlock video generation, longer stories, priority processing and more.
                         </p>
                         <Button as-child size="sm" class="w-full bg-violet-600 hover:bg-violet-700 text-white">
-                            <Link href="/oto1">Upgrade Now</Link>
+                            <Link href="/plans">Upgrade Now</Link>
                         </Button>
                     </div>
 

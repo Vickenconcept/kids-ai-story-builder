@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Billing;
 use App\Http\Controllers\Controller;
 use App\Models\CreditPack;
 use App\Models\CreditPurchase;
+use App\Models\PayPalCheckoutIntent;
 use App\Services\Billing\PayPalClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -83,6 +84,19 @@ class CreditPurchaseController extends Controller
             ]);
         }
 
+        PayPalCheckoutIntent::query()->updateOrCreate(
+            ['provider_order_id' => $orderId],
+            [
+                'user_id' => $request->user()->id,
+                'domain' => 'credits',
+                'target_id' => $pack->id,
+                'amount_cents' => (int) $pack->price_cents,
+                'currency' => strtoupper($pack->currency),
+                'expires_at' => now()->addMinutes(60),
+                'consumed_at' => null,
+            ]
+        );
+
         return response()->json([
             'id' => $orderId,
         ]);
@@ -97,6 +111,26 @@ class CreditPurchaseController extends Controller
 
         $user = $request->user();
         $pack = CreditPack::query()->active()->findOrFail($validated['pack_id']);
+
+        $intent = PayPalCheckoutIntent::query()
+            ->where('provider_order_id', $validated['order_id'])
+            ->where('user_id', $user->id)
+            ->where('domain', 'credits')
+            ->where('target_id', $pack->id)
+            ->first();
+
+        if (! $intent || $intent->consumed_at !== null || $intent->expires_at->isPast()) {
+            throw ValidationException::withMessages([
+                'paypal' => 'Invalid or expired checkout intent. Please start checkout again.',
+            ]);
+        }
+
+        if ((int) $intent->amount_cents !== (int) $pack->price_cents || strtoupper($intent->currency) !== strtoupper($pack->currency)) {
+            throw ValidationException::withMessages([
+                'paypal' => 'Checkout intent does not match selected pack.',
+            ]);
+        }
+
         $capture = $payPal->captureOrder($validated['order_id']);
 
         $captureStatus = strtoupper((string) Arr::get($capture, 'status', ''));
@@ -123,6 +157,15 @@ class CreditPurchaseController extends Controller
         }
 
         $credited = DB::transaction(function () use ($user, $pack, $validated, $capture, $captureId): bool {
+            $intent = PayPalCheckoutIntent::query()
+                ->where('provider_order_id', $validated['order_id'])
+                ->lockForUpdate()
+                ->first();
+
+            if (! $intent || $intent->consumed_at !== null) {
+                return false;
+            }
+
             $existing = CreditPurchase::query()
                 ->where('provider_order_id', $validated['order_id'])
                 ->lockForUpdate()
@@ -155,6 +198,7 @@ class CreditPurchaseController extends Controller
 
             if (! $wasCompleted) {
                 $user->increment('story_credits', $pack->credits);
+                $intent->update(['consumed_at' => now()]);
 
                 return true;
             }

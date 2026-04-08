@@ -3,8 +3,9 @@
 namespace App\Services\Story;
 
 use App\Exceptions\InsufficientStoryCreditsException;
+use App\Models\StoryCreditSpendEvent;
 use App\Models\User;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class StoryCreditService
 {
@@ -56,8 +57,15 @@ class StoryCreditService
         if ($cost <= 0) {
             return;
         }
-        $this->assertCanSpend($user, $kind);
-        $user->decrement('story_credits', $cost);
+
+        $updated = User::query()
+            ->whereKey($user->id)
+            ->where('story_credits', '>=', $cost)
+            ->decrement('story_credits', $cost);
+
+        if ($updated === 0) {
+            throw InsufficientStoryCreditsException::for($kind);
+        }
     }
 
     /**
@@ -65,17 +73,36 @@ class StoryCreditService
      */
     public function spendOnce(string $idempotencyKey, User $user, string $kind): void
     {
-        $cacheKey = 'story:credits:'.hash('sha256', $idempotencyKey);
-        if (! Cache::add($cacheKey, 1, now()->addDays(14))) {
-            return;
-        }
+        $cost = $this->cost($kind);
 
-        try {
-            $this->spend($user, $kind);
-        } catch (\Throwable $e) {
-            Cache::forget($cacheKey);
+        DB::transaction(function () use ($idempotencyKey, $user, $kind, $cost): void {
+            $existing = StoryCreditSpendEvent::query()
+                ->where('idempotency_key', $idempotencyKey)
+                ->lockForUpdate()
+                ->first();
 
-            throw $e;
-        }
+            if ($existing) {
+                return;
+            }
+
+            if ($cost > 0) {
+                $updated = User::query()
+                    ->whereKey($user->id)
+                    ->where('story_credits', '>=', $cost)
+                    ->decrement('story_credits', $cost);
+
+                if ($updated === 0) {
+                    throw InsufficientStoryCreditsException::for($kind);
+                }
+            }
+
+            StoryCreditSpendEvent::query()->create([
+                'user_id' => $user->id,
+                'idempotency_key' => $idempotencyKey,
+                'kind' => $kind,
+                'cost' => $cost,
+                'spent_at' => now(),
+            ]);
+        }, 3);
     }
 }

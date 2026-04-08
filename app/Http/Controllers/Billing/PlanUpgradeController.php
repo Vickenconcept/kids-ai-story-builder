@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Billing;
 
 use App\Enums\FeatureTier;
 use App\Http\Controllers\Controller;
+use App\Models\PayPalCheckoutIntent;
 use App\Models\PlanPurchase;
 use App\Models\StoryPlan;
 use App\Services\Billing\PayPalClient;
@@ -98,6 +99,19 @@ class PlanUpgradeController extends Controller
             ]);
         }
 
+        PayPalCheckoutIntent::query()->updateOrCreate(
+            ['provider_order_id' => $orderId],
+            [
+                'user_id' => $request->user()->id,
+                'domain' => 'plans',
+                'target_id' => $plan->id,
+                'amount_cents' => (int) $plan->price_cents,
+                'currency' => strtoupper($plan->currency),
+                'expires_at' => now()->addMinutes(60),
+                'consumed_at' => null,
+            ]
+        );
+
         return response()->json([
             'id' => $orderId,
         ]);
@@ -112,6 +126,25 @@ class PlanUpgradeController extends Controller
 
         $user = $request->user();
         $plan = StoryPlan::query()->active()->findOrFail($validated['plan_id']);
+
+        $intent = PayPalCheckoutIntent::query()
+            ->where('provider_order_id', $validated['order_id'])
+            ->where('user_id', $user->id)
+            ->where('domain', 'plans')
+            ->where('target_id', $plan->id)
+            ->first();
+
+        if (! $intent || $intent->consumed_at !== null || $intent->expires_at->isPast()) {
+            throw ValidationException::withMessages([
+                'paypal' => 'Invalid or expired checkout intent. Please start checkout again.',
+            ]);
+        }
+
+        if ((int) $intent->amount_cents !== (int) $plan->price_cents || strtoupper($intent->currency) !== strtoupper($plan->currency)) {
+            throw ValidationException::withMessages([
+                'paypal' => 'Checkout intent does not match selected plan.',
+            ]);
+        }
 
         $this->ensureUpgradeAllowed($user->feature_tier ?? FeatureTier::Basic, $plan->tier);
 
@@ -147,6 +180,15 @@ class PlanUpgradeController extends Controller
         }
 
         $upgraded = DB::transaction(function () use ($user, $plan, $validated, $capture, $captureId): bool {
+            $intent = PayPalCheckoutIntent::query()
+                ->where('provider_order_id', $validated['order_id'])
+                ->lockForUpdate()
+                ->first();
+
+            if (! $intent || $intent->consumed_at !== null) {
+                return false;
+            }
+
             $existing = PlanPurchase::query()
                 ->where('provider_order_id', $validated['order_id'])
                 ->lockForUpdate()
@@ -183,6 +225,7 @@ class PlanUpgradeController extends Controller
                 $user->feature_tier = $plan->tier;
                 $user->story_credits = max((int) $user->story_credits, (int) $plan->included_credits);
                 $user->save();
+                $intent->update(['consumed_at' => now()]);
 
                 return true;
             }

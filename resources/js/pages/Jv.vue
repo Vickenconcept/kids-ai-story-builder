@@ -1358,7 +1358,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <a href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351" target="_blank" rel="noopener noreferrer" class="rounded-full bg-white px-8 py-3 font-bold text-slate-900 transition hover:bg-indigo-50 text-sm">
                         Request JV Approval Now →
                     </a>
-                    <a href="mailto:jv@dreamforge .ai" class="rounded-full border border-white/30 px-8 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                    <a href="mailto:vickenconcept@gmail.com" class="rounded-full border border-white/30 px-8 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
                         Contact Us Directly
                     </a>
                 </div>

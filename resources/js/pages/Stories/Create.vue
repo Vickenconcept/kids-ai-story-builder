@@ -716,7 +716,7 @@ const illustrationStyleOptions = [
                                 <div class="min-w-0">
                                     <p class="text-sm font-medium text-violet-800 dark:text-violet-300">Video generation requires Pro</p>
                                     <p class="text-xs text-violet-700/70 dark:text-violet-400 mt-0.5">Upgrade to unlock AI video for every story page.</p>
-                                    <Link href="/oto1" class="mt-2 inline-block text-xs font-semibold text-violet-600 hover:underline">Upgrade to Pro →</Link>
+                                    <Link href="/plans" class="mt-2 inline-block text-xs font-semibold text-violet-600 hover:underline">Upgrade to Pro →</Link>
                                 </div>
                             </div>
                         </div>

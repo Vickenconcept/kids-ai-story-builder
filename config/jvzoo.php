@@ -36,4 +36,14 @@ return [
         'pro' => (int) env('JVZOO_PRO_CREDITS', 150),
         'elite' => (int) env('JVZOO_ELITE_CREDITS', 500),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Security hardening
+    |--------------------------------------------------------------------------
+    */
+    'max_event_age_minutes' => (int) env('JVZOO_MAX_EVENT_AGE_MINUTES', 120),
+
+    // Keep false by default: avoid broad automatic downgrades on reversal events.
+    'auto_downgrade_on_reversal' => (bool) env('JVZOO_AUTO_DOWNGRADE_ON_REVERSAL', false),
 ];

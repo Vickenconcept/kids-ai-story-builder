@@ -19,6 +19,7 @@ class StoryPage extends Model
         'image_path',
         'audio_path',
         'video_path',
+        'pipeline_completed_at',
         'runway_video_task_id',
         'asset_errors',
     ];
@@ -28,6 +29,7 @@ class StoryPage extends Model
         return [
             'quiz_questions' => 'array',
             'asset_errors' => 'array',
+            'pipeline_completed_at' => 'datetime',
         ];
     }
 

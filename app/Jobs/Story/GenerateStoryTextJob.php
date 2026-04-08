@@ -69,6 +69,7 @@ class GenerateStoryTextJob implements ShouldQueue
                         'page_number' => $page->pageNumber,
                         'text_content' => $page->text,
                         'quiz_questions' => $page->quizQuestions,
+                        'pipeline_completed_at' => null,
                     ]);
                 }
                 $project->update([
