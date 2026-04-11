@@ -1,30 +1,27 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { onUnmounted, ref, watch } from 'vue';
+
 const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
+const mobileMenuOpen = ref(false);
 
-// const menu = document.getElementById('menu');
-// const closeMenu = document.getElementById('close-menu');
-// const openMenu = document.getElementById('open-menu');
+watch(mobileMenuOpen, (open) => {
+    document.body.style.overflow = open ? 'hidden' : '';
+});
 
-// closeMenu.addEventListener('click', () => {
-//     menu.classList.remove('max-md:w-full');
-//     menu.classList.add('max-md:w-0');
-// });
-
-// openMenu.addEventListener('click', () => {
-//     menu.classList.remove('max-md:w-0');
-//     menu.classList.add('max-md:w-full');
-// });
+onUnmounted(() => {
+    document.body.style.overflow = '';
+});
 </script>
 
 <template>
     <Head title="DreamForge AI - JV Partner Page" />
 
     <section
-        class="w-full bg-[url('https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/gridBackground.png')] bg-cover bg-center bg-no-repeat pb-44 text-sm"
+        class="relative z-30 w-full bg-[url('https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/gridBackground.png')] bg-cover bg-center bg-no-repeat pb-44 text-sm"
     >
         <nav
-            class="flex w-full items-center justify-between p-4 md:px-16 md:py-6 lg:px-24 xl:px-32"
+            class="relative z-40 flex w-full items-center justify-between p-4 md:px-16 md:py-6 lg:px-24 xl:px-32"
         >
             <div class="flex items-center gap-3">
                 <img src="/images/logo-without-bg.png" alt="DreamForge AI" class="h-16 w-auto object-contain" />
@@ -32,14 +29,16 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </div>
             <div
                 id="menu"
-                class="flex items-center gap-8 font-medium max-md:absolute max-md:top-0 max-md:left-0 max-md:h-full max-md:w-0 max-md:flex-col max-md:justify-center max-md:overflow-hidden max-md:bg-white/50 max-md:backdrop-blur max-md:transition-all max-md:duration-300"
+                class="flex items-center gap-8 font-medium md:static md:h-auto md:w-auto md:flex-row md:bg-transparent md:overflow-visible max-md:fixed max-md:inset-0 max-md:z-50 max-md:flex-col max-md:justify-center max-md:bg-white/95 max-md:backdrop-blur-md max-md:transition-opacity max-md:duration-200"
+                :class="mobileMenuOpen ? 'max-md:flex max-md:opacity-100' : 'max-md:hidden max-md:opacity-0'"
             >
-                <span class="text-gray-600"> JV Home </span>
-                   
-                <span class="text-gray-600"> Email Swipes </span>
+                <a href="/jv" class="cursor-pointer text-gray-600 transition hover:text-gray-900" @click="mobileMenuOpen = false">JV Home</a>
+                <a href="#email-swipes" class="cursor-pointer text-gray-600 transition hover:text-gray-900" @click="mobileMenuOpen = false">Email Swipes</a>
                 <button
                     id="close-menu"
+                    type="button"
                     class="aspect-square rounded-md bg-gray-800 p-2 font-medium text-white transition hover:bg-black md:hidden"
+                    @click="mobileMenuOpen = false"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -61,14 +60,17 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="hidden rounded-full bg-gray-800 px-6 py-3 font-medium text-white transition hover:bg-black md:block"
+                class="relative z-[60] hidden cursor-pointer rounded-full bg-gray-800 px-6 py-3 font-medium text-white transition hover:bg-black md:inline-flex md:items-center md:justify-center"
             >
                 Request JV Access
             </a>
 
             <button
                 id="open-menu"
-                class="aspect-square rounded-md bg-gray-800 p-2 font-medium text-white transition hover:bg-black md:hidden"
+                type="button"
+                class="relative z-[60] aspect-square rounded-md bg-gray-800 p-2 font-medium text-white transition hover:bg-black md:hidden"
+                aria-label="Open menu"
+                @click="mobileMenuOpen = true"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +96,12 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             <span class="font-semibold text-indigo-600">DreamForge AI</span>
             <span class="text-slate-400">·</span>
             <span>Early affiliates — KDP + AI income angle (limited launch window)</span>
-            <a href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 font-medium">
+            <a
+                href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex cursor-pointer items-center gap-1 font-medium text-indigo-700 underline-offset-2 hover:underline"
+            >
                 <span>Request JV Access</span>
                 <svg
                     width="19"
@@ -132,13 +139,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center justify-center rounded-full bg-slate-800 px-6 py-3 font-medium text-white transition hover:bg-black"
+                class="inline-flex cursor-pointer items-center justify-center rounded-full bg-slate-800 px-6 py-3 font-medium text-white shadow-sm transition hover:bg-black"
             >
                 Request JV Approval
             </a>
             <a
                 href="#demo"
-                class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-6 py-3 font-medium text-slate-800 transition hover:bg-white"
+                class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 bg-white/90 px-6 py-3 font-medium text-slate-800 shadow-sm transition hover:bg-white"
             >
                 <span>🎬 Watch The 2-Minute Demo That Sells This For You</span>
                 <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -183,7 +190,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         </div>
     </section>
 
-    <section class="mx-auto -mt-28 max-w-6xl px-4 pb-10 md:px-8">
+    <section class="relative z-20 mx-auto -mt-12 max-w-6xl px-4 pb-10 md:px-8 md:-mt-20">
         <div class="grid gap-4 md:grid-cols-3">
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                 <p class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">
