@@ -10,7 +10,6 @@ use App\Models\JvzooIpnEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -114,11 +113,12 @@ class JvzooIpnController extends Controller
         $user = User::where('email', $email)->first();
 
         if (! $user) {
+            $temporaryPassword = Str::password(16);
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
                 'email_verified_at' => Carbon::now(),
-                'password' => Hash::make(Str::random(16)),
+                'password' => $temporaryPassword,
                 'feature_tier' => $tier,
                 'story_credits' => max(0, $targetCredits),
             ]);
@@ -130,14 +130,24 @@ class JvzooIpnController extends Controller
                 'product_id' => $productId,
             ]);
 
+            $appName = (string) config('app.name', 'DreamForge AI');
+            $loginUrl = url('/login');
+
             $this->sendLifecycleEmail(
                 $user->email,
-                'Your account is ready',
-                'Welcome! Your access has been activated',
+                "Your {$appName} account is ready",
+                'Here is how to sign in',
                 [
-                    sprintf('Your %s access is now active.', ucfirst($tier->value)),
-                    'You can sign in and start creating immediately.',
-                ]
+                    'Your purchase through JVZoo created your member account. Use the details below on the sign-in page.',
+                    sprintf('Sign-in link: %s', $loginUrl),
+                    'Step 1: Open the sign-in page using the button below or the link above.',
+                    "Step 2: Email: {$user->email}",
+                    "Step 3: Temporary password: {$temporaryPassword}",
+                    'After you sign in you can change your password anytime under Settings if you prefer.',
+                    sprintf('Your %s plan access is active with story credits ready to use.', ucfirst($tier->value)),
+                ],
+                'Open sign-in page',
+                $loginUrl,
             );
 
             SendCeoOnboardingEmailJob::dispatch($user->id, 1)->delay(now()->addHour());
@@ -389,16 +399,22 @@ class JvzooIpnController extends Controller
     /**
      * @param  array<int, string>  $lines
      */
-    private function sendLifecycleEmail(string $to, string $subject, string $headline, array $lines): void
-    {
+    private function sendLifecycleEmail(
+        string $to,
+        string $subject,
+        string $headline,
+        array $lines,
+        ?string $ctaLabel = null,
+        ?string $ctaUrl = null,
+    ): void {
         try {
             Mail::to($to)->send(
                 new UserNotificationMail(
                     subjectLine: $subject,
                     headline: $headline,
                     lines: $lines,
-                    ctaLabel: 'Open Dashboard',
-                    ctaUrl: url('/dashboard'),
+                    ctaLabel: $ctaLabel ?? 'Open Dashboard',
+                    ctaUrl: $ctaUrl ?? url('/dashboard'),
                 )
             );
         } catch (\Throwable $e) {
