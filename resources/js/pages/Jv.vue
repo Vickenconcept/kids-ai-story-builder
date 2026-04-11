@@ -124,7 +124,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         >
             <strong>Core hook:</strong> Create and sell kids storybooks on Amazon KDP using AI — without doing all the writing, art, or recording yourself.
             You are not pitching &quot;another AI kids app&quot;; you are pitching an <strong>AI KDP income tool</strong>. One workflow outputs story pages, matching art, read-aloud, flipbook, and page videos — so buyers can publish to <strong>KDP</strong>, sell digitally, and feed YouTube/Shorts. Most competitors stop at text + images; this is the full stack affiliates can show in a demo.
-            <strong class="text-slate-900"> Earn 50% across the entire funnel — frontend + all upsells (JVZoo).</strong>
+            <strong class="text-slate-900"> Earn 70% on the frontend — 50% on every upsell (JVZoo).</strong>
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3 flex-wrap">
@@ -170,7 +170,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </div>
             <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
                 <span class="font-semibold text-slate-900">Commission:</span>
-                <span class="text-emerald-700 font-semibold">50% Across The Entire Funnel</span>
+                <span class="text-emerald-700 font-semibold">70% FE · 50% upsells</span>
             </div>
             <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
                 <span class="font-semibold text-slate-900">Network:</span>
@@ -186,11 +186,10 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     Commission Structure
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    Earn 50% Across The Entire Funnel
+                    70% on frontend, 50% on upsells
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    Frontend + all upsells included. No splits, no caps.
-                    High-converting emotional niche means strong EPC for volume affiliates.
+                    Strong FE payout ($20 FE → you earn $14) plus half on each OTO. KDP + AI angle helps EPC on cold traffic.
                 </p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -345,13 +344,14 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <div class="mb-8 text-center">
                     <p class="text-xs font-semibold tracking-widest text-indigo-600 uppercase">Full Funnel Map</p>
                     <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Your earnings per customer at every stage</h2>
-                    <p class="mt-2 text-sm text-slate-500">50% commission across the funnel. Every upsell is a natural next step — easier to close, higher EPC for you.</p>
+                    <p class="mt-2 text-sm text-slate-500"><strong>70%</strong> commission on the frontend; <strong>50%</strong> on each upsell. Natural OTO flow — easier to close, strong stack for you.</p>
                 </div>
                 <div class="grid gap-4 md:grid-cols-3">
                     <div class="rounded-2xl border-2 border-indigo-300 bg-white p-6 text-center shadow-sm">
                         <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500">Front End</p>
                         <p class="mt-2 text-3xl font-extrabold text-slate-900">$20</p>
-                        <p class="mt-1 text-sm font-semibold text-emerald-600">You earn $10</p>
+                        <p class="mt-1 text-sm font-semibold text-emerald-600">You earn $14</p>
+                        <p class="mt-1 text-xs font-medium text-indigo-600">70% of $20 FE</p>
                         <p class="mt-3 text-xs text-slate-500 leading-relaxed">Full story creation: text, illustrations, narration, flipbook reader &amp; quiz. One-time payment.</p>
                     </div>
                     <div class="rounded-2xl border-2 border-amber-300 bg-white p-6 text-center shadow-sm">
@@ -517,7 +517,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <p>2. Show KDP / sell-it angle (PDF, listing story) early.</p>
                     <p>3. Show narration + flipbook (not just static pages).</p>
                     <p>4. Show page video — proof it beats text-only competitors.</p>
-                    <p>5. Close with pricing, 50% funnel commission, and bonus stack.</p>
+                    <p>5. Close with pricing (70% FE, 50% OTOs) and bonus stack.</p>
                 </div>
                 <p class="mt-4 text-sm font-medium text-zinc-900">
                     Simple. Visual. Emotional. Built to convert fast.
@@ -782,8 +782,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Position commission at 50% to attract active affiliates
-                        who can send volume immediately.
+                        Lead with 70% on the frontend and 50% on upsells — strong hook for affiliates who mail volume.
                     </p>
                 </div>
 
@@ -1071,8 +1070,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                                         <p class="text-base font-extrabold text-slate-900">$20</p>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-[10px] text-slate-500">You earn</p>
-                                        <p class="text-sm font-bold text-emerald-600">$10</p>
+                                        <p class="text-[10px] text-slate-500">You earn (70%)</p>
+                                        <p class="text-sm font-bold text-emerald-600">$14</p>
                                     </div>
                                 </div>
                                 <!-- OTO1 -->
@@ -1097,7 +1096,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                                         <p class="text-sm font-bold text-emerald-600">50%</p>
                                     </div>
                                 </div>
-                                <p class="pt-1 text-center text-xs font-semibold text-indigo-600">50% on every single step ✔</p>
+                                <p class="pt-1 text-center text-xs font-semibold text-indigo-600">70% frontend · 50% each upsell ✔</p>
                             </div>
                         </div>
                     </div>
@@ -1112,7 +1111,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                             Frontend at $20. Upsell 1: PRO video features at $69.
                         </p>
                         <p class="mt-3 text-sm text-gray-700">
-                            Commission structure: frontend 50%, upsell 1 50%.
+                            Commission structure: <strong>frontend 70%</strong> ($14 on $20), upsell 1 <strong>50%</strong>, upsell 2 <strong>50%</strong>.
                         </p>
                         <div class="mt-8">
                             <span
@@ -1300,7 +1299,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">Outreach scripts</p>
                     <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">DM, follow-ups &amp; group posts (KDP + income angle)</h2>
                     <p class="mx-auto mt-3 max-w-3xl text-sm text-slate-600 md:mx-0">
-                        Replace <span class="font-mono text-xs bg-slate-100 px-1 rounded">[Name]</span> with the contact&apos;s name. Commission matches this launch: <strong>50% on the frontend and every upsell</strong> (JVZoo). Lead with <strong>money + Amazon KDP</strong>, not generic &quot;AI tool&quot;.
+                        Replace <span class="font-mono text-xs bg-slate-100 px-1 rounded">[Name]</span> with the contact&apos;s name. Commission: <strong>70% on the frontend</strong>, <strong>50% on each upsell</strong> (JVZoo). Lead with <strong>money + Amazon KDP</strong>, not generic &quot;AI tool&quot;.
                     </p>
                 </div>
 
@@ -1314,7 +1313,7 @@ I've got a JVZoo launch opening soon in the KDP / AI niche.
 It lets people create FULL kids storybooks (story + illustrations + voice + flipbook + page video) and sell or publish on Amazon KDP.
 
 Offer:
-- 50% commission across the entire funnel (frontend + all upsells)
+- 70% commission on the frontend, 50% on every upsell
 - JVZoo tracking &amp; payouts
 - DFY promo materials
 
@@ -1340,7 +1339,7 @@ Users can:
 Basically a full "AI book business in a box."
 
 I'm offering:
-- 50% on frontend + all upsells
+- 70% on the frontend, 50% on each upsell
 - Custom bonuses for your list if needed
 
 Looking for a few affiliates to test traffic early.
@@ -1365,7 +1364,7 @@ Let me know and I'll send everything over.</pre>
 
 Launching an AI tool for creating &amp; selling kids books on Amazon KDP.
 
-50% on the full funnel (JVZoo) + DFY promo pack.
+70% FE + 50% on upsells (JVZoo) + DFY promo pack.
 
 Want details?</pre>
                     </article>
@@ -1378,7 +1377,7 @@ This is NOT just another AI tool.
 
 It lets users create full kids storybooks (with illustrations, voice &amp; video) and sell on Amazon KDP.
 
-- 50% commission on frontend + all upsells
+- 70% on frontend, 50% on upsells
 - JVZoo
 - DFY promo pack
 
@@ -1440,7 +1439,7 @@ Want to test a small run?</pre>
                         <p class="mt-3 text-sm leading-relaxed text-slate-700">
                             Launch window is opening — early mailers usually see fresher traffic and less competition on the same angle.
                             This offer is built for a quick &quot;show the demo → show KDP path → close&quot; promo. Request your JVZoo link, grab the swipes and assets, and mail when you are ready.
-                            <strong>50% on the frontend and every upsell.</strong>
+                            <strong>70% on the frontend, 50% on every upsell.</strong>
                         </p>
                     </article>
                 </div>
@@ -1475,7 +1474,7 @@ Want to test a small run?</pre>
                         Contact Us Directly
                     </a>
                 </div>
-                <p class="mt-6 text-xs text-slate-400">Earn 50% on frontend + all upsells. Commission paid via JVZoo.</p>
+                <p class="mt-6 text-xs text-slate-400">Earn 70% on the frontend and 50% on each upsell. Commission paid via JVZoo.</p>
             </div>
         </section>
 
