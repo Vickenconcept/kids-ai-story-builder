@@ -18,7 +18,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 </script>
 
 <template>
-    <Head title="DreamForge AI � JV Partner Page" />
+    <Head title="DreamForge AI - JV Partner Page" />
 
     <section
         class="w-full bg-[url('https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/gridBackground.png')] bg-cover bg-center bg-no-repeat pb-44 text-sm"
@@ -92,8 +92,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             class="mx-auto mt-40 flex w-max items-center gap-2 rounded-full border border-slate-300 px-4 py-2 hover:border-slate-400/70 md:mt-32"
         >
             <span class="font-semibold text-indigo-600">DreamForge AI</span>
-            <span class="text-slate-400">�</span>
-            <span>Launch window open now for early affiliates</span>
+            <span class="text-slate-400">·</span>
+            <span>Early affiliates — KDP + AI income angle (limited launch window)</span>
             <a href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 font-medium">
                 <span>Request JV Access</span>
                 <svg
@@ -114,16 +114,17 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </a>
         </div>
         <h5
-            class="mx-auto mt-8 max-w-[850px] text-center text-4xl font-medium md:text-7xl"
+            class="mx-auto mt-8 max-w-[920px] text-center text-3xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-6xl"
         >
-            NEW AI APP TURNS 1 CLICK INTO STORY VIDEOS THAT SELL
+            Turn ideas into illustrated kids books + voice + videos you can sell on Amazon KDP — in minutes.
         </h5>
 
         <p
-            class="mx-auto mt-6 max-w-2xl text-center text-sm max-md:px-2 md:text-base"
+            class="mx-auto mt-5 max-w-2xl text-center text-sm max-md:px-2 md:text-base text-slate-700"
         >
-            A visual transformation product — not just another AI writer. Turn one prompt into a full illustrated,
-            narrated storybook. <strong>Earn 50% across the entire funnel — frontend + all upsells included.</strong>
+            <strong>Core hook:</strong> Create and sell kids storybooks on Amazon KDP using AI — without doing all the writing, art, or recording yourself.
+            You are not pitching &quot;another AI kids app&quot;; you are pitching an <strong>AI KDP income tool</strong>. One workflow outputs story pages, matching art, read-aloud, flipbook, and page videos — so buyers can publish to <strong>KDP</strong>, sell digitally, and feed YouTube/Shorts. Most competitors stop at text + images; this is the full stack affiliates can show in a demo.
+            <strong class="text-slate-900"> Earn 50% across the entire funnel — frontend + all upsells (JVZoo).</strong>
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3 flex-wrap">
@@ -143,15 +144,18 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         </div>
 
         <!-- Demo hook callout -->
-        <div class="mx-auto mt-6 max-w-xl rounded-2xl border border-slate-200 bg-white/80 px-6 py-5 text-sm backdrop-blur-sm text-center">
-            <p class="font-semibold text-slate-800 mb-3">See a blank idea turn into:</p>
-            <div class="grid grid-cols-2 gap-2 text-left max-w-sm mx-auto">
-                <p class="text-slate-700">✔ Full story pages</p>
-                <p class="text-slate-700">✔ Matching illustrations</p>
-                <p class="text-slate-700">✔ Read-aloud narration</p>
-                <p class="text-slate-700">✔ Animated video output</p>
+        <div class="mx-auto mt-6 max-w-2xl rounded-2xl border border-indigo-200 bg-white/90 px-6 py-5 text-sm backdrop-blur-sm text-center shadow-sm">
+            <p class="font-semibold text-slate-800 mb-2">Say this (your unique angle vs text-only AI books):</p>
+            <p class="text-base font-semibold text-indigo-700 leading-snug">
+                Creates books + read-aloud + flipbook + page videos from one workflow — built so people can publish and sell on Amazon KDP fast.
+            </p>
+            <div class="mt-4 grid grid-cols-2 gap-2 text-left max-w-md mx-auto text-xs sm:text-sm">
+                <p class="text-slate-700">✔ Full illustrated story pages</p>
+                <p class="text-slate-700">✔ Voice narration (not just silent PDFs)</p>
+                <p class="text-slate-700">✔ Shareable flipbook</p>
+                <p class="text-slate-700">✔ Page-level video for social + proof</p>
             </div>
-            <p class="mt-3 font-semibold text-indigo-600">👉 This is what converts the sale.</p>
+            <p class="mt-3 text-slate-600 text-sm">Pitch <strong>income + speed + KDP</strong>, not &quot;we have AI.&quot; Affiliates in MMO, KDP, and AI-tool review audiences respond to that framing.</p>
         </div>
 
         <!-- Launch quick-stats bar -->
@@ -206,11 +210,10 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     Core Positioning
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    A Visual Transformation Product — Not Just Another AI Writer
+                    AI KDP income positioning — not &quot;just another story generator&quot;
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    AI + kids + visual content = high engagement and fast conversions.
-                    The demo sells it before the copy finishes loading.
+                    Lead with <strong>money + Amazon KDP + speed</strong>. Video + voice + flipbook are your proof points against tools that only output text and static images. The demo does the heavy lifting.
                 </p>
             </div>
         </div>
@@ -221,13 +224,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         <!-- ── DEMO VIDEO ──────────────────────────────────────── -->
         <section id="demo" class="bg-slate-900 px-4 py-16 text-white md:px-8 md:py-20">
             <div class="mx-auto max-w-4xl text-center">
-                <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400">The Most Important 2 Minutes You'll Spend Today</p>
+                <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400">Affiliate proof clip (KDP + AI)</p>
                 <h2 class="mt-3 text-2xl font-extrabold md:text-3xl">
-                    🎬 Show Your Audience This — They'll Want It Instantly
+                    🎬 Demo = your closer: KDP-ready book + narration + video in one flow
                 </h2>
-                <p class="mx-auto mt-3 max-w-xl text-sm text-slate-400">
-                    This 2-minute walkthrough shows the full transformation — one prompt to illustrated, narrated, flipbook-ready storybook.
-                    No explaining needed. The output sells itself.
+                <p class="mx-auto mt-3 max-w-2xl text-sm text-slate-400">
+                    Use this clip when you reach out: one clear idea becomes a full kids storybook pipeline — illustrations, read-aloud voice,
+                    flipbook, and page videos — so prospects see a <strong>product they can sell on KDP</strong> (and reuse on Shorts/Reels), not a generic chat toy.
                 </p>
 
                 <div
@@ -249,8 +252,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <div class="mt-8 grid grid-cols-2 gap-3 text-left md:grid-cols-4">
                     <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
                         <p class="text-2xl mb-2">✍️</p>
-                        <p class="text-sm font-semibold">1. One Prompt</p>
-                        <p class="mt-1 text-xs text-slate-400">Type a story idea in seconds</p>
+                        <p class="text-sm font-semibold">1. One idea</p>
+                        <p class="mt-1 text-xs text-slate-400">Start from a simple premise (KDP niche)</p>
                     </div>
                     <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
                         <p class="text-2xl mb-2">🎨</p>
@@ -280,7 +283,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             <div class="mx-auto max-w-5xl">
                 <div class="mb-10 text-center">
                     <p class="text-xs font-semibold tracking-widest text-indigo-600 uppercase">Why Your Audience Will Buy</p>
-                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Most parents, creators and educators want this output category. Here is the gap you bridge.</h2>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Buyers want outcomes they can monetize — especially Amazon KDP. Here is the gap your traffic bridges.</h2>
                 </div>
                 <div class="grid gap-6 md:grid-cols-2">
                     <div class="rounded-2xl border border-red-100 bg-red-50 p-6">
@@ -447,7 +450,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     </div>
                     <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
                         <span class="text-emerald-500 font-bold text-lg mt-0.5">✔</span>
-                        <p class="text-sm text-slate-700">Works across multiple audiences: parents, educators, creators, agencies</p>
+                        <p class="text-sm text-slate-700">Strong fit for MMO, KDP publishers, AI tool reviewers — audiences already sold on &quot;AI + income&quot;</p>
                     </div>
                 </div>
                 <p class="mt-6 text-center text-sm font-semibold text-slate-700">If they see it, they get it. If they get it, they buy it.</p>
@@ -465,8 +468,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 <div class="grid gap-4 md:grid-cols-4">
                     <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
                         <p class="text-2xl font-extrabold text-violet-600 mb-2">1</p>
-                        <h3 class="font-bold text-slate-900 text-sm">Send Curiosity Email</h3>
-                        <p class="mt-2 text-xs text-slate-500">Tease the transformation. Don't reveal the product name — let the demo do the work.</p>
+                        <h3 class="font-bold text-slate-900 text-sm">Send KDP-angle email</h3>
+                        <p class="mt-2 text-xs text-slate-500">Lead with income + Amazon KDP + speed; let the demo prove voice, flipbook, and video.</p>
                     </div>
                     <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
                         <p class="text-2xl font-extrabold text-violet-600 mb-2">2</p>
@@ -481,7 +484,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 text-center">
                         <p class="text-2xl font-extrabold text-violet-600 mb-2">4</p>
                         <h3 class="font-bold text-slate-900 text-sm">Close with Urgency</h3>
-                        <p class="mt-2 text-xs text-slate-500">Launch window + price increase after X hours. That's enough to start commissions.</p>
+                        <p class="mt-2 text-xs text-slate-500">Launch window + price increase after X hours. That&apos;s enough to start commissions.</p>
                     </div>
                 </div>
             </div>
@@ -498,10 +501,10 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 >
                     Why This Will Convert
                 </h1>
-                <p class="max-w-xl text-sm tracking-tight text-zinc-800">
-                    Unique story-to-video pipeline, emotional market appeal,
-                    visual output that increases perceived value, and a clearer
-                    outcome than generic AI writing tools.
+                <p class="max-w-2xl text-sm tracking-tight text-zinc-800">
+                    The offer is framed for affiliates as an <strong>AI + Amazon KDP income play</strong> (not &quot;kids AI toy&quot;):
+                    illustrated books, narration, flipbook, and optional page video — so the buyer sees a path to <strong>publish and sell</strong>.
+                    That is easier to promote than another undifferentiated AI writer.
                 </p>
             </div>
 
@@ -510,11 +513,11 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     How This Converts in 60 Seconds
                 </h2>
                 <div class="mt-4 grid gap-3 text-sm text-zinc-700 md:grid-cols-2">
-                    <p>1. Show story creation from one prompt.</p>
-                    <p>2. Show illustrations generated for each page.</p>
-                    <p>3. Show narration applied automatically.</p>
-                    <p>4. Show page video for the wow moment.</p>
-                    <p>5. Close the sale with clear pricing and bonus stack.</p>
+                    <p>1. Show one idea become a full illustrated kids book.</p>
+                    <p>2. Show KDP / sell-it angle (PDF, listing story) early.</p>
+                    <p>3. Show narration + flipbook (not just static pages).</p>
+                    <p>4. Show page video — proof it beats text-only competitors.</p>
+                    <p>5. Close with pricing, 50% funnel commission, and bonus stack.</p>
                 </div>
                 <p class="mt-4 text-sm font-medium text-zinc-900">
                     Simple. Visual. Emotional. Built to convert fast.
@@ -567,12 +570,11 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                         <h3
                             class="text-sm leading-snug font-medium text-zinc-800"
                         >
-                            Story to video engine
+                            KDP-ready book + media stack
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Transform one prompt into full story pages, matching
-                        visuals, narration and optional per-page videos.
+                        One workflow: illustrated story pages, read-aloud, flipbook, and optional per-page video — positioned for Amazon KDP and digital sales, not generic AI text.
                     </p>
                 </div>
 
@@ -1292,44 +1294,153 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </div>
         </section>
 
+        <section id="affiliate-outreach" class="bg-white px-4 py-16 md:px-8 border-t border-slate-200">
+            <div class="mx-auto max-w-6xl">
+                <div class="mb-8 text-center md:text-left">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">Outreach scripts</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">DM, follow-ups &amp; group posts (KDP + income angle)</h2>
+                    <p class="mx-auto mt-3 max-w-3xl text-sm text-slate-600 md:mx-0">
+                        Replace <span class="font-mono text-xs bg-slate-100 px-1 rounded">[Name]</span> with the contact&apos;s name. Commission matches this launch: <strong>50% on the frontend and every upsell</strong> (JVZoo). Lead with <strong>money + Amazon KDP</strong>, not generic &quot;AI tool&quot;.
+                    </p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600">1 · Power DM (send first)</p>
+                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey [Name]—quick one.
+
+I've got a JVZoo launch opening soon in the KDP / AI niche.
+
+It lets people create FULL kids storybooks (story + illustrations + voice + flipbook + page video) and sell or publish on Amazon KDP.
+
+Offer:
+- 50% commission across the entire funnel (frontend + all upsells)
+- JVZoo tracking &amp; payouts
+- DFY promo materials
+
+This converts when you pitch "make money with AI books" — not just another AI chat.
+
+Want me to send demo + funnel?</pre>
+                    </article>
+
+                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">2 · Stronger DM (serious affiliates)</p>
+                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey [Name],
+
+Quick collab idea—
+
+Launching a KDP-focused AI tool on JVZoo soon.
+
+Users can:
+- Generate kids books
+- Add voice narration
+- Export as flipbooks + page videos
+- Publish or sell on Amazon KDP
+
+Basically a full "AI book business in a box."
+
+I'm offering:
+- 50% on frontend + all upsells
+- Custom bonuses for your list if needed
+
+Looking for a few affiliates to test traffic early.
+
+Can I send details?</pre>
+                    </article>
+
+                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-amber-600">3 · Follow-up</p>
+                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey [Name], just checking—
+
+This is in the "AI + KDP income" niche which is trending hard right now.
+
+Happy to discuss custom bonuses for your audience.
+
+Let me know and I'll send everything over.</pre>
+                    </article>
+
+                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-violet-600">4 · Short mass DM</p>
+                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey—quick one.
+
+Launching an AI tool for creating &amp; selling kids books on Amazon KDP.
+
+50% on the full funnel (JVZoo) + DFY promo pack.
+
+Want details?</pre>
+                    </article>
+
+                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm md:col-span-2">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-rose-600">5 · Facebook group post</p>
+                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Looking for 5 affiliates ONLY (JVZoo launch)
+
+This is NOT just another AI tool.
+
+It lets users create full kids storybooks (with illustrations, voice &amp; video) and sell on Amazon KDP.
+
+- 50% commission on frontend + all upsells
+- JVZoo
+- DFY promo pack
+
+Perfect for "make money online / AI / KDP" audiences.
+
+Comment "INFO" or DM me.</pre>
+                    </article>
+
+                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm md:col-span-2">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-600">6 · Close (when they say &quot;maybe&quot;)</p>
+                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Got you.
+
+This one is easy to promote because:
+- Huge demand (KDP + AI)
+- Beginner-friendly money angle
+- Visual results (books + narration + video)
+
+I can also customize bonuses for your audience and help with angles that convert.
+
+Want to test a small run?</pre>
+                    </article>
+                </div>
+            </div>
+        </section>
+
         <section id="email-swipes" class="bg-slate-50 px-4 py-16 md:px-8">
             <div class="mx-auto max-w-6xl">
                 <div class="mb-6 flex items-center justify-between gap-3">
-                    <h2 class="text-3xl font-bold text-slate-900">Email Swipes</h2>
+                    <h2 class="text-3xl font-bold text-slate-900">Email swipes</h2>
                     <span class="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-700">Affiliate Promo Pack</span>
                 </div>
                 <p class="mb-6 max-w-3xl text-sm text-slate-600">
-                    Copy these ready-to-send email swipes, personalize your affiliate link and bonus angle, then launch fast.
+                    List-mail versions of the same KDP + income positioning. Personalize with your affiliate link, bonus, and launch date when you have it.
                 </p>
 
                 <div class="grid gap-4 md:grid-cols-2">
                     <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                        <p class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">Swipe 1: Curiosity</p>
-                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: New AI App Turns 1 Prompt Into Story Videos</h3>
+                        <p class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">Swipe 1 · KDP outcome</p>
+                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: Create &amp; sell kids storybooks on Amazon KDP in minutes (AI)</h3>
                         <p class="mt-3 text-sm leading-relaxed text-slate-700">
-                            Quick heads up. I just tested a new AI app that turns one prompt into illustrated story pages,
-                            narration, and even page videos. It is visual, easy to demo, and converts fast in kid-content
-                            niches. Watch the 2-minute demo here and see why this is getting strong launch traction.
+                            Quick heads up — I&apos;m backing a launch that is positioned for the &quot;AI + KDP income&quot; crowd, not generic story toys.
+                            Buyers get illustrated kids books, read-aloud voice, flipbook, and page-level video — so they can publish or sell on Amazon KDP and reuse clips on Shorts/Reels.
+                            Watch the 2-minute demo: it is the whole pitch. Then grab your JVZoo link and run a demo-first promo.
                         </p>
                     </article>
 
                     <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                        <p class="text-xs font-semibold tracking-wide text-emerald-600 uppercase">Swipe 2: Problem/Solution</p>
-                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: Most AI Story Tools Stop at Text. This One Doesn't.</h3>
+                        <p class="text-xs font-semibold tracking-wide text-emerald-600 uppercase">Swipe 2 · vs text-only tools</p>
+                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: Most &quot;AI book&quot; tools stop at text. This one ships voice + video + KDP.</h3>
                         <p class="mt-3 text-sm leading-relaxed text-slate-700">
-                            Most tools generate text and leave the hard part to you. This app handles the full flow:
-                            story pages, images, voice, and optional video output. If your audience wants fast content they
-                            can publish or sell, this is a strong fit. Check the offer and launch details now.
+                            Most competitors stop at text and images. This app runs the full stack: story pages, matched art, narration, flipbook, and optional page videos — so your audience sees a product they can monetize on KDP and social.
+                            If you mail MMO, KDP, or AI-tool buyers, this angle tends to pull harder than &quot;we have AI.&quot; Check the JV page, demo, and funnel.
                         </p>
                     </article>
 
                     <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-                        <p class="text-xs font-semibold tracking-wide text-amber-600 uppercase">Swipe 3: Launch Urgency</p>
-                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: Launch Window Open - Early Affiliates Usually Win Bigger</h3>
+                        <p class="text-xs font-semibold tracking-wide text-amber-600 uppercase">Swipe 3 · Urgency (early affiliates)</p>
+                        <h3 class="mt-2 text-lg font-semibold text-slate-900">Subject: Early affiliates for a KDP-focused AI launch — want in?</h3>
                         <p class="mt-3 text-sm leading-relaxed text-slate-700">
-                            Launch window is open now. Early promotions usually benefit from stronger EPC, fresher traffic,
-                            and less competition. If you can run a quick demo-first campaign, this offer is positioned for
-                            speed. Grab your link, pick your angle, and start mailing today.
+                            Launch window is opening — early mailers usually see fresher traffic and less competition on the same angle.
+                            This offer is built for a quick &quot;show the demo → show KDP path → close&quot; promo. Request your JVZoo link, grab the swipes and assets, and mail when you are ready.
+                            <strong>50% on the frontend and every upsell.</strong>
                         </p>
                     </article>
                 </div>
@@ -1451,15 +1562,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
     >
         <p>Copyright © 2026 JV Launch Assets. All rights reserved.</p>
         <div class="flex items-center gap-4">
-            <span class="transition-all hover:text-white"> JV Support </span>
-            <div class="h-8 w-px bg-white/20"></div>
-            <span class="transition-all hover:text-white">
-                Affiliate Terms
-            </span>
-            <div class="h-8 w-px bg-white/20"></div>
-            <span class="transition-all hover:text-white">
-                Promo Compliance
-            </span>
+           
         </div>
     </footer>
 </template>
