@@ -128,19 +128,23 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3 flex-wrap">
-            <button
-                class="rounded-full bg-slate-800 px-6 py-3 font-medium text-white transition hover:bg-black"
+            <a
+                href="https://www.jvzoo.com/affiliate/affiliateinfonew/index/437351"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center rounded-full bg-slate-800 px-6 py-3 font-medium text-white transition hover:bg-black"
             >
                 Request JV Approval
-            </button>
-            <button
-                class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-6 py-3 hover:bg-white"
+            </a>
+            <a
+                href="#demo"
+                class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-6 py-3 font-medium text-slate-800 transition hover:bg-white"
             >
                 <span>🎬 Watch The 2-Minute Demo That Sells This For You</span>
-                <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M1.25.5 4.75 4l-3.5 3.5" stroke="#050040" stroke-opacity=".4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-            </button>
+            </a>
         </div>
 
         <!-- Demo hook callout -->
@@ -221,7 +225,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
     <main>
 
         <!-- ── DEMO VIDEO ──────────────────────────────────────── -->
-        <section id="demo" class="bg-slate-900 px-4 py-16 text-white md:px-8 md:py-20">
+        <section id="demo" class="scroll-mt-20 bg-slate-900 px-4 py-16 text-white md:px-8 md:py-20">
             <div class="mx-auto max-w-4xl text-center">
                 <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400">Affiliate proof clip (KDP + AI)</p>
                 <h2 class="mt-3 text-2xl font-extrabold md:text-3xl">
