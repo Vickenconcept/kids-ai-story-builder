@@ -32,7 +32,14 @@ const props = defineProps<{
     currentCount: number;
 }>();
 
-const page = usePage<{ flash?: { success?: string | null } }>();
+type ResellerInviteFallback = { email: string; temporary_password: string };
+
+const page = usePage<{
+    flash?: {
+        success?: string | null;
+        reseller_invite_fallback?: ResellerInviteFallback | null;
+    };
+}>();
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
     { title: 'Reseller', href: '/reseller' },
@@ -100,6 +107,22 @@ const atLimit = () => props.currentCount >= props.maxSubAccounts;
                 class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-200"
             >
                 {{ page.props.flash.success }}
+            </div>
+
+            <div
+                v-if="page.props.flash?.reseller_invite_fallback"
+                class="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/50 dark:text-amber-100"
+            >
+                <p class="font-semibold">One-time sign-in details (email could not be sent)</p>
+                <p class="mt-2 font-mono text-xs break-all">
+                    Email: {{ page.props.flash.reseller_invite_fallback.email }}
+                </p>
+                <p class="mt-1 font-mono text-xs break-all">
+                    Temporary password: {{ page.props.flash.reseller_invite_fallback.temporary_password }}
+                </p>
+                <p class="mt-2 text-xs opacity-90">
+                    This message clears after you leave the page. Fix mail config so future invites send automatically.
+                </p>
             </div>
 
             <div class="rounded-xl border border-border bg-card">

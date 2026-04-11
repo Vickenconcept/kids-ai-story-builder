@@ -7,6 +7,7 @@ use App\Mail\UserNotificationMail;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -65,19 +66,42 @@ class ResellerController extends Controller
         $appName = (string) config('app.name', 'DreamForge AI');
         $loginUrl = url('/login');
 
-        Mail::to($subUser->email)->send(new UserNotificationMail(
-            subjectLine: "Your {$appName} account is ready",
-            headline: "Welcome, {$subUser->name}",
-            lines: [
-                "{$reseller->name} created a {$appName} account for you.",
-                'Sign in with this email address and the temporary password below.',
-                "Temporary password: {$plainPassword}",
-                'Change your password after you sign in under Settings.',
-            ],
-            ctaLabel: 'Sign in',
-            ctaUrl: $loginUrl,
-        ));
+        $mailSent = false;
+        try {
+            Mail::to($subUser->email)->send(new UserNotificationMail(
+                subjectLine: "Your {$appName} account is ready",
+                headline: "Welcome, {$subUser->name}",
+                lines: [
+                    "{$reseller->name} created a {$appName} account for you.",
+                    'Sign in with this email address and the temporary password below.',
+                    "Temporary password: {$plainPassword}",
+                    'Change your password after you sign in under Settings.',
+                ],
+                ctaLabel: 'Sign in',
+                ctaUrl: $loginUrl,
+            ));
+            $mailSent = true;
+        } catch (\Throwable $e) {
+            Log::warning('Failed to send reseller sub-account invitation email.', [
+                'reseller_id' => $reseller->id,
+                'sub_user_id' => $subUser->id,
+                'email' => $subUser->email,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
-        return back()->with('success', 'Account created and an invitation email was sent.');
+        if ($mailSent) {
+            return back()->with('success', 'Account created and an invitation email was sent.');
+        }
+
+        return back()
+            ->with(
+                'success',
+                'Account created, but the invitation email could not be sent. Use the one-time details below to share with them manually, then fix your mail configuration.',
+            )
+            ->with('reseller_invite_fallback', [
+                'email' => $subUser->email,
+                'temporary_password' => $plainPassword,
+            ]);
     }
 }
