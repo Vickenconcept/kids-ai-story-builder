@@ -231,7 +231,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             <div class="mt-8 overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-violet-900/40 aspect-video">
                 <iframe
                     class="h-full w-full"
-                    src="https://www.youtube.com/embed/RlErCkHnTto"
+                    src="https://www.youtube.com/embed/10RpMoI-Zps"
                     title="DreamForge demo video"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin"
