@@ -27,6 +27,11 @@ return [
     ],
 
     /*
+    | Same as JVZOO_PRODUCT_ELITE_ID — exposed for marketing / client checks.
+    */
+    'elite_product_id' => env('JVZOO_PRODUCT_ELITE_ID', ''),
+
+    /*
     |--------------------------------------------------------------------------
     | Default credits per tier
     |--------------------------------------------------------------------------

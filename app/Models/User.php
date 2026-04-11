@@ -9,12 +9,13 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['name', 'email', 'password', 'story_credits', 'feature_tier'])]
+#[Fillable(['name', 'email', 'password', 'story_credits', 'feature_tier', 'reseller_id'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -34,6 +35,16 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
             'feature_tier' => FeatureTier::class,
         ];
+    }
+
+    public function reseller(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reseller_id');
+    }
+
+    public function resellerSubAccounts(): HasMany
+    {
+        return $this->hasMany(User::class, 'reseller_id');
     }
 
     public function storyProjects(): HasMany

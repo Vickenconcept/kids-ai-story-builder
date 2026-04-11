@@ -1,10 +1,22 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
+
+const page = usePage<{
+    auth?: { user?: { feature_tier?: string }; canUseReseller?: boolean };
+    jvzoo?: { eliteProductId?: string };
+}>();
+
+const isEliteBuyer = computed(() => page.props.auth?.canUseReseller === true);
+const eliteProductConfigured = computed(() => {
+    const id = page.props.jvzoo?.eliteProductId?.trim() ?? '';
+    return id.length > 0 && id !== 'ELITE_PRODUCT_ID';
+});
 </script>
 <template>
-    <Head title="You Now Have Content — Here's How To Turn It Into Income" />
+    <Head title="DFY System — Turn Your AI Books Into Amazon KDP and Digital Income" />
 
     <!-- HEADER BAR -->
     <div class="bg-emerald-700 text-white text-center px-4 py-3 text-sm font-bold">
@@ -22,13 +34,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 💰 Final Step — Monetization System
             </p>
             <h1 class="mt-6 text-4xl font-extrabold leading-tight md:text-6xl">
-                You Now Have Content.<br class="hidden md:block"/>
-                <span class="text-emerald-400">Here's How To Turn It Into Income.</span>
+                You Have the Book.<br class="hidden md:block"/>
+                <span class="text-emerald-400">Now Get the KDP Income Roadmap.</span>
             </h1>
             <p class="mx-auto mt-6 max-w-2xl text-base text-slate-300 md:text-lg">
-                Most people fail not because of their tools —<br/>
-                but because they don't know <strong class="text-white">what to do next</strong>.<br/>
-                This upgrade removes all the guesswork.
+                The market buys <strong class="text-white">outcomes</strong>: listings on Amazon KDP, Etsy downloads, bundles, and repeatable publishing systems.<br/>
+                This pack is your shortcut — prompts, KDP walkthrough, and monetization plays — so you stop guessing and start
+                <strong class="text-white">shipping products that pay</strong>.
             </p>
         </div>
     </section>
@@ -36,9 +48,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
     <!-- DEMO -->
     <section class="bg-slate-900 text-white px-4 py-14 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400">Quick Demo</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch The Product Demo</h2>
-            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">See how the story funnel works in action.</p>
+            <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400">See the full pipeline</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch: Idea → Book → KDP-Ready Output</h2>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">This demo backs the income angle: a complete kids book experience you can position for Amazon KDP and digital sales — not a single-feature gimmick.</p>
             <div
                 class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border-2 border-emerald-400/40 bg-slate-800"
             >
@@ -206,6 +218,33 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         </div>
     </section>
 
+    <!-- ELITE RESELLER / SEATS (ties to JVZOO_PRODUCT_ELITE_ID → Elite tier) -->
+    <section class="border-y border-emerald-200 bg-linear-to-br from-emerald-50 to-white px-4 py-14 md:px-8">
+        <div class="mx-auto max-w-4xl">
+            <p class="text-xs font-semibold uppercase tracking-widest text-emerald-700">Elite plan advantage</p>
+            <h2 class="mt-3 text-2xl font-extrabold text-slate-900 md:text-3xl">
+                Resell seats without sharing your login
+            </h2>
+            <p class="mt-4 max-w-2xl text-sm text-slate-600 md:text-base">
+                On the Elite tier<span v-if="eliteProductConfigured">
+                    (JVZoo product <span class="font-mono text-xs">{{ page.props.jvzoo?.eliteProductId }}</span>)</span>,
+                you can provision separate accounts for clients, students, or family from your dashboard. Each gets their own credits and workspace — a clean way to bundle DreamForge as part of your offer or agency workflow.
+            </p>
+            <div class="mt-6 flex flex-wrap items-center gap-3">
+                <Link
+                    v-if="isEliteBuyer"
+                    href="/reseller"
+                    class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+                >
+                    Open Reseller dashboard
+                </Link>
+                <p v-else class="text-sm text-slate-600">
+                    Upgrade to Elite on the main offer to unlock the Reseller dashboard after purchase.
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- KDP SPOTLIGHT -->
     <section class="bg-slate-900 text-white px-4 py-14 md:px-8">
         <div class="mx-auto max-w-4xl">
@@ -290,6 +329,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Story Monetization Blueprint</li>
                     <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Etsy &amp; Digital Sales Quickstart</li>
                     <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Kids Content Channel Blueprint</li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-emerald-400">✓</span> Elite: reseller seats — create separate logins for buyers or clients (Elite upgrade)
+                    </li>
                 </ul>
 
                 <a href="https://www.jvzoo.com/b/116189/437357/3" target="_blank" rel="noopener noreferrer" class="mt-8 block text-center">

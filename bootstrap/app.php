@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsElite;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetPublicPageSeo;
@@ -26,6 +27,10 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
             SetPublicPageSeo::class,
+        ]);
+
+        $middleware->alias([
+            'elite' => EnsureUserIsElite::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Api\JvzooIpnController;
 use App\Http\Controllers\Admin\CreditPackController;
 use App\Http\Controllers\Admin\StoryPlanController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Api\JvzooIpnController;
 use App\Http\Controllers\Billing\CreditPurchaseController;
 use App\Http\Controllers\Billing\PlanUpgradeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\Story\PublicStoryController;
 use App\Http\Controllers\Story\StoryPageController;
 use App\Http\Controllers\Story\StoryProjectController;
@@ -98,6 +99,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::patch('/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('elite')->prefix('reseller')->name('reseller.')->group(function () {
+        Route::get('/', [ResellerController::class, 'index'])->name('index');
+        Route::post('/accounts', [ResellerController::class, 'store'])
+            ->middleware('throttle:20,1')
+            ->name('accounts.store');
     });
 });
 

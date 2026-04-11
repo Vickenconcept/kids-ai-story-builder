@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookMarked, Coins, Crown, LayoutGrid, Monitor, Moon, Settings, ShieldCheck, Sparkles, Sun, Users, Zap } from 'lucide-vue-next';
+import { BookMarked, Coins, Crown, LayoutGrid, Monitor, Moon, Settings, ShieldCheck, Sparkles, Sun, UserPlus, Users, Zap } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -49,6 +49,10 @@ const mainNavItems = computed<NavItem[]>(() => {
         { title: 'Credits', href: '/credits', icon: Coins },
         { title: 'Settings', href: '/settings', icon: Settings },
     ];
+
+    if (page.props.auth?.canUseReseller) {
+        items.splice(4, 0, { title: 'Reseller', href: '/reseller', icon: UserPlus });
+    }
 
     if (page.props.auth?.canManageUsers) {
         items.push({ title: 'Users', href: '/admin/users', icon: Users });

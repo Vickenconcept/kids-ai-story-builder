@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\FeatureTier;
 use App\Models\CreditPack;
 use App\Models\StoryPlan;
 use Illuminate\Http\Request;
@@ -47,6 +48,13 @@ class HandleInertiaRequests extends Middleware
                 'canManageCreditPacks' => $user?->can('manage-credit-packs') ?? false,
                 'canManagePlans' => $user?->can('manage-plans') ?? false,
                 'canManageUsers' => $user?->can('manage-users') ?? false,
+                'canUseReseller' => $user?->feature_tier === FeatureTier::Elite,
+            ],
+            'jvzoo' => [
+                'eliteProductId' => (string) config('jvzoo.elite_product_id', ''),
+            ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
             ],
             'billing' => [
                 'paypalClientId' => config('services.paypal.client_id'),
