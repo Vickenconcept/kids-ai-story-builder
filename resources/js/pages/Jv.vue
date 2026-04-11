@@ -230,17 +230,19 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                     No explaining needed. The output sells itself.
                 </p>
 
-                <div class="relative mt-8 overflow-hidden rounded-2xl border-2 border-indigo-500/40 bg-slate-800 shadow-2xl shadow-indigo-950/60">
-                    <div class="aspect-video">
-                        <iframe
-                            class="h-full w-full"
-                            src="https://www.youtube.com/embed/10RpMoI-Zps"
-                            title="JV demo video"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin"
-                            allowfullscreen
-                        />
-                    </div>
+                <div
+                    class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border-2 border-indigo-500/40 bg-slate-800 shadow-2xl shadow-indigo-950/60"
+                >
+                    <iframe
+                        class="absolute inset-0 h-full w-full border-0"
+                        src="https://www.youtube.com/embed/10RpMoI-Zps?rel=0"
+                        title="JV demo video"
+                        width="560"
+                        height="315"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                    ></iframe>
                 </div>
 
                 <!-- What the video shows — transformation steps -->

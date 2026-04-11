@@ -228,15 +228,19 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch This: From One Prompt to Complete Storybook in Minutes</h2>
             <p class="mx-auto mt-4 max-w-xl text-sm text-indigo-300">No explaining needed - they see it, they want it.</p>
 
-            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-violet-900/40 aspect-video">
+            <div
+                class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-violet-900/40"
+            >
                 <iframe
-                    class="h-full w-full"
-                    src="https://www.youtube.com/embed/10RpMoI-Zps"
+                    class="absolute inset-0 h-full w-full border-0"
+                    src="https://www.youtube.com/embed/10RpMoI-Zps?rel=0"
                     title="DreamForge demo video"
+                    width="560"
+                    height="315"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen
-                />
+                ></iframe>
             </div>
 
             <div class="mt-8 grid grid-cols-2 gap-3 max-w-lg mx-auto text-sm text-left md:grid-cols-4">

@@ -99,15 +99,19 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">See The Difference</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🎬 Watch: Your Story Becomes a Video</h2>
             <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">Every story page transforms into a dynamic animated video scene — synced with your narration automatically.</p>
-            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-yellow-400/40 bg-slate-800 aspect-video">
+            <div
+                class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border-2 border-yellow-400/40 bg-slate-800"
+            >
                 <iframe
-                    class="h-full w-full"
-                    src="https://www.youtube.com/embed/10RpMoI-Zps"
+                    class="absolute inset-0 h-full w-full border-0"
+                    src="https://www.youtube.com/embed/10RpMoI-Zps?rel=0"
                     title="Story to video demo"
+                    width="560"
+                    height="315"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen
-                />
+                ></iframe>
             </div>
         </div>
     </section>

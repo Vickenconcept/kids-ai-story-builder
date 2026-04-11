@@ -39,15 +39,19 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400">Quick Demo</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch The Product Demo</h2>
             <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">See how the story funnel works in action.</p>
-            <div class="mt-8 overflow-hidden rounded-2xl border-2 border-emerald-400/40 bg-slate-800 aspect-video">
+            <div
+                class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border-2 border-emerald-400/40 bg-slate-800"
+            >
                 <iframe
-                    class="h-full w-full"
-                    src="https://www.youtube.com/embed/10RpMoI-Zps"
+                    class="absolute inset-0 h-full w-full border-0"
+                    src="https://www.youtube.com/embed/10RpMoI-Zps?rel=0"
                     title="Product demo video"
+                    width="560"
+                    height="315"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen
-                />
+                ></iframe>
             </div>
         </div>
     </section>
