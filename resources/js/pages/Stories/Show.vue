@@ -149,8 +149,28 @@ const displayStoryCredits = computed(() =>
     polledStoryCredits.value !== null ? polledStoryCredits.value : props.story_credits,
 );
 
-const canAffordSingleVideo = computed(() => displayStoryCredits.value >= props.video_credit_cost);
-const canAffordSingleAudio = computed(() => displayStoryCredits.value >= props.audio_credit_cost);
+/** Integer credits balance (avoids relational quirks with null/NaN from JSON). */
+const storyCreditsBalance = computed(() => {
+    const n = Number(displayStoryCredits.value);
+
+    return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0;
+});
+
+function toNonNegativeInt(value: unknown): number {
+    const n = Number(value);
+
+    if (!Number.isFinite(n) || n < 0) {
+        return 0;
+    }
+
+    return Math.trunc(n);
+}
+
+const videoCreditCost = computed(() => toNonNegativeInt(props.video_credit_cost));
+const audioCreditCost = computed(() => toNonNegativeInt(props.audio_credit_cost));
+
+const canAffordSingleVideo = computed(() => storyCreditsBalance.value >= videoCreditCost.value);
+const canAffordSingleAudio = computed(() => storyCreditsBalance.value >= audioCreditCost.value);
 
 const mergedPageVideoBusy = computed(() => {
     const m: Record<string, boolean> = { ...pageVideoBusy.value };
@@ -197,7 +217,7 @@ const pageAudioActionHint = computed(() => {
     }
 
     if (!canAffordSingleAudio.value) {
-        return 'Not enough credits for page narration.';
+        return `Not enough credits for page narration (${audioCreditCost.value} required, ${storyCreditsBalance.value} available).`;
     }
 
     return '';

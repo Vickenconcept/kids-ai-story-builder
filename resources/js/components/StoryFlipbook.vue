@@ -1304,9 +1304,7 @@ async function initTurn(): Promise<void> {
                         `data-action="generate-page-audio" data-page-uuid="${p.uuid}" title="${disabledReasonAudio || labelAudio}">` +
                         `${audioBtnIcon}</button>`,
                     );
-                    if (!canGenerateThisPageAudio) {
-                        $aBtn.attr('disabled', 'true');
-                    }
+                    $aBtn.prop('disabled', !canGenerateThisPageAudio);
                     $actionGroup.append($aBtn);
                 }
 
@@ -1348,9 +1346,7 @@ async function initTurn(): Promise<void> {
                         `data-action="generate-page-video" data-page-uuid="${p.uuid}" title="${disabledReason || label}">` +
                         `${btnIcon}</button>`,
                     );
-                    if (!canGenerateThisPage) {
-                        $vBtn.attr('disabled', 'true');
-                    }
+                    $vBtn.prop('disabled', !canGenerateThisPage);
                     $actionGroup.append($vBtn);
                 }
 
@@ -1454,6 +1450,10 @@ async function initTurn(): Promise<void> {
         (e as Event).preventDefault();
         (e as Event).stopPropagation();
         const target = e.currentTarget as HTMLElement | null;
+        if (target instanceof HTMLButtonElement && target.disabled) {
+            return;
+        }
+
         const pageUuid = target?.getAttribute('data-page-uuid');
 
         if (!pageUuid) {
@@ -1466,6 +1466,10 @@ async function initTurn(): Promise<void> {
         (e as Event).preventDefault();
         (e as Event).stopPropagation();
         const target = e.currentTarget as HTMLElement | null;
+        if (target instanceof HTMLButtonElement && target.disabled) {
+            return;
+        }
+
         const pageUuid = target?.getAttribute('data-page-uuid');
 
         if (!pageUuid) {
