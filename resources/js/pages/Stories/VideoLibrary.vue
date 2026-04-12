@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { BookOpen, Download, ExternalLink, Film, Play } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { index as videoLibraryIndex } from '@/routes/video-library';
 import type { BreadcrumbItem } from '@/types';
+import { normalizeLaravelPaginator } from '@/lib/normalizeLaravelPaginator';
 import { videoPlaybackSrc } from '@/lib/videoPlaybackUrl';
 
 type VideoAssetRow = {
@@ -30,8 +31,19 @@ type VideoAssetRow = {
 };
 
 const props = defineProps<{
-    videos: VideoAssetRow[];
+    /** Laravel paginator JSON or legacy array */
+    videos: unknown;
 }>();
+
+const videosPage = computed(() => normalizeLaravelPaginator<VideoAssetRow>(props.videos));
+
+function goVideoLibraryPage(page: number): void {
+    if (page < 1 || page > videosPage.value.meta.last_page) {
+        return;
+    }
+
+    router.get(videoLibraryIndex.url({ query: { page } }), {}, { preserveState: true, preserveScroll: true, replace: true });
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard().url },
@@ -85,7 +97,7 @@ const previewPlaybackSrc = computed(() =>
             </div>
 
             <div
-                v-if="props.videos.length === 0"
+                v-if="videosPage.data.length === 0"
                 class="rounded-xl border border-dashed border-border bg-muted/30 px-6 py-12 text-center"
             >
                 <Film class="text-muted-foreground mx-auto size-10 opacity-60" />
@@ -100,7 +112,7 @@ const previewPlaybackSrc = computed(() =>
             </div>
 
             <div v-else class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                <Card v-for="row in props.videos" :key="row.id" class="overflow-hidden pt-0">
+                <Card v-for="row in videosPage.data" :key="row.id" class="overflow-hidden pt-0">
                     <div class="bg-muted relative aspect-video w-full overflow-hidden">
                         <img
                             v-if="row.image_url"
@@ -162,6 +174,37 @@ const previewPlaybackSrc = computed(() =>
                     </CardFooter>
                 </Card>
             </div>
+
+            <div
+                v-if="videosPage.meta.last_page > 1"
+                class="flex flex-wrap items-center justify-center gap-2 pt-2"
+            >
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    :disabled="videosPage.meta.current_page <= 1"
+                    @click="goVideoLibraryPage(videosPage.meta.current_page - 1)"
+                >
+                    Previous
+                </Button>
+                <span class="text-muted-foreground text-sm">
+                    Page {{ videosPage.meta.current_page }} of {{ videosPage.meta.last_page }}
+                </span>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    :disabled="videosPage.meta.current_page >= videosPage.meta.last_page"
+                    @click="goVideoLibraryPage(videosPage.meta.current_page + 1)"
+                >
+                    Next
+                </Button>
+            </div>
+
+            <p v-if="videosPage.data.length > 0" class="text-muted-foreground text-right text-xs">
+                Showing {{ videosPage.meta.from ?? 0 }}–{{ videosPage.meta.to ?? 0 }} of {{ videosPage.meta.total }} clips
+            </p>
         </div>
 
         <Dialog v-model:open="previewOpen">

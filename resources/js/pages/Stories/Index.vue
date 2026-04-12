@@ -16,6 +16,7 @@ import {
 import { computed, ref, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { normalizeLaravelPaginator } from '@/lib/normalizeLaravelPaginator';
 import type { BreadcrumbItem } from '@/types';
 
 type ProjectRow = {
@@ -42,10 +43,13 @@ type Stats = {
 };
 
 const props = defineProps<{
-    projects: ProjectRow[];
+    /** Laravel LengthAwarePaginator JSON (flat fields) or legacy array of rows */
+    projects: unknown;
     stats: Stats;
-    filters: { status?: string; search?: string; date_from?: string; date_to?: string };
+    filters: { status?: string; search?: string; date_from?: string; date_to?: string; page?: string; per_page?: string };
 }>();
+
+const projectsPage = computed(() => normalizeLaravelPaginator<ProjectRow>(props.projects));
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Stories', href: '/stories' }];
 
@@ -65,6 +69,7 @@ function applyFilters() {
             status: filterStatus.value || undefined,
             date_from: dateFrom.value || undefined,
             date_to: dateTo.value || undefined,
+            page: 1,
         },
         { preserveState: true, replace: true },
     );
@@ -95,17 +100,18 @@ function toggleSelect(id: number) {
 }
 
 function selectAll() {
+    const rows = projectsPage.value.data;
     selected.value =
-        selected.value.length === props.projects.length
+        selected.value.length === rows.length
             ? []
-            : props.projects.map((p) => p.id);
+            : rows.map((p) => p.id);
 }
 
 const allSelected = computed(
-    () => props.projects.length > 0 && selected.value.length === props.projects.length,
+    () => projectsPage.value.data.length > 0 && selected.value.length === projectsPage.value.data.length,
 );
 const someSelected = computed(
-    () => selected.value.length > 0 && selected.value.length < props.projects.length,
+    () => selected.value.length > 0 && selected.value.length < projectsPage.value.data.length,
 );
 
 function deleteStory(uuid: string) {
@@ -120,6 +126,24 @@ function bulkDelete() {
         router.post('/stories/bulk-destroy', { ids: selected.value });
         selected.value = [];
     }
+}
+
+function goStoriesPage(page: number): void {
+    if (page < 1 || page > projectsPage.value.meta.last_page) {
+        return;
+    }
+
+    router.get(
+        '/stories',
+        {
+            search: search.value || undefined,
+            status: filterStatus.value || undefined,
+            date_from: dateFrom.value || undefined,
+            date_to: dateTo.value || undefined,
+            page,
+        },
+        { preserveState: true, preserveScroll: true, replace: true },
+    );
 }
 
 function statusColor(status: string) {
@@ -283,7 +307,7 @@ function progressPercent(p: ProjectRow) {
 
                 <!-- Empty state -->
                 <div
-                    v-if="projects.length === 0"
+                    v-if="projectsPage.data.length === 0"
                     class="flex flex-col items-center gap-4 py-20 text-center"
                 >
                     <div class="flex size-14 items-center justify-center rounded-full bg-violet-100 dark:bg-violet-900/30">
@@ -310,7 +334,7 @@ function progressPercent(p: ProjectRow) {
 
                 <!-- Rows -->
                 <div
-                    v-for="p in projects"
+                    v-for="p in projectsPage.data"
                     :key="p.uuid"
                     class="group grid grid-cols-[auto_3rem_1fr_auto_auto_auto_auto] items-center gap-3 border-b px-4 py-3 text-sm last:border-0 hover:bg-muted/30 transition-colors"
                     :class="selected.includes(p.id) ? 'bg-violet-50/60 dark:bg-violet-950/20' : ''"
@@ -404,9 +428,36 @@ function progressPercent(p: ProjectRow) {
                 </div>
             </div>
 
+            <div
+                v-if="projectsPage.meta.last_page > 1"
+                class="flex flex-wrap items-center justify-center gap-2 pt-2"
+            >
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    :disabled="projectsPage.meta.current_page <= 1"
+                    @click="goStoriesPage(projectsPage.meta.current_page - 1)"
+                >
+                    Previous
+                </Button>
+                <span class="text-muted-foreground text-sm">
+                    Page {{ projectsPage.meta.current_page }} of {{ projectsPage.meta.last_page }}
+                </span>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    :disabled="projectsPage.meta.current_page >= projectsPage.meta.last_page"
+                    @click="goStoriesPage(projectsPage.meta.current_page + 1)"
+                >
+                    Next
+                </Button>
+            </div>
+
             <!-- Footer count -->
-            <p v-if="projects.length > 0" class="text-muted-foreground text-xs text-right">
-                Showing {{ projects.length }} of {{ stats.total }} stories
+            <p v-if="projectsPage.data.length > 0" class="text-muted-foreground text-xs text-right">
+                Showing {{ projectsPage.meta.from ?? 0 }}–{{ projectsPage.meta.to ?? 0 }} of {{ projectsPage.meta.total }} stories
             </p>
         </div>
     </AppLayout>

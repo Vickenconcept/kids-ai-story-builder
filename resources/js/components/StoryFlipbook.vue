@@ -23,6 +23,8 @@ export type FlipbookPage = {
     video_url: string | null;
     /** Server-side: page video job pending or running (author view). */
     video_generating?: boolean;
+    /** Server-side: page narration audio job pending or running (author view). */
+    audio_generating?: boolean;
 };
 
 export type CoverConfigJson = {
@@ -64,6 +66,11 @@ const props = withDefaults(
         pageVideoBusy?: Record<string, boolean>;
         /** Optional reason shown as disabled button tooltip. */
         pageVideoActionHint?: string;
+        /** Per-page narration (TTS) for stories created without project-wide narration. */
+        showPageAudioAction?: boolean;
+        canGeneratePageAudio?: boolean;
+        pageAudioBusy?: Record<string, boolean>;
+        pageAudioActionHint?: string;
         /** When playAudioOnFlip is false but narration exists (e.g. video stories), explain why the toggle is off. */
         narrationUnavailableHint?: string;
         /** Hide video playback / default media controls in setup (e.g. Basic tier readers). */
@@ -82,6 +89,10 @@ const props = withDefaults(
         canGeneratePageVideo: false,
         pageVideoBusy: () => ({}),
         pageVideoActionHint: '',
+        showPageAudioAction: false,
+        canGeneratePageAudio: false,
+        pageAudioBusy: () => ({}),
+        pageAudioActionHint: '',
         narrationUnavailableHint: '',
         showVideoMediaSettings: true,
     },
@@ -90,6 +101,7 @@ const props = withDefaults(
 const emit = defineEmits<{
     'view-page-change': [pageUuid: string | null];
     'generate-page-video': [pageUuid: string];
+    'generate-page-audio': [pageUuid: string];
 }>();
 
 const flipRoot = ref<HTMLElement | null>(null);
@@ -1118,6 +1130,7 @@ async function initTurn(): Promise<void> {
 
     const $root = jq(flipRoot.value);
     $root.off('.pageVideoAction');
+    $root.off('.pageAudioAction');
 
     let savedTurnPage: number | null = null;
     try {
@@ -1180,8 +1193,15 @@ async function initTurn(): Promise<void> {
             const buttonSideClass = turnPageNumber % 2 === 0 ? 'left-2' : 'right-2';
             const pageBusy =
                 Boolean(props.pageVideoBusy?.[p.uuid]) || Boolean((p as FlipbookPage).video_generating);
+            const pageAudioBusyState =
+                Boolean(props.pageAudioBusy?.[p.uuid]) || Boolean((p as FlipbookPage).audio_generating);
             const canGenerateThisPage =
                 Boolean(props.canGeneratePageVideo) && Boolean(p.image_url) && !pageBusy;
+            const canGenerateThisPageAudio =
+                Boolean(props.canGeneratePageAudio) &&
+                Boolean((p.text_content ?? '').trim()) &&
+                !p.audio_url &&
+                !pageAudioBusyState;
 
             if (p.image_url) {
                 const mediaWrap = jq('<div class="relative min-h-0 flex-1 bg-muted/30" />');
@@ -1256,6 +1276,38 @@ async function initTurn(): Promise<void> {
                             `${mediaIcon}</button>`,
                         ),
                     );
+                }
+
+                if (props.showPageAudioAction && !p.audio_url) {
+                    const disabledReasonAudio = !props.canGeneratePageAudio
+                        ? props.pageAudioActionHint || 'Narration generation is unavailable.'
+                        : pageAudioBusyState
+                          ? 'Narration is being generated for this page.'
+                          : !(p.text_content ?? '').trim()
+                            ? 'Add text to this page first.'
+                            : '';
+                    const labelAudio = pageAudioBusyState ? 'Generating…' : 'Generate narration';
+                    const volSvg =
+                        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<path d="M11 5 6 9H2v6h4l5 4V5z"/>` +
+                        `<path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>` +
+                        `<path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>` +
+                        `</svg>`;
+                    const busyAudioSvg =
+                        `<svg class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                        `<path d="M21 12a9 9 0 1 1-6.219-8.56"/>` +
+                        `</svg>`;
+                    const audioBtnIcon = pageAudioBusyState ? busyAudioSvg : volSvg;
+                    const $aBtn = jq(
+                        `<button type="button" ` +
+                        `class="inline-flex size-7 items-center justify-center rounded-full border border-sky-300/80 bg-sky-50/95 text-sky-700 shadow-md backdrop-blur-sm transition hover:bg-sky-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50" ` +
+                        `data-action="generate-page-audio" data-page-uuid="${p.uuid}" title="${disabledReasonAudio || labelAudio}">` +
+                        `${audioBtnIcon}</button>`,
+                    );
+                    if (!canGenerateThisPageAudio) {
+                        $aBtn.attr('disabled', 'true');
+                    }
+                    $actionGroup.append($aBtn);
                 }
 
                 if (props.showPageVideoAction) {
@@ -1385,11 +1437,30 @@ async function initTurn(): Promise<void> {
     ready.value = true;
     applyDragFlipInteraction();
 
+    $root.on(
+        'pointerdown.pageAudioAction mousedown.pageAudioAction touchstart.pageAudioAction',
+        '[data-action="generate-page-audio"]',
+        (e: unknown) => {
+            (e as Event).stopPropagation();
+        },
+    );
     $root.on('pointerdown.pageVideoAction mousedown.pageVideoAction touchstart.pageVideoAction', '[data-action="generate-page-video"]', (e: unknown) => {
         (e as Event).stopPropagation();
     });
     $root.on('pointerdown.pageMediaToggle mousedown.pageMediaToggle touchstart.pageMediaToggle', '[data-action="toggle-page-media"]', (e: unknown) => {
         (e as Event).stopPropagation();
+    });
+    $root.on('click.pageAudioAction', '[data-action="generate-page-audio"]', (e: unknown) => {
+        (e as Event).preventDefault();
+        (e as Event).stopPropagation();
+        const target = e.currentTarget as HTMLElement | null;
+        const pageUuid = target?.getAttribute('data-page-uuid');
+
+        if (!pageUuid) {
+            return;
+        }
+
+        emit('generate-page-audio', pageUuid);
     });
     $root.on('click.pageVideoAction', '[data-action="generate-page-video"]', (e: unknown) => {
         (e as Event).preventDefault();
@@ -1639,6 +1710,9 @@ watch(
         props.pageVideoBusy,
         props.canGeneratePageVideo,
         props.showPageVideoAction,
+        props.pageAudioBusy,
+        props.canGeneratePageAudio,
+        props.showPageAudioAction,
         props.gameplayEnabled,
         props.coverFront,
         props.coverBack,

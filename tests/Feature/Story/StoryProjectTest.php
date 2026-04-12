@@ -3,11 +3,13 @@
 namespace Tests\Feature\Story;
 
 use App\Enums\StoryProjectStatus;
+use App\Jobs\Story\GenerateStoryPageAudioJob;
 use App\Jobs\Story\GenerateStoryTextJob;
 use App\Models\StoryPage;
 use App\Models\StoryProject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
@@ -227,6 +229,45 @@ class StoryProjectTest extends TestCase
             ->assertOk()
             ->assertJsonPath('story_credits', 42)
             ->assertJsonPath('pages.0.uuid', $page->uuid)
-            ->assertJsonPath('pages.0.video_generating', false);
+            ->assertJsonPath('pages.0.video_generating', false)
+            ->assertJsonPath('pages.0.audio_generating', false)
+            ->assertJsonPath('pages.0.audio_url', null);
+    }
+
+    public function test_owner_can_queue_standalone_page_audio_when_narration_disabled(): void
+    {
+        Bus::fake([GenerateStoryPageAudioJob::class]);
+
+        $user = User::factory()->create(['story_credits' => 100]);
+        $project = StoryProject::query()->create([
+            'user_id' => $user->id,
+            'title' => 'No narration book',
+            'topic' => 'T',
+            'lesson_type' => 'moral',
+            'age_group' => '6-8',
+            'page_count' => 1,
+            'illustration_style' => 'cartoon',
+            'include_quiz' => false,
+            'include_narration' => false,
+            'include_video' => true,
+            'status' => StoryProjectStatus::Ready,
+            'pages_completed' => 1,
+        ]);
+
+        $page = StoryPage::query()->create([
+            'story_project_id' => $project->id,
+            'page_number' => 1,
+            'text_content' => 'Hello world',
+            'quiz_questions' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->postJson(route('stories.pages.audio', [$project, $page]), [])
+            ->assertOk()
+            ->assertJsonPath('ok', true);
+
+        Bus::assertDispatched(GenerateStoryPageAudioJob::class, function (GenerateStoryPageAudioJob $job) use ($page): bool {
+            return $job->storyPageId === $page->id && $job->standalone === true;
+        });
     }
 }

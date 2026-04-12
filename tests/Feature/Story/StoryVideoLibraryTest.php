@@ -87,9 +87,9 @@ class StoryVideoLibraryTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
             ->component('Stories/VideoLibrary')
-            ->has('videos', 1)
-            ->where('videos.0.story_title', 'My Book')
-            ->where('videos.0.page_number', 1)
-            ->where('videos.0.video_url', 'https://example.com/mine.mp4'));
+            ->has('videos.data', 1)
+            ->where('videos.data.0.story_title', 'My Book')
+            ->where('videos.data.0.page_number', 1)
+            ->where('videos.data.0.video_url', 'https://example.com/mine.mp4'));
     }
 }

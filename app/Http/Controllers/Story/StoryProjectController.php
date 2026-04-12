@@ -11,6 +11,7 @@ use App\Enums\StoryProjectStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStoryProjectRequest;
 use App\Http\Requests\UpdateStoryProjectPresentationRequest;
+use App\Jobs\Story\GenerateStoryPageAudioJob;
 use App\Jobs\Story\GenerateStoryPageVideoJob;
 use App\Models\StoryAiJob;
 use App\Models\StoryPage;
@@ -87,10 +88,12 @@ class StoryProjectController extends Controller
             $query->whereDate('created_at', '<=', $request->input('date_to'));
         }
 
-        $projects = $query->get([
+        $perPage = min(50, max(1, (int) $request->input('per_page', 15)));
+
+        $projects = $query->paginate($perPage, [
             'id', 'uuid', 'title', 'topic', 'status', 'page_count', 'pages_completed',
             'include_narration', 'include_video', 'cover_front', 'created_at', 'updated_at',
-        ])->map(fn ($p) => [
+        ])->through(fn ($p) => [
             'id' => $p->id,
             'uuid' => $p->uuid,
             'title' => $p->title,
@@ -117,7 +120,7 @@ class StoryProjectController extends Controller
         return Inertia::render('Stories/Index', [
             'projects' => $projects,
             'stats' => $stats,
-            'filters' => $request->only(['status', 'search', 'date_from', 'date_to']),
+            'filters' => $request->only(['status', 'search', 'date_from', 'date_to', 'page', 'per_page']),
         ]);
     }
 
@@ -208,7 +211,8 @@ class StoryProjectController extends Controller
             ->latest('id')
             ->value('error_message');
 
-        $videoGeneratingSet = $this->videoGeneratingPageIdSet($story);
+        $videoGeneratingSet = $this->pageMediaGeneratingPageIdSet($story, StoryAiJobType::PageVideo);
+        $audioGeneratingSet = $this->pageMediaGeneratingPageIdSet($story, StoryAiJobType::PageAudio);
 
         $pages = $story->pages->map(fn ($page) => [
             'id' => $page->id,
@@ -221,6 +225,7 @@ class StoryProjectController extends Controller
             'audio_url' => StoryMediaUrl::resolve($page->audio_path),
             'video_url' => StoryMediaUrl::resolve($page->video_path),
             'video_generating' => isset($videoGeneratingSet[$page->id]),
+            'audio_generating' => isset($audioGeneratingSet[$page->id]),
         ]);
 
         return Inertia::render('Stories/Show', [
@@ -257,37 +262,38 @@ class StoryProjectController extends Controller
             'story_credits' => $request->user()->story_credits,
             'feature_tier' => $request->user()->feature_tier?->value ?? FeatureTier::Basic->value,
             'video_credit_cost' => (int) config('story.credit_costs.video', 0),
+            'audio_credit_cost' => (int) config('story.credit_costs.audio', 0),
         ]);
     }
 
     /**
-     * Map of story_page_id => true when that page's latest PageVideo AI job is still pending or running.
+     * Map of story_page_id => true when that page's latest AI job of $type is still pending or running.
      *
      * @return array<int, true>
      */
-    private function videoGeneratingPageIdSet(StoryProject $story): array
+    private function pageMediaGeneratingPageIdSet(StoryProject $story, StoryAiJobType $type): array
     {
         $story->loadMissing('pages');
         $pageIds = $story->pages->pluck('id');
-        $latestPageVideoJobIds = $pageIds->isEmpty()
+        $latestJobIds = $pageIds->isEmpty()
             ? collect()
             : StoryAiJob::query()
                 ->where('story_project_id', $story->id)
-                ->where('type', StoryAiJobType::PageVideo)
+                ->where('type', $type)
                 ->whereIn('story_page_id', $pageIds)
                 ->selectRaw('max(id) as id')
                 ->groupBy('story_page_id')
                 ->pluck('id');
 
-        $videoGeneratingPageIds = $latestPageVideoJobIds->isEmpty()
+        $generatingPageIds = $latestJobIds->isEmpty()
             ? []
             : StoryAiJob::query()
-                ->whereIn('id', $latestPageVideoJobIds)
+                ->whereIn('id', $latestJobIds)
                 ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
                 ->pluck('story_page_id')
                 ->all();
 
-        return array_flip($videoGeneratingPageIds);
+        return array_flip($generatingPageIds);
     }
 
     /** Lightweight JSON for author UI polling while page video jobs run (avoids Inertia reload resetting the flipbook). */
@@ -296,9 +302,12 @@ class StoryProjectController extends Controller
         $this->authorize('view', $story);
 
         $story->load('pages');
-        $videoGeneratingSet = $this->videoGeneratingPageIdSet($story);
+        $videoGeneratingSet = $this->pageMediaGeneratingPageIdSet($story, StoryAiJobType::PageVideo);
+        $audioGeneratingSet = $this->pageMediaGeneratingPageIdSet($story, StoryAiJobType::PageAudio);
         $pages = $story->pages->map(fn ($page) => [
             'uuid' => $page->uuid,
+            'audio_url' => StoryMediaUrl::resolve($page->audio_path),
+            'audio_generating' => isset($audioGeneratingSet[$page->id]),
             'video_url' => StoryMediaUrl::resolve($page->video_path),
             'video_generating' => isset($videoGeneratingSet[$page->id]),
         ]);
@@ -375,6 +384,95 @@ class StoryProjectController extends Controller
             ->onQueue(config('story.queues.video'));
 
         $message = 'Video generation queued for page '.$page->page_number.'.';
+
+        return $expectsJson
+            ? response()->json([
+                'ok' => true,
+                'queued' => true,
+                'message' => $message,
+                'page_uuid' => $page->uuid,
+                'story_credits' => (int) $user->story_credits,
+            ])
+            : back()->with('success', $message);
+    }
+
+    public function generatePageAudio(
+        Request $request,
+        StoryProject $story,
+        StoryPage $page,
+        StoryCreditService $credits,
+    ): RedirectResponse|JsonResponse {
+        $this->authorize('update', $story);
+        $expectsJson = $request->expectsJson() || $request->ajax();
+
+        if ($page->story_project_id !== $story->id) {
+            abort(404);
+        }
+
+        if ($story->include_narration) {
+            $message = 'Narration is already enabled for this story; use the normal generation flow for page audio.';
+
+            return $expectsJson
+                ? response()->json(['ok' => false, 'message' => $message], 422)
+                : back()->with('error', $message);
+        }
+
+        if (blank($page->text_content)) {
+            $message = 'Add text to this page before generating narration audio.';
+
+            return $expectsJson
+                ? response()->json(['ok' => false, 'message' => $message], 422)
+                : back()->with('error', $message);
+        }
+
+        if (filled($page->audio_path)) {
+            $message = 'This page already has narration audio.';
+
+            return $expectsJson
+                ? response()->json(['ok' => false, 'message' => $message], 422)
+                : back()->with('error', $message);
+        }
+
+        $user = $request->user();
+
+        $inFlight = StoryAiJob::query()
+            ->where('story_project_id', $story->id)
+            ->where('story_page_id', $page->id)
+            ->where('type', StoryAiJobType::PageAudio)
+            ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
+            ->exists();
+
+        if ($inFlight) {
+            $message = 'Audio generation is already in progress for this page.';
+
+            return $expectsJson
+                ? response()->json(['ok' => true, 'queued' => true, 'message' => $message])
+                : back()->with('info', $message);
+        }
+
+        $needed = $credits->cost('audio');
+        if ((int) $user->story_credits < $needed) {
+            $message = 'Not enough credits for page narration. Required: '.$needed.' credits.';
+
+            return $expectsJson
+                ? response()->json(['ok' => false, 'message' => $message], 422)
+                : back()->with('error', $message);
+        }
+
+        $voice = is_array($story->meta) ? ($story->meta['tts_voice'] ?? null) : null;
+
+        StoryAiJob::create([
+            'story_project_id' => $story->id,
+            'story_page_id' => $page->id,
+            'type' => StoryAiJobType::PageAudio,
+            'status' => StoryAiJobStatus::Pending,
+            'payload' => ['stage' => 'audio', 'source' => 'manual'],
+        ]);
+
+        GenerateStoryPageAudioJob::dispatch($page->id, is_string($voice) && $voice !== '' ? $voice : null, true)
+            ->onQueue(config('story.queues.audio'));
+
+        $message = 'Narration audio queued for page '.$page->page_number.'.';
 
         return $expectsJson
             ? response()->json([

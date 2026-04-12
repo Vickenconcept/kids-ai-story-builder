@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { Clapperboard, Loader2 } from 'lucide-vue-next';
+import { Clapperboard, Loader2, Volume2 } from 'lucide-vue-next';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import StoryCoverSettingsAccordion from '@/components/StoryCoverSettingsAccordion.vue';
 import StoryFlipbook from '@/components/StoryFlipbook.vue';
@@ -22,6 +22,7 @@ type PageRow = {
     audio_url: string | null;
     video_url: string | null;
     video_generating?: boolean;
+    audio_generating?: boolean;
 };
 
 type QuizDraftRow = {
@@ -64,6 +65,7 @@ const props = defineProps<{
     story_credits: number;
     feature_tier: string;
     video_credit_cost: number;
+    audio_credit_cost: number;
 }>();
 
 const initialReadMode = props.project.flip_settings?.readMode === 'scroll' ? 'scroll' : 'flip';
@@ -86,8 +88,11 @@ const pageSaveState = ref<Record<string, 'idle' | 'unsaved' | 'saving' | 'saved'
 const advancedSaveBusy = ref(false);
 const advancedDirty = ref(false);
 const pageVideoBusy = ref<Record<string, boolean>>({});
-/** Merged from fetch poll so we do not Inertia-reload (which resets the flipbook) while page video jobs run. */
-const pageMediaPoll = ref<Record<string, { video_url: string | null; video_generating: boolean }>>({});
+const pageAudioBusy = ref<Record<string, boolean>>({});
+/** Merged from fetch poll so we do not Inertia-reload (which resets the flipbook) while page media jobs run. */
+const pageMediaPoll = ref<
+    Record<string, { video_url: string | null; video_generating: boolean; audio_url: string | null; audio_generating: boolean }>
+>({});
 const polledStoryCredits = ref<number | null>(null);
 const currentFlipPageUuid = ref<string | null>(null);
 const creditsModal = useCreditsModal();
@@ -132,8 +137,10 @@ const displayPages = computed((): PageRow[] =>
 
         return {
             ...p,
-            video_url: o.video_url,
+            video_url: o.video_url ?? p.video_url,
             video_generating: o.video_generating,
+            audio_url: o.audio_url ?? p.audio_url,
+            audio_generating: o.audio_generating,
         };
     }),
 );
@@ -143,6 +150,7 @@ const displayStoryCredits = computed(() =>
 );
 
 const canAffordSingleVideo = computed(() => displayStoryCredits.value >= props.video_credit_cost);
+const canAffordSingleAudio = computed(() => displayStoryCredits.value >= props.audio_credit_cost);
 
 const mergedPageVideoBusy = computed(() => {
     const m: Record<string, boolean> = { ...pageVideoBusy.value };
@@ -156,7 +164,22 @@ const mergedPageVideoBusy = computed(() => {
     return m;
 });
 
+const mergedPageAudioBusy = computed(() => {
+    const m: Record<string, boolean> = { ...pageAudioBusy.value };
+
+    for (const p of displayPages.value) {
+        if (p.audio_generating) {
+            m[p.uuid] = true;
+        }
+    }
+
+    return m;
+});
+
 const canGeneratePageVideoInFlipbook = computed(() => isPro.value && canAffordSingleVideo.value);
+const canGeneratePageAudioInFlipbook = computed(
+    () => !props.project.include_narration && canAffordSingleAudio.value,
+);
 const pageVideoActionHint = computed(() => {
     if (!isPro.value) {
         return 'Upgrade to Pro to generate page video.';
@@ -164,6 +187,17 @@ const pageVideoActionHint = computed(() => {
 
     if (!canAffordSingleVideo.value) {
         return 'Not enough credits for a page video.';
+    }
+
+    return '';
+});
+const pageAudioActionHint = computed(() => {
+    if (props.project.include_narration) {
+        return '';
+    }
+
+    if (!canAffordSingleAudio.value) {
+        return 'Not enough credits for page narration.';
     }
 
     return '';
@@ -263,6 +297,15 @@ const flipbookKey = computed(() =>
         props.project.sharing_enabled,
         props.pages.length,
         props.pages.map((p) => p.uuid + (p.quiz_questions ? JSON.stringify(p.quiz_questions) : '')).join('-'),
+        JSON.stringify(
+            displayPages.value.map((p) => ({
+                u: p.uuid,
+                a: p.audio_url ?? '',
+                v: p.video_url ?? '',
+                ag: Boolean(p.audio_generating),
+                vg: Boolean(p.video_generating),
+            })),
+        ),
     ].join('|'),
 );
 
@@ -278,13 +321,17 @@ const illustrationStyleOptions = [
     { value: 'paper-collage', label: 'Paper collage' },
 ];
 
-/** Flip-to-play narration only when there is narration and no project-wide page video (avoids double audio). */
+const hasAnyPageNarrationAudio = computed(() => displayPages.value.some((p) => Boolean(p.audio_url)));
+
+/** Flip-to-play narration when there is something to play and no project-wide page video (avoids double audio). */
 const flipbookPlayAudioOnFlip = computed(
-    () => props.project.include_narration && !props.project.include_video,
+    () =>
+        !props.project.include_video &&
+        (props.project.include_narration || hasAnyPageNarrationAudio.value),
 );
 
 const flipbookNarrationOffHint = computed(() => {
-    if (props.project.include_narration && props.project.include_video) {
+    if (props.project.include_video) {
         return 'Page videos include audio, so flip-to-play narration stays off to avoid overlapping sound.';
     }
 
@@ -512,6 +559,10 @@ function isPageVideoGenerating(page: PageRow): boolean {
     return Boolean(page.video_generating) || Boolean(pageVideoBusy.value[page.uuid]);
 }
 
+function isPageAudioGenerating(page: PageRow): boolean {
+    return Boolean(page.audio_generating) || Boolean(pageAudioBusy.value[page.uuid]);
+}
+
 function canGenerateVideoForPage(page: PageRow): boolean {
     if (!isPro.value) {
         return false;
@@ -531,6 +582,16 @@ function canGenerateVideoForPage(page: PageRow): boolean {
 async function queuePageVideoGeneration(page: PageRow): Promise<void> {
     if (!canGenerateVideoForPage(page)) {
         return;
+    }
+
+    const merged = displayPages.value.find((p) => p.uuid === page.uuid) ?? page;
+    if (!merged.audio_url) {
+        const ok = window.confirm(
+            'This page has no narration audio yet. The generated video will not include a soundtrack (silent video). You can use “Generate narration” on the page first if you want audio in the clip.\n\nContinue with video generation?',
+        );
+        if (!ok) {
+            return;
+        }
     }
 
     pageVideoBusy.value = { ...pageVideoBusy.value, [page.uuid]: true };
@@ -575,6 +636,8 @@ async function queuePageVideoGeneration(page: PageRow): Promise<void> {
             [page.uuid]: {
                 video_url: pageMediaPoll.value[page.uuid]?.video_url ?? page.video_url,
                 video_generating: true,
+                audio_url: pageMediaPoll.value[page.uuid]?.audio_url ?? page.audio_url,
+                audio_generating: pageMediaPoll.value[page.uuid]?.audio_generating ?? Boolean(page.audio_generating),
             },
         };
 
@@ -586,6 +649,88 @@ async function queuePageVideoGeneration(page: PageRow): Promise<void> {
 
 function generateVideoForPage(page: PageRow): void {
     void queuePageVideoGeneration(page);
+}
+
+function canGenerateAudioForPage(page: PageRow): boolean {
+    if (props.project.include_narration) {
+        return false;
+    }
+
+    if (!canAffordSingleAudio.value) {
+        return false;
+    }
+
+    if (Boolean(page.audio_url)) {
+        return false;
+    }
+
+    if (isPageAudioGenerating(page)) {
+        return false;
+    }
+
+    return Boolean((page.text_content ?? '').trim());
+}
+
+async function queuePageAudioGeneration(page: PageRow): Promise<void> {
+    if (!canGenerateAudioForPage(page)) {
+        return;
+    }
+
+    pageAudioBusy.value = { ...pageAudioBusy.value, [page.uuid]: true };
+
+    try {
+        const csrf = document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute('content') ?? '';
+
+        const response = await fetch(`/stories/${props.project.uuid}/pages/${page.uuid}/generate-audio`, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrf,
+            },
+            body: JSON.stringify({}),
+        });
+
+        const data = (await response.json().catch(() => null)) as
+            | { ok?: boolean; message?: string; story_credits?: number }
+            | null;
+
+        if (!response.ok || data?.ok === false) {
+            pageAudioBusy.value = { ...pageAudioBusy.value, [page.uuid]: false };
+
+            if ((data?.message ?? '').toLowerCase().includes('not enough credits')) {
+                openCreditsModal();
+            }
+
+            return;
+        }
+
+        if (typeof data?.story_credits === 'number') {
+            polledStoryCredits.value = data.story_credits;
+        }
+
+        pageMediaPoll.value = {
+            ...pageMediaPoll.value,
+            [page.uuid]: {
+                video_url: pageMediaPoll.value[page.uuid]?.video_url ?? page.video_url,
+                video_generating: pageMediaPoll.value[page.uuid]?.video_generating ?? Boolean(page.video_generating),
+                audio_url: pageMediaPoll.value[page.uuid]?.audio_url ?? page.audio_url,
+                audio_generating: true,
+            },
+        };
+
+        void fetchPageMediaStatus();
+    } catch {
+        pageAudioBusy.value = { ...pageAudioBusy.value, [page.uuid]: false };
+    }
+}
+
+function generateAudioForPage(page: PageRow): void {
+    void queuePageAudioGeneration(page);
 }
 
 function onFlipViewPageChange(pageUuid: string | null): void {
@@ -602,6 +747,16 @@ function onFlipbookGeneratePageVideo(pageUuid: string): void {
     }
 
     void queuePageVideoGeneration(page);
+}
+
+function onFlipbookGeneratePageAudio(pageUuid: string): void {
+    const page = props.pages.find((p) => p.uuid === pageUuid);
+
+    if (!page) {
+        return;
+    }
+
+    void queuePageAudioGeneration(page);
 }
 
 function setViewMode(mode: 'flip' | 'scroll'): void {
@@ -748,6 +903,7 @@ watch(generateVideo, (on) => {
 let poll: ReturnType<typeof setInterval> | null = null;
 
 const anyPageVideoGenerating = computed(() => displayPages.value.some((p) => Boolean(p.video_generating)));
+const anyPageAudioGenerating = computed(() => displayPages.value.some((p) => Boolean(p.audio_generating)));
 
 async function fetchPageMediaStatus(): Promise<void> {
     try {
@@ -759,15 +915,42 @@ async function fetchPageMediaStatus(): Promise<void> {
             return;
         }
         const data = (await res.json()) as {
-            pages: { uuid: string; video_url: string | null; video_generating: boolean }[];
+            pages: {
+                uuid: string;
+                audio_url: string | null;
+                audio_generating: boolean;
+                video_url: string | null;
+                video_generating: boolean;
+            }[];
             story_credits: number;
         };
-        const next: Record<string, { video_url: string | null; video_generating: boolean }> = {};
+        const next: Record<
+            string,
+            { video_url: string | null; video_generating: boolean; audio_url: string | null; audio_generating: boolean }
+        > = {};
         for (const p of data.pages) {
-            next[p.uuid] = { video_url: p.video_url, video_generating: p.video_generating };
+            next[p.uuid] = {
+                video_url: p.video_url,
+                video_generating: p.video_generating,
+                audio_url: p.audio_url,
+                audio_generating: p.audio_generating,
+            };
         }
         pageMediaPoll.value = next;
         polledStoryCredits.value = data.story_credits;
+
+        const nextVideoBusy = { ...pageVideoBusy.value };
+        const nextAudioBusy = { ...pageAudioBusy.value };
+        for (const p of data.pages) {
+            if (!p.video_generating) {
+                delete nextVideoBusy[p.uuid];
+            }
+            if (!p.audio_generating) {
+                delete nextAudioBusy[p.uuid];
+            }
+        }
+        pageVideoBusy.value = nextVideoBusy;
+        pageAudioBusy.value = nextAudioBusy;
     } catch {
         /* ignore network errors */
     }
@@ -789,7 +972,7 @@ onMounted(() => {
             return;
         }
 
-        if (anyPageVideoGenerating.value) {
+        if (anyPageVideoGenerating.value || anyPageAudioGenerating.value) {
             void fetchPageMediaStatus();
         }
     }, 8000);
@@ -1125,8 +1308,13 @@ onUnmounted(() => {
                         :can-generate-page-video="canGeneratePageVideoInFlipbook"
                         :page-video-busy="mergedPageVideoBusy"
                         :page-video-action-hint="pageVideoActionHint"
+                        :show-page-audio-action="!project.include_narration"
+                        :can-generate-page-audio="canGeneratePageAudioInFlipbook"
+                        :page-audio-busy="mergedPageAudioBusy"
+                        :page-audio-action-hint="pageAudioActionHint"
                         @view-page-change="onFlipViewPageChange"
                         @generate-page-video="onFlipbookGeneratePageVideo"
+                        @generate-page-audio="onFlipbookGeneratePageAudio"
                     >
                         <template #setup-extra>
                             <StoryCoverSettingsAccordion
@@ -1192,26 +1380,48 @@ onUnmounted(() => {
                             <!-- Card header -->
                             <div class="flex items-center justify-between gap-2 border-b border-border/60 bg-muted/30 px-5 py-3">
                                 <h2 class="font-semibold">Page {{ currentScrollPage.page_number }}</h2>
-                                <div v-if="isPro" class="flex items-center gap-2">
-                                    <span class="text-muted-foreground text-xs">Video: {{ props.video_credit_cost }} cr</span>
-                                    <Button
-                                        type="button"
-                                        size="sm"
-                                        variant="outline"
-                                        :disabled="!canGenerateVideoForPage(currentScrollPage)"
-                                        :title="pageVideoActionHint"
-                                        @click="generateVideoForPage(currentScrollPage)"
+                                <div v-if="!project.include_narration || isPro" class="flex flex-wrap items-center justify-end gap-2">
+                                    <template
+                                        v-if="
+                                            !project.include_narration &&
+                                            (!currentScrollPage.audio_url || isPageAudioGenerating(currentScrollPage))
+                                        "
                                     >
-                                        <Loader2 v-if="isPageVideoGenerating(currentScrollPage)" class="mr-1.5 size-3.5 animate-spin" />
-                                        <Clapperboard v-else class="mr-1.5 size-3.5" />
-                                        {{
-                                            isPageVideoGenerating(currentScrollPage)
-                                                ? 'Video…'
-                                                : currentScrollPage.video_url
-                                                  ? 'Regen video'
-                                                  : 'Gen video'
-                                        }}
-                                    </Button>
+                                        <span class="text-muted-foreground text-xs">Narration: {{ props.audio_credit_cost }} cr</span>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="outline"
+                                            :disabled="!canGenerateAudioForPage(currentScrollPage)"
+                                            :title="pageAudioActionHint"
+                                            @click="generateAudioForPage(currentScrollPage)"
+                                        >
+                                            <Loader2 v-if="isPageAudioGenerating(currentScrollPage)" class="mr-1.5 size-3.5 animate-spin" />
+                                            <Volume2 v-else class="mr-1.5 size-3.5" />
+                                            {{ isPageAudioGenerating(currentScrollPage) ? 'Audio…' : 'Gen narration' }}
+                                        </Button>
+                                    </template>
+                                    <template v-if="isPro">
+                                        <span class="text-muted-foreground text-xs">Video: {{ props.video_credit_cost }} cr</span>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="outline"
+                                            :disabled="!canGenerateVideoForPage(currentScrollPage)"
+                                            :title="pageVideoActionHint"
+                                            @click="generateVideoForPage(currentScrollPage)"
+                                        >
+                                            <Loader2 v-if="isPageVideoGenerating(currentScrollPage)" class="mr-1.5 size-3.5 animate-spin" />
+                                            <Clapperboard v-else class="mr-1.5 size-3.5" />
+                                            {{
+                                                isPageVideoGenerating(currentScrollPage)
+                                                    ? 'Video…'
+                                                    : currentScrollPage.video_url
+                                                      ? 'Regen video'
+                                                      : 'Gen video'
+                                            }}
+                                        </Button>
+                                    </template>
                                 </div>
                             </div>
 
@@ -1261,6 +1471,7 @@ onUnmounted(() => {
 
                                     <audio v-if="currentScrollPage.audio_url" :src="currentScrollPage.audio_url" controls class="w-full rounded-lg" />
                                     <p v-else-if="project.include_narration" class="text-xs text-muted-foreground text-center">Audio pending…</p>
+                                    <p v-else class="text-xs text-muted-foreground text-center">No narration for this page yet.</p>
                                 </div>
                             </div>
                         </article>

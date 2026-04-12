@@ -79,6 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{story:uuid}/start-media', [StoryProjectController::class, 'startMediaGeneration'])->name('start-media');
         Route::get('/{story:uuid}/export/kdp', [StoryProjectController::class, 'exportKdpPackage'])->name('export.kdp');
         Route::post('/{story:uuid}/pages/{page:uuid}/generate-video', [StoryProjectController::class, 'generatePageVideo'])->name('pages.video');
+        Route::post('/{story:uuid}/pages/{page:uuid}/generate-audio', [StoryProjectController::class, 'generatePageAudio'])->name('pages.audio');
         Route::patch('/{story:uuid}/pages/{page:uuid}', [StoryPageController::class, 'update'])->name('pages.update');
     });
 

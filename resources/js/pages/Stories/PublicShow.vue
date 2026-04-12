@@ -70,7 +70,11 @@ watch(
     },
 );
 
-const playAudioOnFlip = computed(() => props.project.include_narration && !props.project.include_video);
+const hasAnyPageAudio = computed(() => props.pages.some((p) => Boolean(p.audio_url)));
+
+const playAudioOnFlip = computed(
+    () => !props.project.include_video && (props.project.include_narration || hasAnyPageAudio.value),
+);
 
 const flipbookKey = computed(() =>
     [

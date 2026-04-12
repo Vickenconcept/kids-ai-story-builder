@@ -16,7 +16,9 @@ class StoryVideoLibraryController extends Controller
     {
         $user = $request->user();
 
-        $rows = StoryPage::query()
+        $perPage = min(48, max(1, (int) $request->input('per_page', 12)));
+
+        $videos = StoryPage::query()
             ->select('story_pages.*')
             ->join('story_projects', 'story_projects.id', '=', 'story_pages.story_project_id')
             ->where('story_projects.user_id', $user->id)
@@ -25,34 +27,29 @@ class StoryVideoLibraryController extends Controller
             ->with(['project:id,uuid,title,updated_at'])
             ->orderByDesc('story_projects.updated_at')
             ->orderBy('story_pages.page_number')
-            ->get();
+            ->paginate($perPage)
+            ->through(function (StoryPage $page): array {
+                $videoUrl = StoryMediaUrl::resolve($page->video_path) ?? '';
+                $project = $page->project;
+                if ($project === null) {
+                    throw new \RuntimeException('Story page is missing its parent project.');
+                }
 
-        $videos = $rows->map(function (StoryPage $page): ?array {
-            $videoUrl = StoryMediaUrl::resolve($page->video_path);
-            if ($videoUrl === null || $videoUrl === '') {
-                return null;
-            }
+                $slug = Str::slug($project->title);
+                $downloadName = $slug !== '' ? "{$slug}-page-{$page->page_number}.mp4" : "story-{$project->uuid}-page-{$page->page_number}.mp4";
 
-            $project = $page->project;
-            if ($project === null) {
-                return null;
-            }
-
-            $slug = Str::slug($project->title);
-            $downloadName = $slug !== '' ? "{$slug}-page-{$page->page_number}.mp4" : "story-{$project->uuid}-page-{$page->page_number}.mp4";
-
-            return [
-                'id' => $page->id,
-                'page_uuid' => $page->uuid,
-                'page_number' => $page->page_number,
-                'story_uuid' => $project->uuid,
-                'story_title' => $project->title,
-                'video_url' => $videoUrl,
-                'image_url' => StoryMediaUrl::resolve($page->image_path),
-                'download_filename' => $downloadName,
-                'story_editor_url' => route('stories.show', $project),
-            ];
-        })->filter()->values();
+                return [
+                    'id' => $page->id,
+                    'page_uuid' => $page->uuid,
+                    'page_number' => $page->page_number,
+                    'story_uuid' => $project->uuid,
+                    'story_title' => $project->title,
+                    'video_url' => $videoUrl,
+                    'image_url' => StoryMediaUrl::resolve($page->image_path),
+                    'download_filename' => $downloadName,
+                    'story_editor_url' => route('stories.show', $project),
+                ];
+            });
 
         return Inertia::render('Stories/VideoLibrary', [
             'videos' => $videos,
