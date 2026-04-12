@@ -55,6 +55,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
                 /** One-time sign-in details when reseller invitation email could not be sent. */
                 'reseller_invite_fallback' => fn () => $request->session()->get('reseller_invite_fallback'),
             ],

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CreditPackController;
+use App\Http\Controllers\Admin\MarketingMailController;
 use App\Http\Controllers\Admin\StoryPlanController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Api\JvzooIpnController;
@@ -101,6 +102,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::patch('/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('can:manage-users')->prefix('admin/marketing-mail')->name('admin.marketing-mail.')->group(function () {
+        Route::get('/', [MarketingMailController::class, 'index'])->name('index');
+        Route::get('/user-search', [MarketingMailController::class, 'userSearch'])
+            ->middleware('throttle:60,1')
+            ->name('user-search');
+        Route::post('/send', [MarketingMailController::class, 'send'])
+            ->middleware('throttle:15,1')
+            ->name('send');
     });
 
     Route::middleware('elite')->prefix('reseller')->name('reseller.')->group(function () {
