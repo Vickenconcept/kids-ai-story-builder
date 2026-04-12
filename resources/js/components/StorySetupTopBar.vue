@@ -361,7 +361,7 @@ const socialShareLinks = computed(() => {
                             Sell on Amazon
                         </Button>
                     </DialogTrigger>
-                    <DialogContent class="sm:max-w-2xl">
+                    <DialogContent class="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
                         <DialogHeader>
                             <DialogTitle>Publish This Story on Amazon KDP</DialogTitle>
                             <DialogDescription>
@@ -369,7 +369,18 @@ const socialShareLinks = computed(() => {
                             </DialogDescription>
                         </DialogHeader>
 
-                        <div class="space-y-4 text-sm">
+                        <p class="text-sm">
+                            <a
+                                href="https://docs.google.com/document/d/1EJcHZbazNcYDQZrFgciwNxn9tNEJ7FJy_YYdidR6OSQ/edit?usp=sharing"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-primary font-medium underline underline-offset-2 hover:no-underline"
+                            >
+                                Amazon KDP publishing guide (Google Doc)
+                            </a>
+                        </p>
+
+                        <div class="space-y-3 text-sm">
                             <div class="rounded-md border border-border p-3">
                                 <p class="font-semibold">Recommended flow</p>
                                 <ol class="text-muted-foreground mt-2 list-inside list-decimal space-y-1.5">
@@ -381,21 +392,14 @@ const socialShareLinks = computed(() => {
                                 </ol>
                             </div>
 
-                            <div class="rounded-md border border-amber-300 bg-amber-50 p-3 text-amber-900">
-                                <p class="font-semibold">Important quality rules</p>
-                                <ul class="mt-2 list-inside list-disc space-y-1">
-                                    <li>Edit AI output before publishing. Do not upload raw drafts.</li>
-                                    <li>Avoid repetitive, low-quality, or inconsistent content.</li>
-                                    <li>Keep character consistency and image-story alignment.</li>
-                                </ul>
-                            </div>
-
-                            <div class="rounded-md border border-sky-300 bg-sky-50 p-3 text-sky-900">
-                                <p class="font-semibold">Positioning tip</p>
-                                <p class="mt-1">
-                                    Stronger message: "Create and sell your own children's books on Amazon."
-                                </p>
-                            </div>
+                            <p
+                                class="text-[10px] leading-snug rounded border border-amber-200/70 bg-amber-50/80 px-2 py-1.5 text-amber-950"
+                                role="note"
+                            >
+                                <span class="font-semibold text-amber-900">Quality:</span>
+                                Edit AI output before publishing — do not upload raw drafts. Avoid repetitive or low-quality
+                                content; keep characters and images aligned with the story.
+                            </p>
 
                             <div class="rounded-md border border-border p-3">
                                 <p class="font-semibold">Export settings</p>

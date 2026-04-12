@@ -5,7 +5,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 </script>
 
 <template>
-    <Head title="Wait — Your Storybooks Are Missing The Most Powerful Feature" />
+    <Head title="PRO Video — Sell and Scale Your KDP Books with Short-Form Video" />
 
     <!-- URGENT HEADER BAR -->
     <div class="bg-red-600 text-white text-center px-4 py-3 text-sm font-bold">
@@ -23,13 +23,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
                 🚨 One-Time Upgrade — This Page Will Not Appear Again
             </p>
             <h1 class="mt-6 text-4xl font-extrabold leading-tight md:text-6xl">
-                Wait— Your Storybooks Are Still<br class="hidden md:block"/>
-                <span class="text-yellow-400">Missing The MOST Powerful Feature</span>
+                Your KDP Asset Is Built —<br class="hidden md:block"/>
+                <span class="text-yellow-400">Now Turn Every Page Into Video That Sells</span>
             </h1>
             <p class="mx-auto mt-6 max-w-2xl text-base text-slate-300 md:text-lg">
-                You just unlocked the ability to create storybooks.<br/>
-                But right now, your stories can only be <em>read</em>.<br/>
-                <strong class="text-white">What if they could be <span class="text-yellow-400">watched</span>?</strong>
+                Buyers and algorithms reward <strong class="text-white">video</strong>: Shorts, Reels, TikTok, and previews that drive traffic to your listings.<br/>
+                This upgrade turns each story page into a dynamic clip with narration synced — so you market like a publisher,
+                not someone hiding a PDF in a folder.
             </p>
         </div>
     </section>
@@ -96,9 +96,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
     <!-- DEMO MOMENT -->
     <section class="bg-slate-950 text-white px-4 py-16 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">See The Difference</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🎬 Watch: Your Story Becomes a Video</h2>
-            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">Every story page transforms into a dynamic animated video scene — synced with your narration automatically.</p>
+            <p class="text-xs font-semibold uppercase tracking-widest text-yellow-400">Proof for buyers &amp; affiliates</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">🎬 Watch: Pages Become Video That Markets Your KDP Book</h2>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-slate-400">Short-form video is how you drive attention to listings, bundles, and launches. See each page turn into a narrated clip you can post everywhere.</p>
             <div
                 class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border-2 border-yellow-400/40 bg-slate-800"
             >

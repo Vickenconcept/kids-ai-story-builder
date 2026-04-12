@@ -5,7 +5,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
 </script>
 
 <template>
-    <Head title="Create Storybooks in Minutes - DreamForge AI" />
+    <Head title="Create and Sell Kids Storybooks on Amazon KDP with AI — DreamForge AI" />
 
     <!-- -- HERO ------------------------------------------------- -->
     <section class="relative overflow-hidden bg-linear-to-br from-violet-950 via-indigo-950 to-purple-950 text-white">
@@ -23,16 +23,17 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
             </div>
             <p class="inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-fuchsia-300">
                 <span class="size-1.5 animate-pulse rounded-full bg-fuchsia-400" />
-                Now Live - Special Launch Price
+                KDP + AI publishing — Now live · Special launch
             </p>
             <h1 class="mt-6 text-4xl font-extrabold leading-tight md:text-6xl lg:text-7xl">
-                Turn One Idea Into a Fully<br class="hidden md:block" />
-                <span class="bg-linear-to-r from-fuchsia-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">Illustrated, Narrated Storybook</span><br class="hidden md:block" />
-                in Minutes
+                Create and Sell Kids Storybooks<br class="hidden md:block" />
+                <span class="bg-linear-to-r from-fuchsia-400 via-violet-400 to-indigo-400 bg-clip-text text-transparent">on Amazon KDP in Minutes</span><br class="hidden md:block" />
+                Using AI — No Writing, No Design, No Recording
             </h1>
             <p class="mx-auto mt-6 max-w-2xl text-base text-violet-200 md:text-lg">
-                No writing skills. No design skills. No tech knowledge.<br />
-                Just enter an idea - and your complete story comes to life.
+                Turn a simple idea into a complete kids book: structured pages, matching illustrations, read-aloud voice,
+                shareable flipbook, and page videos — then export and publish for Amazon KDP. Built for people who want
+                <strong class="text-white">real products they can sell</strong>, not another generic AI toy.
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
                 <a href="https://www.jvzoo.com/b/116189/437351/3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center">
@@ -46,10 +47,10 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         <!-- Trust bar -->
         <div class="relative border-t border-white/10 bg-white/5">
             <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-4 py-5 text-xs font-medium text-violet-300">
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Full illustrated story pages</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> AI-generated visuals per page</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Built-in voice narration</span>
-                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Flipbook reader included</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Built for Amazon KDP publishing</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Full story + matched illustrations</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Read-aloud voice narration</span>
+                <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Flipbook + page videos</span>
                 <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> KDP-ready export</span>
                 <span class="flex items-center gap-1.5"><span class="text-fuchsia-400">✓</span> Interactive quiz layers</span>
             </div>
@@ -224,9 +225,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
     <!-- -- DEMO SECTION ------------------------------------------ -->
     <section id="demo" class="bg-indigo-950 text-white px-4 py-20 md:px-8">
         <div class="mx-auto max-w-4xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">The Most Important 2 Minutes You'll Spend Today</p>
-            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch This: From One Prompt to Complete Storybook in Minutes</h2>
-            <p class="mx-auto mt-4 max-w-xl text-sm text-indigo-300">No explaining needed - they see it, they want it.</p>
+            <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">The 2-minute proof (KDP + AI)</p>
+            <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Watch: One Idea → Full Book + Voice + Flipbook + Video — Ready to Sell</h2>
+            <p class="mx-auto mt-4 max-w-xl text-sm text-indigo-300">This is the visual proof affiliates and buyers respond to: a real publishable asset, not a chat transcript.</p>
 
             <div
                 class="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-violet-900/40"

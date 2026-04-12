@@ -74,7 +74,7 @@ const features = [
 const steps = [
     { num: '01', title: 'Enter Your Idea', desc: 'Type a story idea, pick your age group, illustration style, and page count. Our AI handles the rest.' },
     { num: '02', title: 'AI Builds Everything', desc: 'Watch as pages, illustrations, narration and videos are generated automatically in the background.' },
-    { num: '03', title: 'Read, Share & Sell', desc: 'View in the interactive flipbook, share the link, or export to PDF for KDP publishing.' },
+    { num: '03', title: 'Publish & Sell', desc: 'Share the flipbook link, export for print, and ship a KDP-ready package when you are on Elite — built for selling, not just saving files.' },
 ];
 
 const faqs = [
@@ -183,8 +183,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="DreamForge AI – Create Illustrated Storybooks in Minutes">
-        <meta name="description" content="Turn any idea into a fully illustrated, narrated children's storybook in minutes using AI. No writing or design skills needed." />
+    <Head title="DreamForge AI — Create and Sell Kids Books on Amazon KDP with AI">
+        <meta name="description" content="Turn ideas into illustrated kids storybooks with voice, flipbook, and page videos — built for creators who want to publish and sell on Amazon KDP. Start free." />
     </Head>
 
     <div ref="landingRoot" class="min-h-screen scroll-smooth bg-slate-50 text-slate-900 antialiased dark:bg-[#0d0d1a] dark:text-white">
@@ -251,24 +251,25 @@ onBeforeUnmount(() => {
                 <!-- Badge -->
                 <span class="js-hero-badge mb-6 inline-flex items-center gap-2 rounded-full border border-violet-300 bg-violet-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-violet-700 dark:border-violet-400/30 dark:bg-violet-500/10 dark:text-violet-300">
                     <span class="size-1.5 animate-pulse rounded-full bg-violet-400" />
-                    Now Live!! Special Launch Price
+                    AI + Amazon KDP — Live now
                 </span>
 
                 <!-- Headline -->
                 <h1 class="js-hero-title mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl lg:text-7xl">
-                    Turn Any Idea Into a
+                    Create and sell kids storybooks
                     <span class="bg-linear-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
-                        Fully Illustrated
+                        on Amazon KDP
                     </span>
                     <br class="hidden md:block" />
-                    Storybook in Minutes
+                    in minutes — with AI
                 </h1>
 
                 <!-- Sub -->
                 <p class="js-hero-sub mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg dark:text-slate-400">
-                    No writing skills. No design skills. No tech knowledge.<br />
-                    Just enter your idea — AI writes the story, draws every page,<br class="hidden md:block" />
-                    adds narration, generates videos, and builds an interactive flipbook.
+                    No writing, no design, no voice booth.<br />
+                    One workflow builds the book <strong class="text-slate-800 dark:text-slate-200">and</strong> the assets buyers expect:
+                    illustrations per page, read-aloud narration, a shareable flipbook, and optional page videos — so you are
+                    positioned as a <strong class="text-slate-800 dark:text-slate-200">publisher</strong>, not just another &quot;AI tool&quot; user.
                 </p>
 
                 <!-- CTAs -->
@@ -394,12 +395,12 @@ onBeforeUnmount(() => {
         <!-- ── TRUST STRIP ─────────────────────────────────────── -->
         <div class="js-trust-strip border-y border-slate-200 bg-white dark:border-white/6 dark:bg-white/2">
             <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-5 py-5 text-xs font-medium text-slate-700 dark:text-slate-500">
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Built for Amazon KDP publishing</span>
                 <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Full illustrated story pages</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> AI-generated visuals per page</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> AI visuals matched to each page</span>
                 <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Built-in voice narration</span>
                 <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Animated page videos</span>
                 <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Interactive flipbook reader</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> KDP-ready PDF export</span>
             </div>
         </div>
 

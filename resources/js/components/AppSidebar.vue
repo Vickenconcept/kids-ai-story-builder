@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookMarked, Coins, Crown, LayoutGrid, Monitor, Moon, Settings, ShieldCheck, Sparkles, Sun, UserPlus, Users, Zap } from 'lucide-vue-next';
+import { BookMarked, Coins, Crown, Film, LayoutGrid, Monitor, Moon, Settings, ShieldCheck, Sparkles, Sun, UserPlus, Users, Zap } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -17,6 +17,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as videoLibraryIndex } from '@/routes/video-library';
 import type { NavItem } from '@/types';
 
 const page = usePage<any>();
@@ -45,14 +46,22 @@ const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
         { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
         { title: 'Stories', href: '/stories', icon: BookMarked },
-        { title: 'Plans', href: '/plans', icon: Crown },
-        { title: 'Credits', href: '/credits', icon: Coins },
-        { title: 'Settings', href: '/settings', icon: Settings },
     ];
 
-    if (page.props.auth?.canUseReseller) {
-        items.splice(4, 0, { title: 'Reseller', href: '/reseller', icon: UserPlus });
+    if (featureTier.value === 'pro' || featureTier.value === 'elite') {
+        items.push({ title: 'Video library', href: videoLibraryIndex().url, icon: Film });
     }
+
+    items.push(
+        { title: 'Plans', href: '/plans', icon: Crown },
+        { title: 'Credits', href: '/credits', icon: Coins },
+    );
+
+    if (page.props.auth?.canUseReseller) {
+        items.push({ title: 'Reseller', href: '/reseller', icon: UserPlus });
+    }
+
+    items.push({ title: 'Settings', href: '/settings', icon: Settings });
 
     if (page.props.auth?.canManageUsers) {
         items.push({ title: 'Users', href: '/admin/users', icon: Users });

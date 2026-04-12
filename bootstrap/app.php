@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserHasProTier;
 use App\Http\Middleware\EnsureUserIsElite;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -31,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'elite' => EnsureUserIsElite::class,
+            'pro_tier' => EnsureUserHasProTier::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

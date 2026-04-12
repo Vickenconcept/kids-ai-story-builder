@@ -11,6 +11,7 @@ use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\Story\PublicStoryController;
 use App\Http\Controllers\Story\StoryPageController;
 use App\Http\Controllers\Story\StoryProjectController;
+use App\Http\Controllers\Story\StoryVideoLibraryController;
 use App\Models\StoryPlan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -107,6 +108,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->middleware('throttle:20,1')
             ->name('accounts.store');
     });
+
+    Route::middleware('pro_tier')->get('/video-library', [StoryVideoLibraryController::class, 'index'])->name('video-library.index');
 });
 
 require __DIR__.'/settings.php';
