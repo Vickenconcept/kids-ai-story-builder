@@ -18,7 +18,7 @@ class StoreStoryProjectRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'topic' => ['required', 'string', 'max:500'],
+            'topic' => ['required', 'string', 'max:10000'],
             'lesson_type' => ['required', 'string', 'max:80'],
             'age_group' => ['required', 'string', 'max:32'],
             'page_count' => ['required', 'integer', 'min:2', 'max:15'],

@@ -13,7 +13,20 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { cn } from '@/lib/utils';
 import type { BreadcrumbItem } from '@/types';
+
+/** Keep in sync with `StoreStoryProjectRequest` and DB (`title` varchar 255, `topic` text + max validation). */
+const STORY_TITLE_MAX = 255;
+const STORY_TOPIC_MAX = 10000;
+
+function clampStr(value: string, max: number): string {
+    if (value.length <= max) {
+        return value;
+    }
+
+    return value.slice(0, max);
+}
 
 type CreditCosts = {
     text: number;
@@ -155,6 +168,33 @@ const hasSelectedTemplateWhenNeeded = computed(() => creationMode.value !== 'tem
 const canGenerate = computed(() => canSubmit.value && hasSelectedTemplateWhenNeeded.value);
 const creditsModal = useCreditsModal();
 
+const titleAtLimit = computed(() => form.title.length >= STORY_TITLE_MAX);
+const topicAtLimit = computed(() => form.topic.length >= STORY_TOPIC_MAX);
+
+watch(
+    () => form.title,
+    (v) => {
+        const s = typeof v === 'string' ? v : String(v ?? '');
+        const c = clampStr(s, STORY_TITLE_MAX);
+        if (c !== s) {
+            form.title = c;
+        }
+    },
+    { flush: 'sync' },
+);
+
+watch(
+    () => form.topic,
+    (v) => {
+        const s = typeof v === 'string' ? v : String(v ?? '');
+        const c = clampStr(s, STORY_TOPIC_MAX);
+        if (c !== s) {
+            form.topic = c;
+        }
+    },
+    { flush: 'sync' },
+);
+
 const nicheOptions = computed(() => {
     const set = new Set<string>();
 
@@ -227,8 +267,8 @@ function applyTemplate(template: StoryTemplate): void {
     }
 
     selectedTemplateId.value = template.id;
-    form.title = template.title;
-    form.topic = template.topic;
+    form.title = clampStr(template.title, STORY_TITLE_MAX);
+    form.topic = clampStr(template.topic, STORY_TOPIC_MAX);
     form.lesson_type = template.lesson_type;
     form.age_group = template.age_group;
     form.page_count = Math.min(15, Math.max(2, template.page_count));
@@ -475,26 +515,56 @@ const illustrationStyleOptions = [
                         </h2>
                         <div class="flex flex-col gap-4">
                             <div class="grid gap-1.5">
-                                <Label for="title" class="font-medium">Title</Label>
+                                <div class="flex items-end justify-between gap-2">
+                                    <Label for="title" class="font-medium">Title</Label>
+                                    <span
+                                        class="text-xs tabular-nums"
+                                        :class="titleAtLimit ? 'font-medium text-destructive' : 'text-muted-foreground'"
+                                    >
+                                        {{ form.title.length }} / {{ STORY_TITLE_MAX }}
+                                    </span>
+                                </div>
                                 <Input
                                     id="title"
                                     v-model="form.title"
                                     placeholder="e.g. Luna and the Lost Stars"
-                                    class="h-11"
+                                    :maxlength="STORY_TITLE_MAX"
                                     required
+                                    :class="
+                                        cn(
+                                            'h-11',
+                                            titleAtLimit &&
+                                                'border-destructive ring-1 ring-destructive/25 dark:ring-destructive/40',
+                                        )
+                                    "
                                 />
                                 <p v-if="form.errors.title" class="text-destructive text-xs">{{ form.errors.title }}</p>
                                 <p v-else class="text-muted-foreground text-xs">Give your story a short, catchy title.</p>
                             </div>
                             <div class="grid gap-1.5">
-                                <Label for="topic" class="font-medium">Topic / Premise</Label>
+                                <div class="flex items-end justify-between gap-2">
+                                    <Label for="topic" class="font-medium">Topic / Premise</Label>
+                                    <span
+                                        class="text-xs tabular-nums"
+                                        :class="topicAtLimit ? 'font-medium text-destructive' : 'text-muted-foreground'"
+                                    >
+                                        {{ form.topic.length }} / {{ STORY_TOPIC_MAX }}
+                                    </span>
+                                </div>
                                 <textarea
                                     id="topic"
                                     v-model="form.topic"
                                     placeholder="e.g. A young girl discovers a hidden world beneath the ocean and learns about bravery and friendship."
                                     rows="3"
-                                    class="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-lg border px-3 py-2 text-sm resize-none focus-visible:outline-none focus-visible:ring-1"
+                                    :maxlength="STORY_TOPIC_MAX"
                                     required
+                                    :class="
+                                        cn(
+                                            'border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-lg border px-3 py-2 text-sm resize-none focus-visible:outline-none focus-visible:ring-1',
+                                            topicAtLimit &&
+                                                'border-destructive ring-1 ring-destructive/25 dark:ring-destructive/40',
+                                        )
+                                    "
                                 />
                                 <p class="text-muted-foreground text-xs">Describe what the story should be about.</p>
                             </div>
