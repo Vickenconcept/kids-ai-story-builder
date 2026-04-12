@@ -5,10 +5,12 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import StoryCoverSettingsAccordion from '@/components/StoryCoverSettingsAccordion.vue';
 import StoryFlipbook from '@/components/StoryFlipbook.vue';
 import type {CoverConfigJson} from '@/components/StoryFlipbook.vue';
+import StoryQuizSheet from '@/components/StoryQuizSheet.vue';
 import StoryGenerationOverlay from '@/components/StoryGenerationOverlay.vue';
 import StorySetupTopBar from '@/components/StorySetupTopBar.vue';
 import { useCreditsModal } from '@/composables/useCreditsModal';
 import { Button } from '@/components/ui/button';
+import { normalizeStoryQuizQuestions, type StoryQuizQuestion } from '@/lib/storyQuiz';
 import { videoPlaybackSrc } from '@/lib/videoPlaybackUrl';
 
 type PageRow = {
@@ -25,11 +27,7 @@ type PageRow = {
     audio_generating?: boolean;
 };
 
-type QuizDraftRow = {
-    question: string;
-    choices: string[];
-    answer: string;
-};
+type QuizDraftRow = StoryQuizQuestion;
 
 const props = defineProps<{
     project: {
@@ -240,6 +238,17 @@ const showGenerationOverlay = computed(
 );
 
 const currentScrollPage = computed(() => displayPages.value[scrollCarouselIndex.value] ?? null);
+
+const scrollQuizQuestions = computed(() => {
+    const p = currentScrollPage.value;
+
+    if (!p) {
+        return [];
+    }
+
+    return normalizeStoryQuizQuestions(p.quiz_questions);
+});
+
 const canScrollPrev = computed(() => scrollCarouselIndex.value > 0);
 const canScrollNext = computed(() => scrollCarouselIndex.value < props.pages.length - 1);
 
@@ -371,37 +380,7 @@ const ttsVoiceOptions = [
 ];
 
 function normalizeQuiz(raw: unknown): QuizDraftRow[] {
-    let arr: unknown[] = [];
-
-    if (Array.isArray(raw)) {
-        arr = raw;
-    } else if (typeof raw === 'string') {
-        try {
-            const parsed = JSON.parse(raw);
-
-            if (Array.isArray(parsed)) {
-                arr = parsed;
-            }
-        } catch {
-            arr = [];
-        }
-    }
-
-    return arr
-        .map((item) => {
-            if (!item || typeof item !== 'object') {
-                return null;
-            }
-
-            const o = item as Record<string, unknown>;
-
-            return {
-                question: String(o.question ?? '').trim(),
-                choices: Array.isArray(o.choices) ? o.choices.map((c) => String(c)) : [],
-                answer: String(o.answer ?? '').trim(),
-            };
-        })
-        .filter((row): row is QuizDraftRow => Boolean(row && row.question));
+    return normalizeStoryQuizQuestions(raw);
 }
 
 function quizRowsFor(page: PageRow): QuizDraftRow[] {
@@ -1448,13 +1427,34 @@ onUnmounted(() => {
                             <!-- Card body -->
                             <div class="grid gap-0 lg:grid-cols-2">
                                 <!-- Text + quiz -->
-                                <div class="space-y-4 p-5 border-b lg:border-b-0 lg:border-r border-border/60">
+                                <div class="flex flex-col gap-4 p-5 border-b lg:border-b-0 lg:border-r border-border/60">
                                     <p class="text-sm leading-relaxed">{{ currentScrollPage.text_content }}</p>
 
-                                    <div v-if="project.include_quiz && currentScrollPage.quiz_questions" class="rounded-xl bg-muted/40 p-3 text-xs">
-                                        <p class="font-semibold mb-1">Quiz</p>
-                                        <pre class="overflow-x-auto whitespace-pre-wrap">{{ JSON.stringify(currentScrollPage.quiz_questions, null, 2) }}</pre>
+                                    <div
+                                        v-if="project.include_quiz && scrollQuizQuestions.length > 0"
+                                        class="overflow-hidden rounded-2xl border border-primary/20 bg-card/80 shadow-sm"
+                                    >
+                                        <StoryQuizSheet
+                                            :key="`${currentScrollPage.uuid}-scroll-quiz`"
+                                            :story-uuid="project.uuid"
+                                            :page-uuid="currentScrollPage.uuid"
+                                            :questions="scrollQuizQuestions"
+                                            :editable="false"
+                                            compact
+                                        />
                                     </div>
+
+                                    <audio
+                                        v-if="currentScrollPage.audio_url"
+                                        :key="currentScrollPage.audio_url"
+                                        :src="currentScrollPage.audio_url"
+                                        controls
+                                        class="w-full rounded-lg border border-border/60 bg-muted/20 p-1"
+                                    />
+                                    <p v-else-if="project.include_narration" class="text-xs text-muted-foreground">
+                                        Audio pending…
+                                    </p>
+                                    <p v-else class="text-xs text-muted-foreground">No narration for this page yet.</p>
 
                                     <div v-if="currentScrollPage.asset_errors && Object.keys(currentScrollPage.asset_errors).length" class="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive">
                                         <p class="font-semibold mb-1">Asset errors</p>
@@ -1488,10 +1488,6 @@ onUnmounted(() => {
                                     <div v-else class="flex h-40 items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
                                         Image pending…
                                     </div>
-
-                                    <audio v-if="currentScrollPage.audio_url" :src="currentScrollPage.audio_url" controls class="w-full rounded-lg" />
-                                    <p v-else-if="project.include_narration" class="text-xs text-muted-foreground text-center">Audio pending…</p>
-                                    <p v-else class="text-xs text-muted-foreground text-center">No narration for this page yet.</p>
                                 </div>
                             </div>
                         </article>

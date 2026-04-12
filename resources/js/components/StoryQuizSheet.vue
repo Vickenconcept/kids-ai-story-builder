@@ -16,8 +16,10 @@ const props = withDefaults(
         pageUuid: string;
         questions: QuizRow[];
         editable?: boolean;
+        /** Tighter layout when embedded beside story text (e.g. public read scroll view). */
+        compact?: boolean;
     }>(),
-    { editable: false },
+    { editable: false, compact: false },
 );
 
 const local = ref<QuizRow[]>([]);
@@ -115,15 +117,24 @@ function optionClass(qi: number, opt: string): string {
 </script>
 
 <template>
-    <div class="story-quiz-sheet flex h-full flex-col gap-3 overflow-y-auto p-4 sm:p-5">
-        <div class="flex items-center gap-2">
-            <span class="text-primary inline-flex size-9 items-center justify-center rounded-full bg-primary/15">
+    <div
+        class="story-quiz-sheet flex flex-col overflow-y-auto"
+        :class="compact ? 'gap-2 p-3' : 'h-full gap-3 p-4 sm:p-5'"
+    >
+        <div class="flex items-center gap-2" :class="compact ? 'gap-1.5' : ''">
+            <span
+                class="text-primary inline-flex shrink-0 items-center justify-center rounded-full bg-primary/15"
+                :class="compact ? 'size-8' : 'size-9'"
+            >
                 <Pencil v-if="editable" class="size-4" />
-                <span v-else class="text-lg font-bold">?</span>
+                <span v-else :class="compact ? 'text-base font-bold' : 'text-lg font-bold'">?</span>
             </span>
-            <div>
-                <p class="text-sm font-semibold tracking-tight">Story quiz</p>
-                <p class="text-muted-foreground text-xs">Tap the best answer — see if you got it right!</p>
+            <div class="min-w-0">
+                <p :class="compact ? 'text-xs font-semibold tracking-tight' : 'text-sm font-semibold tracking-tight'">
+                    Story quiz
+                </p>
+                <p v-if="!compact" class="text-muted-foreground text-xs">Tap the best answer — see if you got it right!</p>
+                <p v-else class="text-muted-foreground text-[11px] leading-snug">Tap an answer to check.</p>
             </div>
         </div>
 
@@ -168,31 +179,51 @@ function optionClass(qi: number, opt: string): string {
             </Button>
         </div>
 
-        <div class="flex flex-1 flex-col gap-5">
+        <div :class="compact ? 'flex flex-col gap-3' : 'flex flex-1 flex-col gap-5'">
             <div
                 v-for="(row, qi) in playRows"
                 :key="'play-' + qi"
-                class="rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card to-primary/5 p-4 shadow-sm"
+                class="border-primary/20 bg-gradient-to-br from-card to-primary/5 shadow-sm"
+                :class="compact ? 'rounded-xl border-2 p-3' : 'rounded-2xl border-2 p-4'"
             >
-                <p class="mb-3 text-base font-semibold leading-snug text-foreground">{{ row.question }}</p>
-                <div class="flex flex-col gap-2">
+                <p
+                    class="font-semibold leading-snug text-foreground"
+                    :class="compact ? 'mb-2 text-sm' : 'mb-3 text-base'"
+                >
+                    {{ row.question }}
+                </p>
+                <div :class="compact ? 'flex flex-col gap-1.5' : 'flex flex-col gap-2'">
                     <button
                         v-for="(opt, oi) in row.choices"
                         :key="oi"
                         type="button"
-                        class="quiz-option flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-all"
-                        :class="optionClass(qi, opt)"
+                        class="quiz-option flex items-center justify-between rounded-xl border-2 text-left font-medium transition-all"
+                        :class="[
+                            optionClass(qi, opt),
+                            compact ? 'min-h-10 gap-2 px-3 py-2 text-xs' : 'min-h-12 gap-3 px-4 py-3 text-sm',
+                        ]"
                         @click="pickAnswer(qi, opt)"
                     >
-                        <span>{{ opt }}</span>
-                        <CheckCircle2 v-if="picked[qi] === opt && isCorrect(qi, opt)" class="size-6 shrink-0 text-emerald-600" />
-                        <XCircle v-else-if="picked[qi] === opt" class="size-6 shrink-0 text-amber-600" />
+                        <span class="min-w-0 break-words">{{ opt }}</span>
+                        <CheckCircle2
+                            v-if="picked[qi] === opt && isCorrect(qi, opt)"
+                            class="shrink-0 text-emerald-600"
+                            :class="compact ? 'size-5' : 'size-6'"
+                        />
+                        <XCircle
+                            v-else-if="picked[qi] === opt"
+                            class="shrink-0 text-amber-600"
+                            :class="compact ? 'size-5' : 'size-6'"
+                        />
                     </button>
                 </div>
                 <p
                     v-if="picked[qi] !== undefined && picked[qi] !== null"
-                    class="mt-3 text-center text-sm font-semibold"
-                    :class="isCorrect(qi, picked[qi]!) ? 'text-emerald-600' : 'text-amber-700 dark:text-amber-500'"
+                    class="text-center font-semibold"
+                    :class="[
+                        isCorrect(qi, picked[qi]!) ? 'text-emerald-600' : 'text-amber-700 dark:text-amber-500',
+                        compact ? 'mt-2 text-xs' : 'mt-3 text-sm',
+                    ]"
                 >
                     {{ isCorrect(qi, picked[qi]!) ? 'Great job! That is correct.' : 'Nice try — pick another answer!' }}
                 </p>

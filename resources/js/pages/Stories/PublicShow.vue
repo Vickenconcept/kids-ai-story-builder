@@ -3,7 +3,9 @@ import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 import StoryFlipbook from '@/components/StoryFlipbook.vue';
 import type {CoverConfigJson} from '@/components/StoryFlipbook.vue';
+import StoryQuizSheet from '@/components/StoryQuizSheet.vue';
 import { Button } from '@/components/ui/button';
+import { normalizeStoryQuizQuestions } from '@/lib/storyQuiz';
 import { videoPlaybackSrc } from '@/lib/videoPlaybackUrl';
 import { dashboard, home, login } from '@/routes';
 
@@ -41,6 +43,16 @@ const viewMode = computed<'flip' | 'scroll'>(() =>
 const carouselIndex = ref(0);
 
 const carouselPage = computed(() => props.pages[carouselIndex.value] ?? null);
+
+const publicScrollQuizQuestions = computed(() => {
+    const p = carouselPage.value;
+
+    if (!p) {
+        return [];
+    }
+
+    return normalizeStoryQuizQuestions(p.quiz_questions);
+});
 
 const canCarouselPrev = computed(() => carouselIndex.value > 0);
 const canCarouselNext = computed(() => carouselIndex.value < props.pages.length - 1);
@@ -153,29 +165,57 @@ const flipbookKey = computed(() =>
                     class="mx-auto rounded-xl border border-sidebar-border/70 p-4 transition-all duration-300 dark:border-sidebar-border"
                 >
                     <h2 class="mb-3 text-lg font-medium">Page {{ carouselPage.page_number }}</h2>
-                    <div class="grid gap-6 lg:grid-cols-2">
-                        <p class="text-sm leading-relaxed">{{ carouselPage.text_content }}</p>
-                        <div v-if="carouselPage.video_url" class="overflow-hidden rounded-lg border bg-black">
-                            <video
-                                :key="carouselPage.video_url"
-                                :src="videoPlaybackSrc(carouselPage.video_url) ?? carouselPage.video_url"
-                                :poster="carouselPage.image_url ?? undefined"
+                    <div class="grid gap-6 lg:grid-cols-2 lg:items-start">
+                        <!-- Left: story → quiz → narration -->
+                        <div class="flex min-w-0 flex-col gap-4">
+                            <p class="text-sm leading-relaxed">{{ carouselPage.text_content }}</p>
+
+                            <div
+                                v-if="project.include_quiz && publicScrollQuizQuestions.length > 0"
+                                class="overflow-hidden rounded-2xl border border-primary/20 bg-card/80 shadow-sm"
+                            >
+                                <StoryQuizSheet
+                                    :key="`${carouselPage.uuid}-read-scroll-quiz`"
+                                    :story-uuid="project.uuid"
+                                    :page-uuid="carouselPage.uuid"
+                                    :questions="publicScrollQuizQuestions"
+                                    :editable="false"
+                                    compact
+                                />
+                            </div>
+
+                            <audio
+                                v-if="carouselPage.audio_url"
+                                :key="carouselPage.audio_url"
+                                :src="carouselPage.audio_url"
                                 controls
-                                playsinline
-                                preload="metadata"
-                                class="max-h-80 w-full object-contain"
+                                class="w-full rounded-lg border border-border/60 bg-muted/20 p-1"
                             />
                         </div>
-                        <div v-else-if="carouselPage.image_url" class="overflow-hidden rounded-lg border">
-                            <img
-                                :src="carouselPage.image_url"
-                                :alt="`Illustration page ${carouselPage.page_number}`"
-                                draggable="false"
-                                class="max-h-80 w-full select-none object-contain [-webkit-user-drag:none]"
-                            />
+
+                        <!-- Right: illustration / video -->
+                        <div class="min-w-0">
+                            <div v-if="carouselPage.video_url" class="overflow-hidden rounded-lg border bg-black">
+                                <video
+                                    :key="carouselPage.video_url"
+                                    :src="videoPlaybackSrc(carouselPage.video_url) ?? carouselPage.video_url"
+                                    :poster="carouselPage.image_url ?? undefined"
+                                    controls
+                                    playsinline
+                                    preload="metadata"
+                                    class="max-h-80 w-full object-contain"
+                                />
+                            </div>
+                            <div v-else-if="carouselPage.image_url" class="overflow-hidden rounded-lg border">
+                                <img
+                                    :src="carouselPage.image_url"
+                                    :alt="`Illustration page ${carouselPage.page_number}`"
+                                    draggable="false"
+                                    class="max-h-80 w-full select-none object-contain [-webkit-user-drag:none]"
+                                />
+                            </div>
                         </div>
                     </div>
-                    <audio v-if="carouselPage.audio_url" :src="carouselPage.audio_url" controls class="mt-4 w-full" />
                 </article>
 
                 <p v-else class="text-muted-foreground text-center text-sm">
