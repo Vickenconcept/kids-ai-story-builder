@@ -41,7 +41,7 @@ Rules:
 - Illustration style hint for consistency: {$input->illustrationStyle}.
 - Age-appropriate, kind tone; no scary or adult content.
 - {$quizHint}
-- character_visual_bible is REQUIRED. It locks recurring characters for art: name each main character, their SPECIES (fox, rabbit, human child, robot, etc.), size, fur/skin/feathers, clothing or accessories, and art-friendly proportions. If the hero is an animal, state clearly they are that animal on every page—not a human with the animal's name. If the cast is human, say so. Do not introduce a new species later unless the story explicitly transforms them; page text should match this bible.
+- character_visual_bible is REQUIRED as a single JSON string (not an array). It locks recurring characters for art: name each main character, their SPECIES (fox, rabbit, human child, robot, etc.), size, fur/skin/feathers, clothing or accessories, and art-friendly proportions. If the hero is an animal, state clearly they are that animal on every page—not a human with the animal's name. If the cast is human, say so. Do not introduce a new species later unless the story explicitly transforms them; page text should match this bible.
 TXT;
 
         $response = $this->client->chat()->create([
@@ -65,7 +65,7 @@ TXT;
             throw new JsonException('Story JSON parse failed: '.$e->getMessage(), 0, $e);
         }
 
-        $bible = trim((string) ($data['character_visual_bible'] ?? ''));
+        $bible = $this->normalizeCharacterVisualBible($data['character_visual_bible'] ?? null);
         if ($bible === '') {
             $bible = $this->fallbackCharacterVisualBible($input);
         }
@@ -100,5 +100,40 @@ TXT;
         return 'Illustration consistency: match the title "'.$input->title.'" and topic "'.$input->topic.'". '
             .'If the story names or centers an animal, show that species clearly on every page—not a human child with the same name. '
             .'Keep the same main character proportions, colors, and outfit (if any) across all pages.';
+    }
+
+    /**
+     * Models sometimes return character_visual_bible as a string or as a list of strings; normalize safely.
+     */
+    private function normalizeCharacterVisualBible(mixed $raw): string
+    {
+        if ($raw === null) {
+            return '';
+        }
+
+        if (is_string($raw)) {
+            return trim($raw);
+        }
+
+        if (is_array($raw)) {
+            $parts = [];
+            foreach ($raw as $item) {
+                if (is_string($item)) {
+                    $t = trim($item);
+                    if ($t !== '') {
+                        $parts[] = $t;
+                    }
+                } elseif (is_scalar($item)) {
+                    $t = trim((string) $item);
+                    if ($t !== '') {
+                        $parts[] = $t;
+                    }
+                }
+            }
+
+            return trim(implode(' ', $parts));
+        }
+
+        return '';
     }
 }
