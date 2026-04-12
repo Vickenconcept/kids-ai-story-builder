@@ -9,6 +9,7 @@ import StoryGenerationOverlay from '@/components/StoryGenerationOverlay.vue';
 import StorySetupTopBar from '@/components/StorySetupTopBar.vue';
 import { useCreditsModal } from '@/composables/useCreditsModal';
 import { Button } from '@/components/ui/button';
+import { videoPlaybackSrc } from '@/lib/videoPlaybackUrl';
 
 type PageRow = {
     id: number;
@@ -1236,7 +1237,15 @@ onUnmounted(() => {
                                 <!-- Media -->
                                 <div class="flex flex-col gap-3 p-5">
                                     <div v-if="currentScrollPage.video_url" class="overflow-hidden rounded-xl border bg-black">
-                                        <video :src="currentScrollPage.video_url" controls playsinline class="max-h-72 w-full object-contain" />
+                                        <video
+                                            :key="currentScrollPage.video_url"
+                                            :src="videoPlaybackSrc(currentScrollPage.video_url) ?? currentScrollPage.video_url"
+                                            :poster="currentScrollPage.image_url ?? undefined"
+                                            controls
+                                            playsinline
+                                            preload="metadata"
+                                            class="max-h-72 w-full object-contain"
+                                        />
                                     </div>
                                     <div v-else-if="currentScrollPage.image_url" class="overflow-hidden rounded-xl border">
                                         <img

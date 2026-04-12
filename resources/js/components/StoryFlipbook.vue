@@ -10,6 +10,7 @@ import StoryQuizSheet from '@/components/StoryQuizSheet.vue';
 import type {QuizRow} from '@/components/StoryQuizSheet.vue';
 import { Button } from '@/components/ui/button';
 import { coverFrameRootClass } from '@/lib/coverFrames';
+import { videoPlaybackSrc } from '@/lib/videoPlaybackUrl';
 
 export type FlipbookPage = {
     uuid: string;
@@ -764,6 +765,15 @@ function playVideoByPageUuid(pageUuid: string): void {
         }
     }
 
+    if (target.networkState === HTMLMediaElement.NETWORK_EMPTY) {
+        target.preload = 'auto';
+        try {
+            target.load();
+        } catch {
+            /* ignore */
+        }
+    }
+
     const playAttempt = target.play();
     if (playAttempt && typeof playAttempt.then === 'function') {
         void playAttempt
@@ -1178,10 +1188,12 @@ async function initTurn(): Promise<void> {
                 const showVideo = Boolean(p.video_url) && pageMediaMode(p) === 'video';
 
                 if (showVideo && p.video_url) {
+                    const playbackSrc = videoPlaybackSrc(p.video_url) ?? p.video_url;
                     const videoEl = jq('<video />')
-                        .attr('src', p.video_url)
+                        .attr('src', playbackSrc)
+                        .attr('poster', p.image_url || '')
                         .attr('playsinline', 'true')
-                        .attr('preload', 'metadata')
+                        .attr('preload', 'none')
                         .attr('data-role', 'story-page-video')
                         .attr('data-page-uuid', p.uuid)
                         .addClass('story-flipbook-page-img')

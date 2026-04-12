@@ -15,6 +15,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { index as videoLibraryIndex } from '@/routes/video-library';
 import type { BreadcrumbItem } from '@/types';
+import { videoPlaybackSrc } from '@/lib/videoPlaybackUrl';
 
 type VideoAssetRow = {
     id: number;
@@ -51,6 +52,10 @@ const previewOpen = computed({
 function openPreview(row: VideoAssetRow) {
     preview.value = row;
 }
+
+const previewPlaybackSrc = computed(() =>
+    preview.value ? videoPlaybackSrc(preview.value.video_url) : null,
+);
 </script>
 
 <template>
@@ -166,7 +171,15 @@ function openPreview(row: VideoAssetRow) {
                     <DialogDescription>Preview your generated page video.</DialogDescription>
                 </DialogHeader>
                 <div v-if="preview" class="overflow-hidden rounded-lg border bg-black">
-                    <video :src="preview.video_url" class="max-h-[60vh] w-full" controls playsinline preload="metadata" />
+                    <video
+                        :key="preview.video_url"
+                        :src="previewPlaybackSrc ?? undefined"
+                        :poster="preview.image_url ?? undefined"
+                        class="max-h-[60vh] w-full"
+                        controls
+                        playsinline
+                        preload="auto"
+                    />
                 </div>
                 <div v-if="preview" class="flex flex-wrap gap-2 pt-2">
                     <Button size="sm" variant="secondary" as-child>

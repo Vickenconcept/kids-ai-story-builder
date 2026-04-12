@@ -4,6 +4,7 @@ import { computed, ref, watch } from 'vue';
 import StoryFlipbook from '@/components/StoryFlipbook.vue';
 import type {CoverConfigJson} from '@/components/StoryFlipbook.vue';
 import { Button } from '@/components/ui/button';
+import { videoPlaybackSrc } from '@/lib/videoPlaybackUrl';
 import { dashboard, home, login } from '@/routes';
 
 type PageRow = {
@@ -152,9 +153,12 @@ const flipbookKey = computed(() =>
                         <p class="text-sm leading-relaxed">{{ carouselPage.text_content }}</p>
                         <div v-if="carouselPage.video_url" class="overflow-hidden rounded-lg border bg-black">
                             <video
-                                :src="carouselPage.video_url"
+                                :key="carouselPage.video_url"
+                                :src="videoPlaybackSrc(carouselPage.video_url) ?? carouselPage.video_url"
+                                :poster="carouselPage.image_url ?? undefined"
                                 controls
                                 playsinline
+                                preload="metadata"
                                 class="max-h-80 w-full object-contain"
                             />
                         </div>
