@@ -19,11 +19,26 @@ class OpenAiPageImageGenerator implements PageImageGenerator
     public function generate(PageImageInput $input, string $storageDirectory): string
     {
         $style = $this->describeIllustrationStyle($input->illustrationStyle);
-        $prompt = implode(' ', [
+        $lock = $input->characterVisualBible !== null ? trim($input->characterVisualBible) : '';
+        $title = trim($input->storyTitle);
+
+        $parts = [
             "Children's book illustration, {$style}, age-appropriate, no text or letters in the image.",
-            'Scene inspired by:',
-            mb_substr($input->pageText, 0, 900),
-        ]);
+        ];
+
+        if ($title !== '') {
+            $parts[] = 'Book title for context: '.$title.'.';
+        }
+
+        if ($lock !== '') {
+            $parts[] = 'CAST LOCK — use the SAME recurring characters on every page of this book (same species, age, colors, proportions, clothing): '.mb_substr($lock, 0, 520);
+            $parts[] = 'If the bible names an animal (fox, bear, etc.), depict that animal clearly—not a human child with the same name. Do not change species mid-story.';
+        }
+
+        $parts[] = 'Single scene for this page (one clear moment):';
+        $parts[] = mb_substr($input->pageText, 0, 900);
+
+        $prompt = implode(' ', $parts);
 
         $model = trim((string) config('story.models.image'));
 

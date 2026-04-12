@@ -536,6 +536,7 @@ class StoryProjectController extends Controller
             $pageText,
             $story->illustration_style,
             $story->age_group,
+            $story->characterVisualBible(),
         );
 
         $dir = 'stories/'.$story->id.'/covers';

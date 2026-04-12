@@ -72,9 +72,17 @@ class GenerateStoryTextJob implements ShouldQueue
                         'pipeline_completed_at' => null,
                     ]);
                 }
+                $meta = is_array($project->meta) ? $project->meta : [];
+                $bible = $outline->characterVisualBible !== null ? trim($outline->characterVisualBible) : '';
+                if ($bible !== '') {
+                    $meta['character_visual_bible'] = $bible;
+                } else {
+                    unset($meta['character_visual_bible']);
+                }
                 $project->update([
                     'pages_completed' => 0,
                     'status' => StoryProjectStatus::Draft,
+                    'meta' => $meta,
                 ]);
             });
 

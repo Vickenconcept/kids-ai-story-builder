@@ -62,6 +62,7 @@ class GenerateStoryPageImageJob implements ShouldQueue
                 pageText: (string) $page->text_content,
                 illustrationStyle: $project->illustration_style,
                 ageGroup: $project->age_group,
+                characterVisualBible: $project->characterVisualBible(),
             );
 
             $path = $images->generate($input, $dir);

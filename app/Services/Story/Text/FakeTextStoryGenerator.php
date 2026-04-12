@@ -28,6 +28,10 @@ class FakeTextStoryGenerator implements TextStoryGenerator
             );
         }
 
-        return new GeneratedStoryOutline($pages);
+        $bible = 'Consistent cast for every page: a friendly animal protagonist that fits the topic "'
+            .$input->topic.'". Clearly the same species and proportions on each page—not a human child '
+            .'unless the topic is explicitly about people. Match tone to ages '.$input->ageGroup.'.';
+
+        return new GeneratedStoryOutline($pages, $bible);
     }
 }

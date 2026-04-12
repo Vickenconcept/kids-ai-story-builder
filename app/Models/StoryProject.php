@@ -68,4 +68,19 @@ class StoryProject extends Model
     {
         return 'uuid';
     }
+
+    /**
+     * Story-wide visual lock for page images (set when story text is generated).
+     */
+    public function characterVisualBible(): ?string
+    {
+        $meta = $this->meta;
+        if (! is_array($meta)) {
+            return null;
+        }
+
+        $text = trim((string) ($meta['character_visual_bible'] ?? ''));
+
+        return $text !== '' ? $text : null;
+    }
 }

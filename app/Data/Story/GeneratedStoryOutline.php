@@ -9,5 +9,6 @@ readonly class GeneratedStoryOutline
      */
     public function __construct(
         public array $pages,
+        public ?string $characterVisualBible = null,
     ) {}
 }
