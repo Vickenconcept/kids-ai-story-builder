@@ -1,0 +1,1 @@
+import{c as o}from"./index-Cj4X1ZbV.js";import{d as r,i as a,L as n,n as c,b as l,o as p}from"./app-Cas_LurJ.js";const u=r({__name:"CardDescription",props:{class:{type:[Boolean,null,String,Object,Array]}},setup(e){const s=e;return(t,i)=>(p(),a("p",{"data-slot":"card-description",class:c(l(o)("text-muted-foreground text-sm",s.class))},[n(t.$slots,"default")],2))}});export{u as _};
