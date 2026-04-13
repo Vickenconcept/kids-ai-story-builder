@@ -10,6 +10,7 @@ use App\Models\JvzooIpnEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -29,10 +30,6 @@ class JvzooIpnController extends Controller
             return response('STALE EVENT', 200);
         }
 
-        if ($this->isDuplicateEvent($payload)) {
-            return response('DUPLICATE', 200);
-        }
-
         if (! $this->isValidCverify($payload)) {
             Log::warning('JVZoo IPN rejected: invalid cverify.', [
                 'transaction_id' => $payload['transaction_id'] ?? null,
@@ -42,6 +39,10 @@ class JvzooIpnController extends Controller
             ]);
 
             return response('INVALID CVERIFY', 400);
+        }
+
+        if ($this->isDuplicateEvent($payload)) {
+            return response('DUPLICATE', 200);
         }
 
         $transactionType = strtoupper((string) ($payload['transaction_type'] ?? ''));
@@ -70,6 +71,7 @@ class JvzooIpnController extends Controller
 
         if (in_array($transactionType, ['SALE', 'BILL', 'REBILL'], true)) {
             $this->createOrUpgradeUser($payload);
+            $this->markProcessed($payload);
 
             return response('OK', 200);
         }
@@ -118,7 +120,7 @@ class JvzooIpnController extends Controller
                 'name' => $name,
                 'email' => $email,
                 'email_verified_at' => Carbon::now(),
-                'password' => $temporaryPassword,
+                'password' => Hash::make($temporaryPassword),
                 'feature_tier' => $tier,
                 'story_credits' => max(0, $targetCredits),
             ]);
@@ -300,12 +302,13 @@ class JvzooIpnController extends Controller
         $transactionType = (string) ($payload['transaction_type'] ?? '');
         $date = (string) ($payload['date'] ?? '');
 
-        $signatureBase = $paykey
-            .'|'.$customerEmail
-            .'|'.$productName
-            .'|'.$transactionType
-            .'|'.$date
-            .$secret;
+        $signatureBase = implode('|', [
+            trim($paykey),
+            trim($customerEmail),
+            trim($productName),
+            trim($transactionType),
+            trim($date),
+        ]).$secret;
 
         $calculated = sha1(mb_convert_encoding($signatureBase, 'UTF-8'));
         $calculated = strtoupper(substr($calculated, 0, 8));
@@ -408,7 +411,7 @@ class JvzooIpnController extends Controller
         ?string $ctaUrl = null,
     ): void {
         try {
-            Mail::to($to)->send(
+            Mail::to($to)->queue(
                 new UserNotificationMail(
                     subjectLine: $subject,
                     headline: $headline,
