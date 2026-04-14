@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { useToast } from '@/composables/useToast';
 import { useCreditsModal } from '@/composables/useCreditsModal';
 
 type CreditPack = {
@@ -22,6 +23,7 @@ type CreditPack = {
 
 const page = usePage<any>();
 const modal = useCreditsModal();
+const toast = useToast();
 
 const packs = computed<CreditPack[]>(() => page.props.billing?.creditPacks ?? []);
 const paypalClientId = computed<string>(() => page.props.billing?.paypalClientId ?? '');
@@ -142,25 +144,33 @@ const renderPayPalButtons = async () => {
                         order_id: data.orderID,
                     });
 
-                    successMessage.value = String(payload.message ?? 'Payment completed.');
+                    const message = String(payload.message ?? 'Payment completed.');
+                    successMessage.value = message;
+                    toast.success(message);
                     router.reload();
                 },
                 onError: (error: unknown) => {
-                    errorMessage.value =
+                    const message =
                         error instanceof Error
                             ? error.message
                             : 'PayPal checkout failed. Please try again.';
+                    errorMessage.value = message;
+                    toast.error(message);
                 },
                 onCancel: () => {
-                    errorMessage.value = 'Payment was canceled.';
+                    const message = 'Payment was canceled.';
+                    errorMessage.value = message;
+                    toast.info(message);
                 },
             })
             .render(target);
     } catch (error) {
-        errorMessage.value =
+        const message =
             error instanceof Error
                 ? error.message
                 : 'Could not initialize payment checkout.';
+        errorMessage.value = message;
+        toast.error(message);
     } finally {
         loading.value = false;
     }

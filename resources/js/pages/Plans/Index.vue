@@ -2,6 +2,7 @@
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 
@@ -43,6 +44,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const page = usePage<any>();
+const toast = useToast();
 
 const selectedPlanId = ref<number | null>(null);
 const loading = ref(false);
@@ -171,25 +173,33 @@ const startUpgrade = async () => {
                         order_id: data.orderID,
                     });
 
-                    successMessage.value = String((payload as any).message ?? 'Plan upgraded successfully.');
+                    const message = String((payload as any).message ?? 'Plan upgraded successfully.');
+                    successMessage.value = message;
+                    toast.success(message);
                     router.reload();
                 },
                 onError: (error: unknown) => {
-                    errorMessage.value =
+                    const message =
                         error instanceof Error
                             ? error.message
                             : 'PayPal checkout failed. Please try again.';
+                    errorMessage.value = message;
+                    toast.error(message);
                 },
                 onCancel: () => {
-                    errorMessage.value = 'Payment was canceled.';
+                    const message = 'Payment was canceled.';
+                    errorMessage.value = message;
+                    toast.info(message);
                 },
             })
             .render(target);
     } catch (error) {
-        errorMessage.value =
+        const message =
             error instanceof Error
                 ? error.message
                 : 'Could not initialize payment checkout.';
+        errorMessage.value = message;
+        toast.error(message);
     } finally {
         loading.value = false;
     }

@@ -4,6 +4,7 @@ import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
 import CreditsPurchaseModal from '@/components/CreditsPurchaseModal.vue';
+import ToastViewport from '@/components/ToastViewport.vue';
 import type { BreadcrumbItem } from '@/types';
 
 type Props = {
@@ -23,5 +24,6 @@ withDefaults(defineProps<Props>(), {
             <slot />
         </AppContent>
         <CreditsPurchaseModal />
+        <ToastViewport />
     </AppShell>
 </template>
