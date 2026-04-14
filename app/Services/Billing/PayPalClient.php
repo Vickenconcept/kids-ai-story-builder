@@ -77,8 +77,18 @@ class PayPalClient
      */
     public function captureOrder(string $orderId): array
     {
+        $normalizedOrderId = trim($orderId);
+
+        if ($normalizedOrderId === '') {
+            throw new RuntimeException('PayPal order id is missing.');
+        }
+
         return $this->apiRequest()
-            ->post("/v2/checkout/orders/{$orderId}/capture")
+            ->asJson()
+            ->post(
+                sprintf('/v2/checkout/orders/%s/capture', rawurlencode($normalizedOrderId)),
+                (object) []
+            )
             ->throw()
             ->json();
     }
