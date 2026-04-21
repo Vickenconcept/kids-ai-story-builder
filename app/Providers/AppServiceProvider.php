@@ -45,6 +45,23 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-credit-packs', $storyAdminGate);
         Gate::define('manage-plans', $storyAdminGate);
         Gate::define('manage-users', $storyAdminGate);
+        Gate::define('viewHorizon', function ($user) use ($storyAdminGate): bool {
+            if (app()->environment('local')) {
+                return true;
+            }
+
+            $allowed = collect(explode(',', (string) env('HORIZON_ALLOWED_EMAILS', '')))
+                ->map(fn ($email) => strtolower(trim((string) $email)))
+                ->filter()
+                ->values()
+                ->all();
+
+            if (! empty($allowed)) {
+                return in_array(strtolower((string) $user?->email), $allowed, true);
+            }
+
+            return $user !== null && $storyAdminGate($user);
+        });
 
         Date::use(CarbonImmutable::class);
 

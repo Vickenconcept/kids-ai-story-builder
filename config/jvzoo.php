@@ -47,7 +47,7 @@ return [
     | Security hardening
     |--------------------------------------------------------------------------
     */
-    'max_event_age_minutes' => (int) env('JVZOO_MAX_EVENT_AGE_MINUTES', 120),
+    'max_event_age_minutes' => (int) env('JVZOO_MAX_EVENT_AGE_MINUTES', 480),
 
     // Keep false by default: avoid broad automatic downgrades on reversal events.
     'auto_downgrade_on_reversal' => (bool) env('JVZOO_AUTO_DOWNGRADE_ON_REVERSAL', false),

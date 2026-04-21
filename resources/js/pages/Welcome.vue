@@ -32,49 +32,73 @@ const formatPrice = (amountCents: number, currency: string) =>
         currency: currency.toUpperCase(),
     }).format(amountCents / 100);
 
+const tierSummary = (tier: 'basic' | 'pro' | 'elite') => {
+    if (tier === 'basic') {
+        return [
+            'Create a few storybooks',
+            'Perfect for trying with your child or class',
+            'Great for first-time users',
+        ];
+    }
+
+    if (tier === 'pro') {
+        return [
+            'Create more storybooks each month',
+            'Ideal for regular home or classroom use',
+            'Better fit for weekly storytelling activities',
+        ];
+    }
+
+    return [
+        'Higher usage for teachers and schools',
+        'Designed for multiple students',
+        'Best for ongoing classroom storytelling programs',
+    ];
+};
+
 const features = [
     {
         icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-6"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
-        title: 'AI Story Writer',
-        desc: 'Type any idea and get a fully structured multi-page storybook in seconds.',
+        title: 'Full Storybooks',
+        desc: 'Children start with one idea and get a complete multi-page storybook in seconds.',
         color: 'violet',
     },
     {
         icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-6"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`,
-        title: 'Page Illustrations',
-        desc: 'Each page gets a stunning AI-generated illustration perfectly matched to the story.',
+        title: 'Illustrated Pages',
+        desc: 'Each page includes matching visuals to keep students and young readers engaged.',
         color: 'indigo',
     },
     {
         icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-6"><path d="M12 18.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>`,
-        title: 'Voice Narration',
-        desc: 'Auto-generate professional AI text-to-speech narration for every single page.',
+        title: 'Read-Aloud Narration',
+        desc: 'Built-in narration supports early readers, ESL learners, and at-home practice.',
         color: 'purple',
     },
     {
         icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-6"><path d="m22 8-6 4 6 4V8z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>`,
-        title: 'Page Videos',
-        desc: 'Generate animated short videos for each page. Perfect for engaging young readers.',
+        title: 'Optional Page Videos',
+        desc: 'Turn pages into short visuals to bring stories to life during class or home reading.',
         color: 'pink',
     },
     {
         icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-6"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
-        title: 'Flipbook Reader',
-        desc: 'A beautiful interactive flipbook viewer with realistic page-turn animations.',
+        title: 'Interactive Flipbook',
+        desc: 'A child-friendly reading experience that makes stories fun to read and share.',
         color: 'violet',
     },
     {
         icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-6"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
-        title: 'KDP Export',
-        desc: 'Export print-ready PDF packages formatted for Amazon KDP publishing.',
+        title: 'Comprehension Quizzes',
+        desc: 'Each story can include quizzes to reinforce understanding after reading.',
         color: 'indigo',
     },
 ];
 
 const steps = [
-    { num: '01', title: 'Enter Your Idea', desc: 'Type a story idea, pick your age group, illustration style, and page count. Our AI handles the rest.' },
-    { num: '02', title: 'AI Builds Everything', desc: 'Watch as pages, illustrations, narration and videos are generated automatically in the background.' },
-    { num: '03', title: 'Publish & Sell', desc: 'Share the flipbook link, export for print, and ship a KDP-ready package when you are on Elite — built for selling, not just saving files.' },
+    { num: '01', title: 'Enter an Idea', desc: 'A child, student, teacher, or parent enters a simple story idea and reading level.' },
+    { num: '02', title: 'AI Builds the Storybook', desc: 'Pages, illustrations, narration, and quiz content are generated automatically.' },
+    { num: '03', title: 'Read, Listen, and Share', desc: 'Children read and listen to their stories, then share them with class or family.' },
 ];
 
 const faqs = [
@@ -83,8 +107,8 @@ const faqs = [
         answer: 'No. DreamForge AI is made for beginners. You enter your story idea and the app generates the pages, visuals, and structure for you.',
     },
     {
-        question: 'Can I use my storybooks for KDP publishing?',
-        answer: 'Yes, but KDP-ready export is available only in Elite mode.',
+        question: 'Can schools and parents both use it?',
+        answer: 'Yes. DreamForge AI is designed for classrooms, homeschooling, and family learning at home.',
     },
     {
         question: 'How fast does a storybook get generated?',
@@ -96,11 +120,11 @@ const faqs = [
     },
     {
         question: 'Can I share the story with others?',
-        answer: 'Yes. You can share your interactive flipbook link with readers, parents, students, or clients.',
+        answer: 'Yes. You can share interactive story links with students, parents, and family members.',
     },
     {
         question: 'Is there a free option to try first?',
-        answer: 'Yes. The Basic plan lets you start free so you can test the workflow before upgrading.',
+        answer: 'Yes. Starter gives you free access so you can try the workflow before upgrading.',
     },
 ];
 
@@ -183,8 +207,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="DreamForge AI — Create and Sell Kids Books on Amazon KDP with AI">
-        <meta name="description" content="Turn ideas into illustrated kids storybooks with voice, flipbook, and page videos — built for creators who want to publish and sell on Amazon KDP. Start free." />
+    <Head title="DreamForge AI — Turn Kids Into Published Storytellers">
+        <meta name="description" content="DreamForge AI helps children create illustrated storybooks with narration and quizzes in minutes. Built for schools and parents. Free to start." />
     </Head>
 
     <div ref="landingRoot" class="min-h-screen scroll-smooth bg-slate-50 text-slate-900 antialiased dark:bg-[#0d0d1a] dark:text-white">
@@ -251,25 +275,21 @@ onBeforeUnmount(() => {
                 <!-- Badge -->
                 <span class="js-hero-badge mb-6 inline-flex items-center gap-2 rounded-full border border-violet-300 bg-violet-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-violet-700 dark:border-violet-400/30 dark:bg-violet-500/10 dark:text-violet-300">
                     <span class="size-1.5 animate-pulse rounded-full bg-violet-400" />
-                    AI + Amazon KDP — Live now
+                    Built for classrooms and homes
                 </span>
 
                 <!-- Headline -->
                 <h1 class="js-hero-title mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl lg:text-7xl">
-                    Create and sell kids storybooks
+                    From Idea to Illustrated Storybook in Minutes
                     <span class="bg-linear-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
-                        on Amazon KDP
+                        Built for Classrooms and Homes
                     </span>
-                    <br class="hidden md:block" />
-                    in minutes — with AI
                 </h1>
 
                 <!-- Sub -->
                 <p class="js-hero-sub mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg dark:text-slate-400">
-                    No writing, no design, no voice booth.<br />
-                    One workflow builds the book <strong class="text-slate-800 dark:text-slate-200">and</strong> the assets buyers expect:
-                    illustrations per page, read-aloud narration, a shareable flipbook, and optional page videos — so you are
-                    positioned as a <strong class="text-slate-800 dark:text-slate-200">publisher</strong>, not just another &quot;AI tool&quot; user.
+                    DreamForge AI helps students and children create fully illustrated storybooks with narration and built-in comprehension quizzes in one simple workflow.
+                    Build creativity, reading confidence, and comprehension without complicated setup.
                 </p>
 
                 <!-- CTAs -->
@@ -282,7 +302,7 @@ onBeforeUnmount(() => {
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                         </svg>
-                        Create Your First Storybook
+                        Create Your First Storybook Free
                     </Link>
                     <Link
                         v-if="$page.props.auth.user"
@@ -298,7 +318,7 @@ onBeforeUnmount(() => {
                         See How It Works
                     </a>
                 </div>
-                <p class="mt-4 text-xs text-slate-600">No credit card required &nbsp;·&nbsp; Free to start &nbsp;·&nbsp; Instant access</p>
+                <p class="mt-4 text-xs text-slate-600">No setup required &nbsp;·&nbsp; Safe for classrooms &nbsp;·&nbsp; Free to start</p>
             </div>
 
             <!-- Floating preview card -->
@@ -392,24 +412,71 @@ onBeforeUnmount(() => {
             </div>
         </section>
 
+        <section class="js-reveal px-5 pb-8">
+            <div class="mx-auto max-w-5xl rounded-2xl border border-violet-200 bg-white p-6 dark:border-violet-500/30 dark:bg-white/3">
+                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Real Classroom Example</p>
+                <h2 class="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl">How Teachers Are Using DreamForge AI</h2>
+                <div class="mt-4 grid gap-3 text-sm text-slate-700 dark:text-slate-300 md:grid-cols-2">
+                    <p>A teacher gives the prompt: “Write a story about kindness.”</p>
+                    <p>Students generate their own illustrated books in minutes.</p>
+                    <p>They read, listen, and complete the comprehension quiz.</p>
+                    <p>The teacher reviews understanding quickly and guides improvements.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- ── TRUST STRIP ─────────────────────────────────────── -->
         <div class="js-trust-strip border-y border-slate-200 bg-white dark:border-white/6 dark:bg-white/2">
             <div class="mx-auto flex max-w-5xl flex-wrap justify-center gap-6 px-5 py-5 text-xs font-medium text-slate-700 dark:text-slate-500">
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Built for Amazon KDP publishing</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Full illustrated story pages</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> AI visuals matched to each page</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Built-in voice narration</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Animated page videos</span>
-                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Interactive flipbook reader</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Classroom-safe workflow</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Story + visuals + narration</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Built-in comprehension quizzes</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Interactive read-aloud flipbook</span>
+                <span class="flex items-center gap-1.5"><span class="text-violet-400">✓</span> Great for class and home learning</span>
             </div>
         </div>
+
+        <section class="js-reveal px-5 py-20 md:py-24">
+            <div class="mx-auto max-w-6xl">
+                <div class="mb-12 text-center">
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Who It Is For</p>
+                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Built for Classrooms and Homes</h2>
+                </div>
+                <div class="js-stagger-group grid gap-5 md:grid-cols-3">
+                    <article class="js-stagger-item rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/8 dark:bg-white/3">
+                        <h3 class="text-lg font-bold">For Teachers</h3>
+                        <ul class="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li>Run engaging writing activities</li>
+                            <li>Turn assignments into illustrated books</li>
+                            <li>Assess comprehension with quizzes</li>
+                        </ul>
+                    </article>
+                    <article class="js-stagger-item rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/8 dark:bg-white/3">
+                        <h3 class="text-lg font-bold">For Parents</h3>
+                        <ul class="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li>Help your child create storybooks</li>
+                            <li>Encourage reading with narration</li>
+                            <li>Make learning fun and creative</li>
+                        </ul>
+                    </article>
+                    <article class="js-stagger-item rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/8 dark:bg-white/3">
+                        <h3 class="text-lg font-bold">For Schools</h3>
+                        <ul class="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li>Improve literacy engagement</li>
+                            <li>Support different reading levels</li>
+                            <li>Introduce creative digital learning</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
 
         <!-- ── HOW IT WORKS ────────────────────────────────────── -->
         <section id="how-it-works" class="js-reveal px-5 py-20 md:py-28">
             <div class="mx-auto max-w-5xl">
                 <div class="mb-14 text-center">
                     <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Simple Process</p>
-                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">From Idea to Storybook in 3 Steps</h2>
+                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">From Idea to Storybook in 3 Simple Steps</h2>
                 </div>
                 <div class="js-stagger-group grid gap-6 md:grid-cols-3">
                     <div
@@ -429,9 +496,9 @@ onBeforeUnmount(() => {
         <section class="js-reveal px-5 py-20 md:py-28" id="pricing">
             <div class="mx-auto max-w-5xl">
                 <div class="mb-14 text-center">
-                    <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Everything Included</p>
-                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">One Tool. Complete Storybooks.</h2>
-                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-600 dark:text-slate-400">Every feature you need to create, publish and sell stunning children's storybooks — all in one place.</p>
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">What Makes It Powerful</p>
+                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">More Than Just Story Creation</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-600 dark:text-slate-400">Create, read, listen, and learn in one storytelling platform for children.</p>
                 </div>
                 <div class="js-stagger-group grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <div
@@ -450,13 +517,79 @@ onBeforeUnmount(() => {
             </div>
         </section>
 
+        <section class="js-reveal px-5 py-20 md:py-24">
+            <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
+                <article class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/8 dark:bg-white/3">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Classroom Use Cases</p>
+                    <h3 class="mt-2 text-2xl font-bold">Perfect for Learning Activities</h3>
+                    <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                        <li>Creative writing assignments</li>
+                        <li>Reading comprehension exercises</li>
+                        <li>ESL and early literacy support</li>
+                        <li>Student author classroom projects</li>
+                        <li>Homework storytelling tasks</li>
+                    </ul>
+                </article>
+                <article class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/8 dark:bg-white/3">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">For Parents</p>
+                    <h3 class="mt-2 text-2xl font-bold">Learning That Feels Like Play</h3>
+                    <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                        <li>Turn imagination into real storybooks</li>
+                        <li>Improve reading confidence</li>
+                        <li>Replace passive screen time with creativity</li>
+                        <li>Create stories together as a family</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section class="js-reveal px-5 py-20 md:py-24">
+            <div class="mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white p-8 text-center dark:border-white/8 dark:bg-white/3">
+                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Live Demo</p>
+                <h2 class="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">See a Story Created in Seconds</h2>
+                <p class="mx-auto mt-3 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
+                    Preview an interactive flipbook workflow and see how quickly students can go from an idea to a finished story.
+                </p>
+                <p class="mt-3 text-sm font-semibold text-violet-700 dark:text-violet-300">Story generated in 42 seconds</p>
+                <div class="mt-6">
+                    <Link
+                        v-if="canRegister && !$page.props.auth.user"
+                        :href="register()"
+                        class="inline-flex items-center gap-2 rounded-full bg-violet-600 px-7 py-3 text-sm font-bold transition hover:bg-violet-500"
+                    >
+                        Create Your First Story
+                    </Link>
+                    <Link
+                        v-else
+                        :href="dashboard()"
+                        class="inline-flex items-center gap-2 rounded-full bg-violet-600 px-7 py-3 text-sm font-bold transition hover:bg-violet-500"
+                    >
+                        Create Your First Story
+                    </Link>
+                </div>
+            </div>
+        </section>
+
+        <section class="js-reveal px-5 py-20 md:py-24">
+            <div class="mx-auto max-w-5xl text-center">
+                <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Why It Works</p>
+                <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Designed for How Children Learn</h2>
+                <div class="js-stagger-group mt-8 grid gap-4 sm:grid-cols-2">
+                    <div class="js-stagger-item rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-700 dark:border-white/8 dark:bg-white/3 dark:text-slate-300">Visual and audio learning combined</div>
+                    <div class="js-stagger-item rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-700 dark:border-white/8 dark:bg-white/3 dark:text-slate-300">Active participation, not passive reading</div>
+                    <div class="js-stagger-item rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-700 dark:border-white/8 dark:bg-white/3 dark:text-slate-300">Instant feedback with quizzes</div>
+                    <div class="js-stagger-item rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-700 dark:border-white/8 dark:bg-white/3 dark:text-slate-300">Builds creativity and student ownership</div>
+                </div>
+            </div>
+        </section>
+
         <!-- ── PLANS ───────────────────────────────────────────── -->
         <section class="js-reveal px-5 py-20 md:py-28">
             <div class="mx-auto max-w-6xl">
                 <div class="mb-14 text-center">
                     <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Plans & Access</p>
-                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Choose Your Creation Level</h2>
-                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-600 dark:text-slate-400">Start on Basic and upgrade to Pro or Elite anytime. Plans include access level plus a credit floor.</p>
+                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Simple Plans for Families and Schools</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm text-slate-600 dark:text-slate-400">Start free, then move to Creator or Classroom as your usage grows.</p>
                 </div>
 
                 <div v-if="plans.length === 0" class="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-600 dark:border-white/8 dark:bg-white/3 dark:text-slate-400">
@@ -481,17 +614,25 @@ onBeforeUnmount(() => {
 
                         <div class="mb-4">
                             <p class="text-xs uppercase tracking-widest text-violet-600 dark:text-violet-300">{{ plan.tier }}</p>
-                            <h3 class="mt-1 text-2xl font-bold">{{ plan.name }}</h3>
-                            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ plan.description }}</p>
+                            <h3 class="mt-1 text-2xl font-bold">{{ plan.tier === 'basic' ? 'Starter' : plan.tier === 'pro' ? 'Creator' : 'Classroom / Pro' }}</h3>
+                            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                                {{
+                                    plan.tier === 'basic'
+                                        ? 'Starter access for parents and teachers exploring the platform.'
+                                        : plan.tier === 'pro'
+                                            ? 'Creator access for regular storytelling at home or in class.'
+                                            : 'Classroom access for higher usage across multiple students.'
+                                }}
+                            </p>
                         </div>
 
                         <div class="mb-4">
                             <p class="text-3xl font-extrabold">{{ formatPrice(plan.price_cents, plan.currency) }}</p>
-                            <p class="text-xs text-slate-500">Includes at least {{ plan.included_credits }} credits</p>
+                            <p class="text-xs text-slate-500">Includes story creation capacity. Credits are used in the background.</p>
                         </div>
 
                         <ul class="mb-6 space-y-2 text-sm text-slate-700 dark:text-slate-300">
-                            <li v-for="feature in plan.feature_list" :key="feature" class="flex items-start gap-2">
+                            <li v-for="feature in tierSummary(plan.tier)" :key="feature" class="flex items-start gap-2">
                                 <span class="mt-0.5 text-violet-400">✓</span>
                                 <span>{{ feature }}</span>
                             </li>
@@ -554,6 +695,18 @@ onBeforeUnmount(() => {
             </div>
         </section>
 
+        <section class="js-reveal px-5 pb-20 md:pb-24">
+            <div class="mx-auto max-w-5xl rounded-2xl border border-slate-200 bg-white p-7 dark:border-white/8 dark:bg-white/3">
+                <p class="text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Safety and Trust</p>
+                <h2 class="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl">Built with Children in Mind</h2>
+                <div class="mt-4 grid gap-3 text-sm text-slate-700 dark:text-slate-300 md:grid-cols-3">
+                    <p>Classroom-safe content generation with guided story workflows.</p>
+                    <p>No complex setup or technical skills required for teachers or parents.</p>
+                    <p>Designed for guided learning environments at school and at home.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- ── CTA SECTION ─────────────────────────────────────── -->
         <section class="js-reveal px-5 py-20 md:py-28">
             <div class="relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-violet-300/50 bg-linear-to-br from-violet-100 via-white to-indigo-100 px-8 py-14 text-center shadow-2xl shadow-violet-200/70 dark:border-violet-500/20 dark:from-violet-950/60 dark:via-[#12122a] dark:to-indigo-950/60 dark:shadow-violet-950/60">
@@ -563,9 +716,9 @@ onBeforeUnmount(() => {
                 </div>
                 <div class="relative">
                     <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-700 dark:text-violet-400">Start Creating</p>
-                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Your First Storybook is One Click Away</h2>
+                    <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Start Creating Your First Storybook Today</h2>
                     <p class="mx-auto mt-4 max-w-md text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                        Create your account, enter your idea, and watch AI bring your story to life — completely free to start.
+                        No experience needed. Just an idea.
                     </p>
                     <div class="mt-8 flex flex-wrap justify-center gap-3">
                         <Link
@@ -573,7 +726,7 @@ onBeforeUnmount(() => {
                             :href="register()"
                             class="inline-flex items-center gap-2 rounded-full bg-violet-600 px-8 py-3.5 text-sm font-bold shadow-lg shadow-violet-600/30 transition hover:-translate-y-0.5 hover:bg-violet-500 active:scale-95"
                         >
-                            Create Free Account →
+                            Get Started Free →
                         </Link>
                         <Link
                             v-if="$page.props.auth.user"
