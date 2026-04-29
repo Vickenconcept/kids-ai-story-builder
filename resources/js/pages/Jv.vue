@@ -131,7 +131,7 @@ onUnmounted(() => {
         >
             <strong>Core hook:</strong> Create and sell kids storybooks on Amazon KDP using AI — without doing all the writing, art, or recording yourself.
             You are not pitching &quot;another AI kids app&quot;; you are pitching an <strong>AI KDP income tool</strong>. One workflow outputs story pages, matching art, read-aloud, flipbook, and page videos — so buyers can publish to <strong>KDP</strong>, sell digitally, and feed YouTube/Shorts. Most competitors stop at text + images; this is the full stack affiliates can show in a demo.
-            <strong class="text-slate-900"> Earn 70% on the frontend — 50% on every upsell (JVZoo).</strong>
+            <strong class="text-slate-900"> Earn 50% on the frontend — 50% on every upsell (JVZoo).</strong>
         </p>
 
         <div class="mx-auto mt-4 flex w-full items-center justify-center gap-3 flex-wrap">
@@ -177,11 +177,11 @@ onUnmounted(() => {
             </div>
             <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
                 <span class="font-semibold text-slate-900">FE Price:</span>
-                <span class="text-slate-600">$20</span>
+                <span class="text-slate-600">$27</span>
             </div>
             <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
                 <span class="font-semibold text-slate-900">Commission:</span>
-                <span class="text-emerald-700 font-semibold">70% FE · 50% upsells</span>
+                <span class="text-emerald-700 font-semibold">50% FE · 50% upsells</span>
             </div>
             <div class="flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-5 py-2 text-sm backdrop-blur-sm">
                 <span class="font-semibold text-slate-900">Network:</span>
@@ -197,10 +197,10 @@ onUnmounted(() => {
                     Commission Structure
                 </p>
                 <h3 class="mt-2 text-xl font-semibold text-slate-900">
-                    70% on frontend, 50% on upsells
+                    50% on frontend, 50% on upsells
                 </h3>
                 <p class="mt-2 text-sm text-slate-600">
-                    Strong FE payout ($20 FE → you earn $14) plus half on each OTO. KDP + AI angle helps EPC on cold traffic.
+                    Strong FE payout ($27 FE → you earn $14) plus half on each OTO. KDP + AI angle helps EPC on cold traffic.
                 </p>
             </div>
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -300,7 +300,7 @@ onUnmounted(() => {
                         <p class="mb-4 text-sm font-bold uppercase tracking-wide text-red-600">❌ The Pains They Feel Right Now</p>
                         <ul class="space-y-3 text-sm text-slate-700">
                             <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Spending hours writing and illustrating a story from scratch with no design skills</li>
-                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Paying expensive freelancers $50–$200+ per story with no guarantee of quality</li>
+                            <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Paying expensive freelancers $50–$270+ per story with no guarantee of quality</li>
                             <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> AI tools that only generate raw text, leaving images, narration and video to figure out manually</li>
                             <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Kids content creators stuck at bottleneck: content takes longer to produce than to consume</li>
                             <li class="flex items-start gap-2"><span class="mt-0.5 text-red-500">✗</span> Educators wanting custom stories for each lesson but lack the tools or budget to create them</li>
@@ -355,14 +355,14 @@ onUnmounted(() => {
                 <div class="mb-8 text-center">
                     <p class="text-xs font-semibold tracking-widest text-indigo-600 uppercase">Full Funnel Map</p>
                     <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Your earnings per customer at every stage</h2>
-                    <p class="mt-2 text-sm text-slate-500"><strong>70%</strong> commission on the frontend; <strong>50%</strong> on each upsell. Natural OTO flow — easier to close, strong stack for you.</p>
+                    <p class="mt-2 text-sm text-slate-500"><strong>50%</strong> commission on the frontend; <strong>50%</strong> on each upsell. Natural OTO flow — easier to close, strong stack for you.</p>
                 </div>
                 <div class="grid gap-4 md:grid-cols-3">
                     <div class="rounded-2xl border-2 border-indigo-300 bg-white p-6 text-center shadow-sm">
                         <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500">Front End</p>
-                        <p class="mt-2 text-3xl font-extrabold text-slate-900">$20</p>
+                        <p class="mt-2 text-3xl font-extrabold text-slate-900">$27</p>
                         <p class="mt-1 text-sm font-semibold text-emerald-600">You earn $14</p>
-                        <p class="mt-1 text-xs font-medium text-indigo-600">70% of $20 FE</p>
+                        <p class="mt-1 text-xs font-medium text-indigo-600">50% of $27 FE</p>
                         <p class="mt-3 text-xs text-slate-500 leading-relaxed">Full story creation: text, illustrations, narration, flipbook reader &amp; quiz. One-time payment.</p>
                     </div>
                     <div class="rounded-2xl border-2 border-amber-300 bg-white p-6 text-center shadow-sm">
@@ -528,7 +528,7 @@ onUnmounted(() => {
                     <p>2. Show KDP / sell-it angle (PDF, listing story) early.</p>
                     <p>3. Show narration + flipbook (not just static pages).</p>
                     <p>4. Show page video — proof it beats text-only competitors.</p>
-                    <p>5. Close with pricing (70% FE, 50% OTOs) and bonus stack.</p>
+                    <p>5. Close with pricing (50% FE, 50% OTOs) and bonus stack.</p>
                 </div>
                 <p class="mt-4 text-sm font-medium text-zinc-900">
                     Simple. Visual. Emotional. Built to convert fast.
@@ -793,7 +793,7 @@ onUnmounted(() => {
                         </h3>
                     </div>
                     <p class="mb-4 text-xs leading-relaxed text-zinc-600">
-                        Lead with 70% on the frontend and 50% on upsells — strong hook for affiliates who mail volume.
+                        Lead with 50% on the frontend and 50% on upsells — strong hook for affiliates who mail volume.
                     </p>
                 </div>
 
@@ -1078,10 +1078,10 @@ onUnmounted(() => {
                                 <div class="flex items-center justify-between rounded-xl border-2 border-indigo-400 bg-white px-4 py-3 shadow-sm">
                                     <div>
                                         <p class="text-[10px] font-bold uppercase tracking-wide text-indigo-500">Front End</p>
-                                        <p class="text-base font-extrabold text-slate-900">$20</p>
+                                        <p class="text-base font-extrabold text-slate-900">$27</p>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-[10px] text-slate-500">You earn (70%)</p>
+                                        <p class="text-[10px] text-slate-500">You earn (50%)</p>
                                         <p class="text-sm font-bold text-emerald-600">$14</p>
                                     </div>
                                 </div>
@@ -1089,7 +1089,7 @@ onUnmounted(() => {
                                 <div class="flex items-center justify-between rounded-xl border-2 border-amber-300 bg-white px-4 py-3 shadow-sm">
                                     <div>
                                         <p class="text-[10px] font-bold uppercase tracking-wide text-amber-500">OTO 1 — PRO Video</p>
-                                        <p class="text-base font-extrabold text-slate-900">$69</p>
+                                        <p class="text-base font-extrabold text-slate-900">$79</p>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-[10px] text-slate-500">Commission</p>
@@ -1107,7 +1107,7 @@ onUnmounted(() => {
                                         <p class="text-sm font-bold text-emerald-600">50%</p>
                                     </div>
                                 </div>
-                                <p class="pt-1 text-center text-xs font-semibold text-indigo-600">70% frontend · 50% each upsell ✔</p>
+                                <p class="pt-1 text-center text-xs font-semibold text-indigo-600">50% frontend · 50% each upsell ✔</p>
                             </div>
                         </div>
                     </div>
@@ -1119,10 +1119,10 @@ onUnmounted(() => {
                             <span class="text-indigo-600">JVZoo-Friendly</span>
                         </h2>
                         <p class="mt-4 text-gray-600">
-                            Frontend at $20. Upsell 1: PRO video features at $69.
+                            Frontend at $27. Upsell 1: PRO video features at $79.
                         </p>
                         <p class="mt-3 text-sm text-gray-700">
-                            Commission structure: <strong>frontend 70%</strong> ($14 on $20), upsell 1 <strong>50%</strong>, upsell 2 <strong>50%</strong>.
+                            Commission structure: <strong>frontend 50%</strong> ($14 on $27), upsell 1 <strong>50%</strong>, upsell 2 <strong>50%</strong>.
                         </p>
                         <div class="mt-8">
                             <span
@@ -1304,115 +1304,6 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="affiliate-outreach" class="bg-white px-4 py-16 md:px-8 border-t border-slate-200">
-            <div class="mx-auto max-w-6xl">
-                <div class="mb-8 text-center md:text-left">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">Outreach scripts</p>
-                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">DM, follow-ups &amp; group posts (KDP + income angle)</h2>
-                    <p class="mx-auto mt-3 max-w-3xl text-sm text-slate-600 md:mx-0">
-                        Replace <span class="font-mono text-xs bg-slate-100 px-1 rounded">[Name]</span> with the contact&apos;s name. Commission: <strong>70% on the frontend</strong>, <strong>50% on each upsell</strong> (JVZoo). Lead with <strong>money + Amazon KDP</strong>, not generic &quot;AI tool&quot;.
-                    </p>
-                </div>
-
-                <div class="grid gap-4 md:grid-cols-2">
-                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600">1 · Power DM (send first)</p>
-                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey [Name]—quick one.
-
-I've got a JVZoo launch opening soon in the KDP / AI niche.
-
-It lets people create FULL kids storybooks (story + illustrations + voice + flipbook + page video) and sell or publish on Amazon KDP.
-
-Offer:
-- 70% commission on the frontend, 50% on every upsell
-- JVZoo tracking &amp; payouts
-- DFY promo materials
-
-This converts when you pitch "make money with AI books" — not just another AI chat.
-
-Want me to send demo + funnel?</pre>
-                    </article>
-
-                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">2 · Stronger DM (serious affiliates)</p>
-                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey [Name],
-
-Quick collab idea—
-
-Launching a KDP-focused AI tool on JVZoo soon.
-
-Users can:
-- Generate kids books
-- Add voice narration
-- Export as flipbooks + page videos
-- Publish or sell on Amazon KDP
-
-Basically a full "AI book business in a box."
-
-I'm offering:
-- 70% on the frontend, 50% on each upsell
-- Custom bonuses for your list if needed
-
-Looking for a few affiliates to test traffic early.
-
-Can I send details?</pre>
-                    </article>
-
-                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-amber-600">3 · Follow-up</p>
-                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey [Name], just checking—
-
-This is in the "AI + KDP income" niche which is trending hard right now.
-
-Happy to discuss custom bonuses for your audience.
-
-Let me know and I'll send everything over.</pre>
-                    </article>
-
-                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-violet-600">4 · Short mass DM</p>
-                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Hey—quick one.
-
-Launching an AI tool for creating &amp; selling kids books on Amazon KDP.
-
-70% FE + 50% on upsells (JVZoo) + DFY promo pack.
-
-Want details?</pre>
-                    </article>
-
-                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm md:col-span-2">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-rose-600">5 · Facebook group post</p>
-                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Looking for 5 affiliates ONLY (JVZoo launch)
-
-This is NOT just another AI tool.
-
-It lets users create full kids storybooks (with illustrations, voice &amp; video) and sell on Amazon KDP.
-
-- 70% on frontend, 50% on upsells
-- JVZoo
-- DFY promo pack
-
-Perfect for "make money online / AI / KDP" audiences.
-
-Comment "INFO" or DM me.</pre>
-                    </article>
-
-                    <article class="rounded-xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm md:col-span-2">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-600">6 · Close (when they say &quot;maybe&quot;)</p>
-                        <pre class="mt-3 text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">Got you.
-
-This one is easy to promote because:
-- Huge demand (KDP + AI)
-- Beginner-friendly money angle
-- Visual results (books + narration + video)
-
-I can also customize bonuses for your audience and help with angles that convert.
-
-Want to test a small run?</pre>
-                    </article>
-                </div>
-            </div>
-        </section>
 
         <section id="email-swipes" class="bg-slate-50 px-4 py-16 md:px-8">
             <div class="mx-auto max-w-6xl">
@@ -1450,12 +1341,13 @@ Want to test a small run?</pre>
                         <p class="mt-3 text-sm leading-relaxed text-slate-700">
                             Launch window is opening — early mailers usually see fresher traffic and less competition on the same angle.
                             This offer is built for a quick &quot;show the demo → show KDP path → close&quot; promo. Request your JVZoo link, grab the swipes and assets, and mail when you are ready.
-                            <strong>70% on the frontend, 50% on every upsell.</strong>
+                            <strong>50% on the frontend, 50% on every upsell.</strong>
                         </p>
                     </article>
                 </div>
             </div>
         </section>
+
 
         <!-- 🚀 Final Push CTA -->
         <section class="bg-linear-to-br from-slate-900 to-indigo-950 px-4 py-20 text-white md:px-8">
@@ -1485,7 +1377,7 @@ Want to test a small run?</pre>
                         Contact Us Directly
                     </a>
                 </div>
-                <p class="mt-6 text-xs text-slate-400">Earn 70% on the frontend and 50% on each upsell. Commission paid via JVZoo.</p>
+                <p class="mt-6 text-xs text-slate-400">Earn 50% on the frontend and 50% on each upsell. Commission paid via JVZoo.</p>
             </div>
         </section>
 
@@ -1562,6 +1454,27 @@ Want to test a small run?</pre>
                         <li>When credits run out, users buy additional credit packs <span class="font-semibold">inside the app</span> via PayPal.</li>
                         <li>Users do <span class="font-semibold">not</span> re-buy the main product through JVZoo for top-ups.</li>
                     </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white px-4 py-14 md:px-8">
+            <div class="mx-auto max-w-6xl">
+                <div class="text-center">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-600">Affiliate Contest</p>
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 md:text-3xl">Leaderboard Prizes for Top Affiliates</h2>
+                    <p class="mx-auto mt-3 max-w-2xl text-sm text-slate-600">
+                        Drive quality traffic during launch and compete for bonus cash prizes on top of your commissions.
+                    </p>
+                </div>
+
+                <div class="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                    <img
+                        src="/images/jv-contest-prizes.png"
+                        alt="JV affiliate contest prizes: first place $500, second place $250, third place $150"
+                        class="h-auto w-full object-cover"
+                        loading="lazy"
+                    />
                 </div>
             </div>
         </section>
