@@ -6,6 +6,7 @@ use App\Enums\FeatureTier;
 use App\Http\Controllers\Controller;
 use App\Jobs\Email\SendCeoOnboardingEmailJob;
 use App\Mail\UserNotificationMail;
+use App\Models\AffiliateTrackingEvent;
 use App\Models\JvzooIpnEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -70,6 +71,7 @@ class JvzooIpnController extends Controller
         }
 
         if (in_array($transactionType, ['SALE', 'BILL', 'REBILL'], true)) {
+            $this->trackAffiliateAttributedSale($payload);
             $this->createOrUpgradeUser($payload);
             $this->markProcessed($payload);
 
@@ -418,6 +420,53 @@ class JvzooIpnController extends Controller
         JvzooIpnEvent::query()
             ->where('fingerprint', $fingerprint)
             ->update(['processed_at' => now()]);
+    }
+
+    private function trackAffiliateAttributedSale(array $payload): void
+    {
+        $email = strtolower(trim((string) ($payload['customer_email'] ?? '')));
+        $transactionId = trim((string) ($payload['transaction_id'] ?? ''));
+        $productId = trim((string) ($payload['product_id'] ?? ''));
+
+        if ($email === '' || $transactionId === '') {
+            return;
+        }
+
+        $latestOptin = AffiliateTrackingEvent::query()
+            ->where('event_type', 'optin')
+            ->where('email', $email)
+            ->latest('occurred_at')
+            ->first();
+
+        if (! $latestOptin) {
+            return;
+        }
+
+        $alreadyTracked = AffiliateTrackingEvent::query()
+            ->where('affiliate_partner_id', $latestOptin->affiliate_partner_id)
+            ->where('event_type', 'sale')
+            ->where('email', $email)
+            ->where('meta->transaction_id', $transactionId)
+            ->exists();
+
+        if ($alreadyTracked) {
+            return;
+        }
+
+        AffiliateTrackingEvent::query()->create([
+            'affiliate_partner_id' => $latestOptin->affiliate_partner_id,
+            'event_type' => 'sale',
+            'visitor_token' => $latestOptin->visitor_token,
+            'email' => $email,
+            'meta' => [
+                'transaction_id' => $transactionId,
+                'paykey' => (string) ($payload['paykey'] ?? ''),
+                'product_id' => $productId,
+                'transaction_type' => strtoupper((string) ($payload['transaction_type'] ?? '')),
+                'status' => strtoupper((string) ($payload['status'] ?? '')),
+            ],
+            'occurred_at' => now(),
+        ]);
     }
 
     /**

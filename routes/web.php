@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\CreditPackController;
+use App\Http\Controllers\Admin\AffiliatePartnerController;
 use App\Http\Controllers\Admin\MarketingMailController;
 use App\Http\Controllers\Admin\StoryPlanController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Affiliate\AffiliateCampaignController;
 use App\Http\Controllers\Api\JvzooIpnController;
 use App\Http\Controllers\Billing\CreditPurchaseController;
 use App\Http\Controllers\Billing\PlanUpgradeController;
@@ -45,6 +47,9 @@ Route::inertia('/oto2', 'Oto2')->name('oto2');
 Route::inertia('/thank-you', 'ThankYou')->name('thank-you');
 Route::inertia('/terms', 'Terms')->name('terms');
 Route::inertia('/privacy-policy', 'PrivacyPolicy')->name('privacy-policy');
+Route::get('/affiliate/{partner:slug}', [AffiliateCampaignController::class, 'show'])->name('affiliate.capture');
+Route::post('/affiliate/{partner:slug}/lead', [AffiliateCampaignController::class, 'captureLead'])->name('affiliate.capture.lead');
+Route::get('/affiliate/{partner:slug}/stats', [AffiliateCampaignController::class, 'stats'])->name('affiliate.stats');
 Route::post('/api/ipn/jvzoo', JvzooIpnController::class)
     ->middleware('throttle:30,1')
     ->name('api.ipn.jvzoo');
@@ -102,6 +107,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::patch('/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('can:manage-users')->prefix('admin/affiliates')->name('admin.affiliates.')->group(function () {
+        Route::get('/', [AffiliatePartnerController::class, 'index'])->name('index');
+        Route::post('/', [AffiliatePartnerController::class, 'store'])->name('store');
+        Route::patch('/{partner}', [AffiliatePartnerController::class, 'update'])->name('update');
     });
 
     Route::middleware('can:manage-users')->prefix('admin/marketing-mail')->name('admin.marketing-mail.')->group(function () {
