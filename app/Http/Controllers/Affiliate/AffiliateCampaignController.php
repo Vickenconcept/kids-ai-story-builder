@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Affiliate;
 use App\Http\Controllers\Controller;
 use App\Models\AffiliatePartner;
 use App\Models\AffiliateTrackingEvent;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class AffiliateCampaignController extends Controller
 {
@@ -83,7 +83,7 @@ class AffiliateCampaignController extends Controller
         ]);
     }
 
-    public function captureLead(Request $request, AffiliatePartner $partner): RedirectResponse
+    public function captureLead(Request $request, AffiliatePartner $partner): SymfonyResponse
     {
         abort_unless($partner->is_active, 404);
 
@@ -112,7 +112,7 @@ class AffiliateCampaignController extends Controller
 
         $destination = (string) config('services.affiliate.redirect_url', '/sales');
 
-        return redirect()->away($destination);
+        return Inertia::location($destination);
     }
 
     private function resolveVisitorToken(Request $request): string
