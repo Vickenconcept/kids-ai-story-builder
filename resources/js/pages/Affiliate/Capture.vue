@@ -18,6 +18,11 @@ const form = useForm({
 const submit = () => {
     form.post(`/affiliate/${props.partner.slug}/lead`);
 };
+
+const scrollToForm = () => {
+    document.getElementById('af-email')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => document.getElementById('af-email')?.focus(), 400);
+};
 </script>
 
 <template>
@@ -160,8 +165,12 @@ const submit = () => {
                                 :disabled="form.processing"
                                 class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-fuchsia-500 to-violet-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet-900/50 transition hover:from-fuchsia-400 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                                <svg v-if="!form.processing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                                {{ form.processing ? 'Redirecting...' : 'Show Me the Offer →' }}
+                                <svg v-if="form.processing" class="size-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                {{ form.processing ? 'Taking you there...' : 'Show Me the Offer →' }}
                             </button>
                         </form>
 
@@ -219,7 +228,7 @@ const submit = () => {
         <button
             type="button"
             class="mt-8 inline-flex items-center gap-2 rounded-full bg-linear-to-r from-fuchsia-500 to-violet-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet-900/50 transition hover:from-fuchsia-400 hover:to-violet-500"
-            @click="document.getElementById('af-email')?.focus()"
+            @click="scrollToForm"
         >
             Get Instant Access →
         </button>
