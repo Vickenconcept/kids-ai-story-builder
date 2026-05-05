@@ -296,24 +296,45 @@ class JvzooIpnController extends Controller
             return false;
         }
 
-        $paykey = (string) ($payload['paykey'] ?? '');
-        $customerEmail = (string) ($payload['customer_email'] ?? '');
-        $productName = (string) ($payload['product_name'] ?? '');
-        $transactionType = (string) ($payload['transaction_type'] ?? '');
-        $date = (string) ($payload['date'] ?? '');
+        $paykey = trim((string) ($payload['paykey'] ?? ''));
+        $customerEmail = trim((string) ($payload['customer_email'] ?? ''));
+        $transactionType = trim((string) ($payload['transaction_type'] ?? ''));
+        $date = trim((string) ($payload['date'] ?? ''));
 
-        $signatureBase = implode('|', [
-            trim($paykey),
-            trim($customerEmail),
-            trim($productName),
-            trim($transactionType),
-            trim($date),
-        ]).$secret;
+        // JVZoo payloads may differ by field naming / legacy format.
+        $productCandidates = array_values(array_unique(array_filter([
+            trim((string) ($payload['product_name'] ?? '')),
+            trim((string) ($payload['item_name'] ?? '')),
+        ])));
 
-        $calculated = sha1(mb_convert_encoding($signatureBase, 'UTF-8'));
-        $calculated = strtoupper(substr($calculated, 0, 8));
+        if ($productCandidates === []) {
+            $productCandidates = [''];
+        }
 
-        return hash_equals($calculated, $incoming);
+        foreach ($productCandidates as $productName) {
+            $base = implode('|', [
+                $paykey,
+                $customerEmail,
+                $productName,
+                $transactionType,
+                $date,
+            ]);
+
+            $candidates = [
+                strtoupper(substr(sha1($base.$secret), 0, 8)),
+                strtoupper(substr(sha1($base.'|'.$secret), 0, 8)),
+                strtoupper(substr(sha1(mb_convert_encoding($base.$secret, 'UTF-8')), 0, 8)),
+                strtoupper(substr(sha1(mb_convert_encoding($base.'|'.$secret, 'UTF-8')), 0, 8)),
+            ];
+
+            foreach ($candidates as $calculated) {
+                if (hash_equals($calculated, $incoming)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private function isFreshEvent(array $payload): bool

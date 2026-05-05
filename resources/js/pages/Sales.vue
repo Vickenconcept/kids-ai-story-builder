@@ -606,12 +606,12 @@ const appName = import.meta.env.VITE_APP_NAME || 'DreamForge AI';
         <div class="relative mx-auto max-w-2xl text-center">
             <p class="text-xs font-semibold uppercase tracking-widest text-fuchsia-400">Special Launch Pricing</p>
             <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Get Instant Access Today</h2>
-            <p class="mt-3 text-violet-300 text-sm">One-time payment. No monthly fees. Price increases after launch.</p>
+            <p class="mt-3 text-violet-300 text-sm">One-time access payment. Price increases after launch.</p>
 
             <div class="mt-10 rounded-2xl border-2 border-fuchsia-400/40 bg-white/6 p-8 shadow-2xl shadow-violet-950/60">
                 <p class="text-sm font-semibold text-violet-400 line-through">Regular price: $97</p>
-                <p class="mt-2 text-7xl font-extrabold bg-linear-to-r from-fuchsia-400 to-violet-400 bg-clip-text text-transparent">$20</p>
-                <p class="mt-1 text-sm text-violet-300">One-time - Instant access - No recurring charges</p>
+                <p class="mt-2 text-7xl font-extrabold bg-linear-to-r from-fuchsia-400 to-violet-400 bg-clip-text text-transparent">$27</p>
+                <p class="mt-1 text-sm text-violet-300">One-time - Instant access </p>
 
                 <ul class="mt-6 space-y-2 text-left text-sm text-violet-200">
                     <li class="flex items-center gap-2"><span class="text-fuchsia-400">✓</span> Full story generation from prompts</li>

@@ -54,6 +54,8 @@ return [
 
     'ffmpeg' => [
         'binary' => env('FFMPEG_BINARY', 'ffmpeg'),
+        'mux_timeout_seconds' => (int) env('FFMPEG_MUX_TIMEOUT_SECONDS', 600),
+        'mux_reencode_preset' => env('FFMPEG_MUX_REENCODE_PRESET', 'veryfast'),
     ],
 
     'cloudinary' => [

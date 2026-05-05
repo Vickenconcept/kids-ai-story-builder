@@ -272,6 +272,8 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
             // Re-encode when looping to avoid container/timestamp issues on concatenated repeats.
             $command[] = '-c:v';
             $command[] = 'libx264';
+            $command[] = '-preset';
+            $command[] = (string) config('services.ffmpeg.mux_reencode_preset', 'veryfast');
             $command[] = '-pix_fmt';
             $command[] = 'yuv420p';
         } else {
@@ -285,8 +287,8 @@ class RunwayPageVideoGenerator implements PageVideoGenerator
         $command[] = $output;
 
         $process = new Process($command);
-
-        $process->setTimeout(180);
+        $muxTimeout = max(120, (int) config('services.ffmpeg.mux_timeout_seconds', 600));
+        $process->setTimeout($muxTimeout);
         $process->run();
 
         if (! $process->isSuccessful() || ! is_file($output)) {
