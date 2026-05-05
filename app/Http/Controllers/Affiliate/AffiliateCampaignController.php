@@ -110,7 +110,9 @@ class AffiliateCampaignController extends Controller
 
         $this->queueVisitorCookie($visitorToken);
 
-        return redirect()->to('/sales?src=affiliate&partner='.$partner->slug.'&lead=1');
+        $destination = (string) config('services.affiliate.redirect_url', '/sales');
+
+        return redirect()->away($destination);
     }
 
     private function resolveVisitorToken(Request $request): string

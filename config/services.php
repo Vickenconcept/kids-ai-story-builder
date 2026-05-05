@@ -85,4 +85,13 @@ return [
         'site_verification' => env('GOOGLE_SITE_VERIFICATION'),
     ],
 
+    /*
+    | Affiliate funnel — after a visitor opts in on the capture page they are
+    | forwarded to this URL. Set it to your own JVZoo buy link so the sale is
+    | registered under your account regardless of which partner sent the traffic.
+    */
+    'affiliate' => [
+        'redirect_url' => env('AFFILIATE_REDIRECT_URL', '/sales'),
+    ],
+
 ];
