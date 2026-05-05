@@ -82,7 +82,7 @@ const submitCreate = () => {
 
 const toggleActive = (partner: PartnerRow) => {
     router.patch(
-        `/admin/affiliates/${partner.id}`,
+        `/admin/affiliates/${partner.slug}`,
         {
             name: partner.name ?? '',
             email: partner.email,
