@@ -113,6 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [AffiliatePartnerController::class, 'index'])->name('index');
         Route::post('/', [AffiliatePartnerController::class, 'store'])->name('store');
         Route::patch('/{partner}', [AffiliatePartnerController::class, 'update'])->name('update');
+        Route::delete('/{partner}', [AffiliatePartnerController::class, 'destroy'])->name('destroy');
     });
 
     Route::middleware('can:manage-users')->prefix('admin/marketing-mail')->name('admin.marketing-mail.')->group(function () {

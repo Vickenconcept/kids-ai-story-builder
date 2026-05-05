@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useDebounceFn } from '@vueuse/core';
-import { Copy, Link2, Search } from 'lucide-vue-next';
+import { Copy, Link2, Search, Trash2 } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -100,6 +100,13 @@ const copyUrl = async (url: string) => {
     } catch {
         // no-op
     }
+};
+
+const deletePartner = (partner: PartnerRow) => {
+    const ok = window.confirm(`Delete affiliate partner "${partner.name || partner.slug}"? This will also remove their tracking history.`);
+    if (!ok) return;
+
+    router.delete(`/admin/affiliates/${partner.slug}`, { preserveScroll: true });
 };
 </script>
 
@@ -203,15 +210,28 @@ const copyUrl = async (url: string) => {
                                             <p>Sales: <span class="font-semibold">{{ partner.stats.sales }}</span></p>
                                         </td>
                                         <td class="px-3 py-3 align-top text-right">
-                                            <Button
-                                                type="button"
-                                                size="sm"
-                                                :variant="partner.is_active ? 'secondary' : 'outline'"
-                                                @click="toggleActive(partner)"
-                                            >
-                                                <Link2 class="mr-1 size-3.5" />
-                                                {{ partner.is_active ? 'Active' : 'Inactive' }}
-                                            </Button>
+                                            <div class="flex flex-col items-end gap-2">
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    :variant="partner.is_active ? 'secondary' : 'outline'"
+                                                    @click="toggleActive(partner)"
+                                                >
+                                                    <Link2 class="mr-1 size-3.5" />
+                                                    {{ partner.is_active ? 'Active' : 'Inactive' }}
+                                                </Button>
+
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    variant="outline"
+                                                    class="border-destructive/40 text-destructive hover:bg-destructive/10"
+                                                    @click="deletePartner(partner)"
+                                                >
+                                                    <Trash2 class="mr-1 size-3.5" />
+                                                    Delete
+                                                </Button>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>

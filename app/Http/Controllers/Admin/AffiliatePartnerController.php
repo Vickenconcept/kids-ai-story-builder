@@ -110,4 +110,11 @@ class AffiliatePartnerController extends Controller
 
         return back()->with('success', 'Affiliate partner updated.');
     }
+
+    public function destroy(AffiliatePartner $partner): RedirectResponse
+    {
+        $partner->delete();
+
+        return back()->with('success', 'Affiliate partner deleted.');
+    }
 }
