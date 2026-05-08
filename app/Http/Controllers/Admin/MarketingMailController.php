@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SendMarketingMailRequest;
 use App\Jobs\SendMarketingBroadcastEmailJob;
 use App\Models\User;
+use App\Support\EmailAddressList;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,9 +66,8 @@ class MarketingMailController extends Controller
         $extraRaw = trim((string) ($validated['extra_emails'] ?? ''));
         $fromPaste = [];
         if ($extraRaw !== '') {
-            foreach (explode(',', $extraRaw) as $part) {
-                $e = strtolower(trim($part));
-                if ($e !== '' && filter_var($e, FILTER_VALIDATE_EMAIL)) {
+            foreach (EmailAddressList::parseTokens($extraRaw) as $e) {
+                if (filter_var($e, FILTER_VALIDATE_EMAIL)) {
                     $fromPaste[] = $e;
                 }
             }

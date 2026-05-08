@@ -73,6 +73,26 @@ class MarketingMailTest extends TestCase
         );
     }
 
+    public function test_admin_send_accepts_newline_separated_extra_emails(): void
+    {
+        Bus::fake();
+
+        $this->setStoryAdminEmails('admin@example.com');
+        $admin = User::factory()->create(['email' => 'admin@example.com']);
+
+        $this->actingAs($admin)
+            ->from(route('admin.marketing-mail.index'))
+            ->post(route('admin.marketing-mail.send'), [
+                'subject' => 'Hello',
+                'body_html' => '<p>Test body</p>',
+                'user_ids' => [],
+                'extra_emails' => "one@test.com\ntwo@test.com\rthree@test.com",
+            ])
+            ->assertRedirect();
+
+        Bus::assertDispatchedTimes(SendMarketingBroadcastEmailJob::class, 3);
+    }
+
     public function test_send_requires_at_least_one_recipient(): void
     {
         $this->setStoryAdminEmails('admin@example.com');

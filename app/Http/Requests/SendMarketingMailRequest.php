@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\EmailAddressList;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -36,15 +37,7 @@ class SendMarketingMailRequest extends FormRequest
                 $userIds = [];
             }
 
-            $parsed = [];
-            if ($extra !== '') {
-                foreach (explode(',', $extra) as $part) {
-                    $e = strtolower(trim($part));
-                    if ($e !== '') {
-                        $parsed[] = $e;
-                    }
-                }
-            }
+            $parsed = $extra !== '' ? EmailAddressList::parseTokens($extra) : [];
 
             if (count($userIds) === 0 && $parsed === []) {
                 $validator->errors()->add('recipients', 'Select at least one user or enter at least one email address.');

@@ -36,6 +36,15 @@ const selectedUsers = ref<UserPick[]>([]);
 const extraEmails = ref('');
 const editorKey = ref(0);
 
+/** Match backend: commas, newlines, semicolons, whitespace */
+function parseExtraEmailTokens(raw: string): string[] {
+    return raw
+        .trim()
+        .split(/[\s,;]+/)
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean);
+}
+
 const toolbarOptions = [
     [{ header: [1, 2, 3, false] }],
     ['bold', 'italic', 'underline', 'strike'],
@@ -55,10 +64,7 @@ const form = useForm({
 
 const recipientCount = computed(() => {
     const ids = new Set(selectedUsers.value.map((u) => u.id));
-    const pasted = extraEmails.value
-        .split(',')
-        .map((s) => s.trim().toLowerCase())
-        .filter(Boolean);
+    const pasted = parseExtraEmailTokens(extraEmails.value);
     const uniquePaste = new Set(pasted);
     return ids.size + uniquePaste.size;
 });
@@ -178,8 +184,10 @@ function submit(): void {
                         <UserPlus class="size-5 text-violet-500" />
                         Recipients
                     </CardTitle>
-                    <CardDescription> Search users by name or email, then add them. Optionally add more addresses
-                        (comma-separated). </CardDescription>
+                    <CardDescription>
+                        Search users by name or email, then add them. Or paste addresses (one per line, or separated by commas /
+                        spaces).
+                    </CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-5">
                     <div class="space-y-2">
@@ -243,7 +251,7 @@ function submit(): void {
                             id="extra-emails"
                             v-model="extraEmails"
                             rows="3"
-                            placeholder="one@example.com, other@example.com"
+                            :placeholder="'one@example.com\nother@example.com'"
                             class="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring w-full resize-y rounded-lg border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1"
                         />
                     </div>
