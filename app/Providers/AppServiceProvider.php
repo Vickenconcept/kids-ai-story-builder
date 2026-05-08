@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureQueueRateLimiting();
     }
 
     /**
@@ -78,5 +81,13 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    protected function configureQueueRateLimiting(): void
+    {
+        RateLimiter::for('resend-marketing-mail', fn (): Limit => Limit::perSecond(
+            max(1, (int) config('services.resend.marketing_mail_per_second', 4)),
+            1
+        ));
     }
 }

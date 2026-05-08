@@ -79,6 +79,13 @@ return [
     ],
 
     /*
+    | Resend API — marketing broadcast jobs throttle to avoid 429 ("5 req/sec").
+    */
+    'resend' => [
+        'marketing_mail_per_second' => max(1, (int) env('RESEND_MARKETING_MAIL_PER_SECOND', 4)),
+    ],
+
+    /*
     | Google Search Console — paste the content value from the HTML tag verification method.
     */
     'google' => [
