@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 type Partner = {
@@ -20,6 +20,18 @@ type OptinRow = {
     utm_campaign: string | null;
 };
 
+type PaginatedOptins = {
+    data: OptinRow[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number | null;
+    to: number | null;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+};
+
 type SaleRow = {
     email: string;
     occurred_at: string | null;
@@ -30,7 +42,7 @@ type SaleRow = {
 const props = defineProps<{
     partner: Partner;
     stats: Stats;
-    recent_optins: OptinRow[];
+    recent_optins: PaginatedOptins;
     recent_sales: SaleRow[];
 }>();
 
@@ -95,8 +107,8 @@ const fmt = (iso: string | null) => {
 
             <!-- Recent Opt-ins -->
             <section>
-                <h2 class="mb-4 text-base font-bold text-violet-200">Recent Opt-ins (last 30)</h2>
-                <div v-if="recent_optins.length === 0" class="rounded-xl border border-white/10 bg-white/5 px-5 py-8 text-center text-sm text-violet-400">
+                <h2 class="mb-4 text-base font-bold text-violet-200">Opt-in Emails</h2>
+                <div v-if="recent_optins.data.length === 0" class="rounded-xl border border-white/10 bg-white/5 px-5 py-8 text-center text-sm text-violet-400">
                     No opt-ins recorded yet.
                 </div>
                 <div v-else class="overflow-hidden rounded-xl border border-white/10">
@@ -110,7 +122,7 @@ const fmt = (iso: string | null) => {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
-                            <tr v-for="(row, i) in recent_optins" :key="i" class="transition hover:bg-white/3">
+                            <tr v-for="(row, i) in recent_optins.data" :key="i" class="transition hover:bg-white/3">
                                 <td class="px-4 py-3 text-violet-200">{{ row.email }}</td>
                                 <td class="px-4 py-3 text-violet-400">{{ fmt(row.occurred_at) }}</td>
                                 <td class="px-4 py-3 text-violet-400">{{ row.utm_source ?? '—' }}</td>
@@ -118,6 +130,37 @@ const fmt = (iso: string | null) => {
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div
+                    v-if="recent_optins.total > recent_optins.per_page"
+                    class="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-violet-400"
+                >
+                    <p>
+                        Showing {{ recent_optins.from ?? 0 }}-{{ recent_optins.to ?? 0 }} of {{ recent_optins.total.toLocaleString() }}
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <Link
+                            v-if="recent_optins.prev_page_url"
+                            :href="recent_optins.prev_page_url"
+                            class="rounded-md border border-white/20 px-3 py-1.5 text-violet-200 transition hover:bg-white/10"
+                        >
+                            Previous
+                        </Link>
+                        <span v-else class="rounded-md border border-white/10 px-3 py-1.5 text-violet-600">Previous</span>
+
+                        <span class="px-2 text-violet-300">
+                            Page {{ recent_optins.current_page }} of {{ recent_optins.last_page }}
+                        </span>
+
+                        <Link
+                            v-if="recent_optins.next_page_url"
+                            :href="recent_optins.next_page_url"
+                            class="rounded-md border border-white/20 px-3 py-1.5 text-violet-200 transition hover:bg-white/10"
+                        >
+                            Next
+                        </Link>
+                        <span v-else class="rounded-md border border-white/10 px-3 py-1.5 text-violet-600">Next</span>
+                    </div>
                 </div>
             </section>
 

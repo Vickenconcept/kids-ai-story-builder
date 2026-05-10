@@ -44,17 +44,28 @@ class AffiliateCampaignController extends Controller
 
         $base = AffiliateTrackingEvent::query()->where('affiliate_partner_id', $partner->id);
 
-        $recentOptins = (clone $base)
+        $optinsPaginator = (clone $base)
             ->where('event_type', 'optin')
             ->orderByDesc('occurred_at')
-            ->limit(30)
-            ->get(['email', 'occurred_at', 'utm_source', 'utm_campaign'])
-            ->map(fn ($e) => [
+            ->paginate(30, ['email', 'occurred_at', 'utm_source', 'utm_campaign'], 'optins_page')
+            ->withQueryString();
+
+        $recentOptins = [
+            'data' => $optinsPaginator->getCollection()->map(fn ($e) => [
                 'email' => $e->email,
                 'occurred_at' => $e->occurred_at?->toIso8601String(),
                 'utm_source' => $e->utm_source,
                 'utm_campaign' => $e->utm_campaign,
-            ]);
+            ])->values(),
+            'current_page' => $optinsPaginator->currentPage(),
+            'last_page' => $optinsPaginator->lastPage(),
+            'per_page' => $optinsPaginator->perPage(),
+            'total' => $optinsPaginator->total(),
+            'from' => $optinsPaginator->firstItem(),
+            'to' => $optinsPaginator->lastItem(),
+            'prev_page_url' => $optinsPaginator->previousPageUrl(),
+            'next_page_url' => $optinsPaginator->nextPageUrl(),
+        ];
 
         $recentSales = (clone $base)
             ->where('event_type', 'sale')
