@@ -20,6 +20,8 @@ return [
 
     'resend' => [
         'key' => env('RESEND_API_KEY'),
+        // Marketing broadcast jobs throttle to avoid 429 ("5 req/sec").
+        'marketing_mail_per_second' => max(1, (int) env('RESEND_MARKETING_MAIL_PER_SECOND', 4)),
     ],
 
     'ses' => [
@@ -76,13 +78,6 @@ return [
         'client_id' => env('PAYPAL_CLIENT_ID'),
         'secret' => env('PAYPAL_SECRET'),
         'sandbox' => filter_var(env('PAYPAL_SANDBOX', true), FILTER_VALIDATE_BOOL),
-    ],
-
-    /*
-    | Resend API — marketing broadcast jobs throttle to avoid 429 ("5 req/sec").
-    */
-    'resend' => [
-        'marketing_mail_per_second' => max(1, (int) env('RESEND_MARKETING_MAIL_PER_SECOND', 4)),
     ],
 
     /*
