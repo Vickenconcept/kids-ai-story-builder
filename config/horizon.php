@@ -20,6 +20,7 @@ return [
 
     'waits' => [
         'redis:default' => 60,
+        'redis:marketing-mail' => 180,
         'redis:story-text' => 120,
         'redis:story-image' => 300,
         'redis:story-audio' => 300,
@@ -61,6 +62,19 @@ return [
             'maxJobs' => 0,
             'memory' => 256,
             'tries' => 1,
+            'timeout' => 120,
+            'nice' => 0,
+        ],
+        'supervisor-marketing' => [
+            'connection' => 'redis',
+            'queue' => ['marketing-mail'],
+            'balance' => 'auto',
+            'autoScalingStrategy' => 'time',
+            'maxProcesses' => 1,
+            'maxTime' => 0,
+            'maxJobs' => 0,
+            'memory' => 256,
+            'tries' => 5,
             'timeout' => 120,
             'nice' => 0,
         ],
@@ -125,6 +139,11 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
+            'supervisor-marketing' => [
+                'maxProcesses' => 1,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+            ],
             'supervisor-story-text' => [
                 'maxProcesses' => 4,
                 'balanceMaxShift' => 1,
@@ -149,6 +168,9 @@ return [
 
         'local' => [
             'supervisor-default' => [
+                'maxProcesses' => 1,
+            ],
+            'supervisor-marketing' => [
                 'maxProcesses' => 1,
             ],
             'supervisor-story-text' => [
