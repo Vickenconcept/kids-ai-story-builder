@@ -262,7 +262,7 @@ const settings = reactive<FlipbookSetupSettings>({
     bookZoomPercent: 100,
     videoPlaybackMode: 'click' as VideoPlaybackMode,
     defaultMediaMode: 'video' as DefaultMediaMode,
-    dragFlipEnabled: true,
+    dragFlipEnabled: false,
     pageMediaOverrides: {} as Record<string, DefaultMediaMode>,
 });
 let suppressSettingsSync = false;
@@ -304,7 +304,7 @@ function defaultFlipCore(): typeof settings {
         bookZoomPercent: 100,
         videoPlaybackMode: 'click',
         defaultMediaMode: 'video',
-        dragFlipEnabled: true,
+        dragFlipEnabled: false,
         pageMediaOverrides: {},
     };
 }
