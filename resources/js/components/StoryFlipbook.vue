@@ -2,7 +2,7 @@ import '../../css/flipbook-realism.css';
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
 import type { JQueryStatic } from 'jquery';
-import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-vue-next';
 import { createApp, h, computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import StoryFlipbookSetupPanel from '@/components/StoryFlipbookSetupPanel.vue';
 import type {FlipbookSetupSettings} from '@/components/StoryFlipbookSetupPanel.vue';
@@ -75,6 +75,8 @@ const props = withDefaults(
         narrationUnavailableHint?: string;
         /** Hide video playback / default media controls in setup (e.g. Basic tier readers). */
         showVideoMediaSettings?: boolean;
+        /** Non-blocking notice while page media generates (shown below prev/next controls). */
+        mediaGenerationNotice?: string | null;
     }>(),
     {
         playAudioOnFlip: true,
@@ -95,6 +97,7 @@ const props = withDefaults(
         pageAudioActionHint: '',
         narrationUnavailableHint: '',
         showVideoMediaSettings: true,
+        mediaGenerationNotice: null,
     },
 );
 
@@ -1659,6 +1662,21 @@ function onResize(): void {
 
 let rebuildTimer: ReturnType<typeof setTimeout> | null = null;
 
+/** Rebuild when page content/media URLs change — not when generating flags toggle (avoids book jumps). */
+function pagesRebuildSignature(pages: FlipbookPage[]): string {
+    return JSON.stringify(
+        pages.map((p) => ({
+            u: p.uuid,
+            n: p.page_number,
+            i: p.image_url ?? '',
+            v: p.video_url ?? '',
+            a: p.audio_url ?? '',
+            t: p.text_content ?? '',
+            q: p.quiz_questions ?? null,
+        })),
+    );
+}
+
 function scheduleRebuildTurn(): void {
     if (rebuildTimer !== null) {
         clearTimeout(rebuildTimer);
@@ -1710,11 +1728,9 @@ watch(
 
 watch(
     () => [
-        props.pages,
-        props.pageVideoBusy,
+        pagesRebuildSignature(props.pages),
         props.canGeneratePageVideo,
         props.showPageVideoAction,
-        props.pageAudioBusy,
         props.canGeneratePageAudio,
         props.showPageAudioAction,
         props.gameplayEnabled,
@@ -1730,7 +1746,6 @@ watch(
 
         scheduleRebuildTurn();
     },
-    { deep: true },
 );
 
 function onKeyDown(e: KeyboardEvent): void {
@@ -1830,6 +1845,16 @@ onBeforeUnmount(() => {
                     </Button>
                 </div>
 
+                <div
+                    v-if="mediaGenerationNotice"
+                    class="flex w-full max-w-xl items-start gap-3 rounded-xl border border-violet-200/80 bg-violet-50/90 px-4 py-3 text-sm text-violet-950 shadow-sm dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-100"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <Loader2 class="mt-0.5 size-4 shrink-0 animate-spin text-violet-600 dark:text-violet-300" />
+                    <p class="leading-snug">{{ mediaGenerationNotice }}</p>
+                </div>
+
                 <div class="flip-stage perspective-desk w-full max-w-[min(100%,980px)]">
                     <div class="book-ambient" aria-hidden="true" />
                     <div class="book-drop-shadow">
@@ -1869,6 +1894,16 @@ onBeforeUnmount(() => {
                     Next
                     <ChevronRight class="ml-1 size-4" />
                 </Button>
+            </div>
+
+            <div
+                v-if="mediaGenerationNotice"
+                class="flex w-full max-w-xl items-start gap-3 rounded-xl border border-violet-200/80 bg-violet-50/90 px-4 py-3 text-sm text-violet-950 shadow-sm dark:border-violet-500/30 dark:bg-violet-950/40 dark:text-violet-100"
+                role="status"
+                aria-live="polite"
+            >
+                <Loader2 class="mt-0.5 size-4 shrink-0 animate-spin text-violet-600 dark:text-violet-300" />
+                <p class="leading-snug">{{ mediaGenerationNotice }}</p>
             </div>
 
             <div class="flip-stage perspective-desk w-full max-w-[min(100%,980px)]">

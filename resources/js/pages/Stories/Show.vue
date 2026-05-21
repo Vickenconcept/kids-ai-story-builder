@@ -331,8 +331,6 @@ const flipbookKey = computed(() =>
                 u: p.uuid,
                 a: p.audio_url ?? '',
                 v: p.video_url ?? '',
-                ag: Boolean(p.audio_generating),
-                vg: Boolean(p.video_generating),
             })),
         ),
     ].join('|'),
@@ -904,6 +902,39 @@ let poll: ReturnType<typeof setInterval> | null = null;
 const anyPageVideoGenerating = computed(() => displayPages.value.some((p) => Boolean(p.video_generating)));
 const anyPageAudioGenerating = computed(() => displayPages.value.some((p) => Boolean(p.audio_generating)));
 
+const flipbookMediaGenerationNotice = computed((): string | null => {
+    const videoCount = displayPages.value.filter(
+        (p) => Boolean(p.video_generating) || Boolean(mergedPageVideoBusy.value[p.uuid]),
+    ).length;
+    const audioCount = displayPages.value.filter(
+        (p) => Boolean(p.audio_generating) || Boolean(mergedPageAudioBusy.value[p.uuid]),
+    ).length;
+
+    if (videoCount === 0 && audioCount === 0) {
+        return null;
+    }
+
+    const parts: string[] = [];
+
+    if (videoCount > 0) {
+        parts.push(
+            videoCount === 1
+                ? 'A page video is generating in the background.'
+                : `${videoCount} page videos are generating in the background.`,
+        );
+    }
+
+    if (audioCount > 0) {
+        parts.push(
+            audioCount === 1
+                ? 'Page narration is generating in the background.'
+                : `${audioCount} page narrations are generating in the background.`,
+        );
+    }
+
+    return `${parts.join(' ')} You can keep reading the flipbook — new media will appear when generation finishes.`;
+});
+
 async function fetchPageMediaStatus(): Promise<void> {
     try {
         const res = await fetch(`/stories/${props.project.uuid}/page-media-status`, {
@@ -963,7 +994,18 @@ watch(
     },
 );
 
-onMounted(() => {
+function startPageMediaPoll(): void {
+    if (poll) {
+        clearInterval(poll);
+    }
+
+    const intervalMs =
+        props.project.status === 'processing' ||
+        anyPageVideoGenerating.value ||
+        anyPageAudioGenerating.value
+            ? 4000
+            : 8000;
+
     poll = setInterval(() => {
         if (props.project.status === 'processing') {
             router.reload({ only: ['project', 'pages', 'story_credits'] });
@@ -974,7 +1016,23 @@ onMounted(() => {
         if (anyPageVideoGenerating.value || anyPageAudioGenerating.value) {
             void fetchPageMediaStatus();
         }
-    }, 8000);
+    }, intervalMs);
+}
+
+watch([anyPageVideoGenerating, anyPageAudioGenerating, () => props.project.status], () => {
+    startPageMediaPoll();
+
+    if (anyPageVideoGenerating.value || anyPageAudioGenerating.value) {
+        void fetchPageMediaStatus();
+    }
+});
+
+onMounted(() => {
+    startPageMediaPoll();
+
+    if (anyPageVideoGenerating.value || anyPageAudioGenerating.value) {
+        void fetchPageMediaStatus();
+    }
 });
 
 onUnmounted(() => {
@@ -1311,6 +1369,7 @@ onUnmounted(() => {
                         :can-generate-page-audio="canGeneratePageAudioInFlipbook"
                         :page-audio-busy="mergedPageAudioBusy"
                         :page-audio-action-hint="pageAudioActionHint"
+                        :media-generation-notice="flipbookMediaGenerationNotice"
                         @view-page-change="onFlipViewPageChange"
                         @generate-page-video="onFlipbookGeneratePageVideo"
                         @generate-page-audio="onFlipbookGeneratePageAudio"
