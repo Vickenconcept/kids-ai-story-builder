@@ -3,11 +3,14 @@
 namespace App\Services\Story;
 
 use App\Enums\FeatureTier;
+use App\Enums\StoryAiJobStatus;
+use App\Enums\StoryAiJobType;
 use App\Enums\StoryProjectStatus;
 use App\Jobs\Story\GenerateStoryPageAudioJob;
 use App\Jobs\Story\GenerateStoryPageImageJob;
 use App\Jobs\Story\GenerateStoryPageVideoJob;
 use App\Jobs\Story\GenerateStoryTextJob;
+use App\Models\StoryAiJob;
 use App\Models\StoryPage;
 use App\Models\StoryProject;
 use Illuminate\Support\Facades\Log;
@@ -72,6 +75,14 @@ class StoryPipelineDispatcher
             ]);
             $this->dispatchPageImages($project);
 
+            if ($generateAudio) {
+                Log::info('story.pipeline.dispatch.audio_parallel', [
+                    'project_id' => $project->id,
+                    'page_count' => $project->pages->count(),
+                ]);
+                $this->dispatchPageAudio($project);
+            }
+
             return;
         }
 
@@ -104,25 +115,20 @@ class StoryPipelineDispatcher
             'user_feature_tier' => $project->user?->feature_tier?->value,
         ]);
 
-        if ($project->include_narration) {
+        if ($project->include_narration && $this->shouldQueueAudioForPage($page)) {
             Log::info('story.pipeline.queue_audio_after_image', [
                 'project_id' => $project->id,
                 'page_id' => $page->id,
             ]);
             GenerateStoryPageAudioJob::dispatch($page->id, $this->resolveNarrationVoice($project))
                 ->onQueue(config('story.queues.audio'));
+        }
 
+        if ($this->maybeQueueVideoWhenReady($page, $project)) {
             return;
         }
 
-        if ($this->shouldQueueVideo($project)) {
-            Log::info('story.pipeline.queue_video_after_image', [
-                'project_id' => $project->id,
-                'page_id' => $page->id,
-            ]);
-            GenerateStoryPageVideoJob::dispatch($page->id)
-                ->onQueue(config('story.queues.video'));
-
+        if ($this->pageAwaitingCompanionAssets($page, $project)) {
             return;
         }
 
@@ -137,7 +143,6 @@ class StoryPipelineDispatcher
     public function afterAudio(StoryPage $page): void
     {
         $project = $page->project->fresh(['user']);
-        $shouldQueueVideo = $this->shouldQueueVideo($project);
 
         Log::info('story.pipeline.after_audio', [
             'project_id' => $project->id,
@@ -147,23 +152,20 @@ class StoryPipelineDispatcher
             'user_feature_tier' => $project->user?->feature_tier?->value,
         ]);
 
-        if ($shouldQueueVideo && filled($page->image_path)) {
-            Log::info('story.pipeline.queue_video_after_audio', [
-                'project_id' => $project->id,
-                'page_id' => $page->id,
-            ]);
-            GenerateStoryPageVideoJob::dispatch($page->id)
-                ->onQueue(config('story.queues.video'));
-
+        if ($this->maybeQueueVideoWhenReady($page, $project)) {
             return;
         }
 
-        if ($shouldQueueVideo && blank($page->image_path)) {
+        if ($this->shouldQueueVideo($project) && blank($page->image_path)) {
             Log::warning('story.pipeline.video_skip_missing_image_after_audio', [
                 'project_id' => $project->id,
                 'page_id' => $page->id,
                 'page_number' => $page->page_number,
             ]);
+        }
+
+        if ($this->pageAwaitingCompanionAssets($page, $project)) {
+            return;
         }
 
         Log::info('story.pipeline.complete_after_audio', [
@@ -179,6 +181,101 @@ class StoryPipelineDispatcher
         $this->readiness->markPagePipelineComplete($page->fresh());
     }
 
+    /**
+     * Queue video only when required inputs exist (image, and audio when narration is on).
+     */
+    private function maybeQueueVideoWhenReady(StoryPage $page, StoryProject $project): bool
+    {
+        if (! $this->shouldQueueVideo($project)) {
+            return false;
+        }
+
+        if (filled($page->video_path)) {
+            return false;
+        }
+
+        if ($this->hasPendingOrRunningJob($page, StoryAiJobType::PageVideo)) {
+            return true;
+        }
+
+        if (blank($page->image_path)) {
+            Log::info('story.pipeline.video_wait_for_image', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+            ]);
+
+            return false;
+        }
+
+        if ($project->include_narration && blank($page->audio_path)) {
+            Log::info('story.pipeline.video_wait_for_audio', [
+                'project_id' => $project->id,
+                'page_id' => $page->id,
+            ]);
+
+            return false;
+        }
+
+        Log::info('story.pipeline.queue_video_when_ready', [
+            'project_id' => $project->id,
+            'page_id' => $page->id,
+        ]);
+        GenerateStoryPageVideoJob::dispatch($page->id)
+            ->onQueue(config('story.queues.video'));
+
+        return true;
+    }
+
+    private function shouldQueueAudioForPage(StoryPage $page): bool
+    {
+        if (filled($page->audio_path)) {
+            return false;
+        }
+
+        return ! $this->hasPendingOrRunningJob($page, StoryAiJobType::PageAudio);
+    }
+
+    private function pageAwaitingCompanionAssets(StoryPage $page, StoryProject $project): bool
+    {
+        if ($this->shouldQueueVideo($project) && $this->pageNeedsVideoPrerequisites($page, $project)) {
+            return true;
+        }
+
+        return $project->include_narration && $this->pageAwaitingAudio($page);
+    }
+
+    private function pageNeedsVideoPrerequisites(StoryPage $page, StoryProject $project): bool
+    {
+        if (blank($page->image_path)) {
+            return true;
+        }
+
+        if ($project->include_narration && blank($page->audio_path)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function pageAwaitingAudio(StoryPage $page): bool
+    {
+        if (filled($page->audio_path)) {
+            return false;
+        }
+
+        return $this->hasPendingOrRunningJob($page, StoryAiJobType::PageAudio);
+    }
+
+    private function hasPendingOrRunningJob(StoryPage $page, StoryAiJobType $type): bool
+    {
+        return StoryAiJob::query()
+            ->where('story_project_id', $page->story_project_id)
+            ->where('story_page_id', $page->id)
+            ->where('type', $type)
+            ->whereIn('status', [StoryAiJobStatus::Pending, StoryAiJobStatus::Running])
+            ->exists();
+    }
+
     private function shouldQueueVideo(StoryProject $project): bool
     {
         if (! $project->include_video) {
@@ -186,6 +283,7 @@ class StoryPipelineDispatcher
                 'project_id' => $project->id,
                 'user_id' => $project->user_id,
             ]);
+
             return false;
         }
 
