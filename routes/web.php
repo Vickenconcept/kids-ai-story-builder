@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\BundleRegisterController;
 use App\Http\Controllers\Admin\CreditPackController;
 use App\Http\Controllers\Admin\AffiliatePartnerController;
 use App\Http\Controllers\Admin\MarketingMailController;
@@ -55,6 +56,11 @@ Route::post('/api/ipn/jvzoo', JvzooIpnController::class)
     ->name('api.ipn.jvzoo');
 
 Route::get('/read/{story:uuid}', [PublicStoryController::class, 'show'])->name('stories.public.show');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/bundle/register', [BundleRegisterController::class, 'create'])->name('bundle.register');
+    Route::post('/bundle/register', [BundleRegisterController::class, 'store'])->name('bundle.register.store');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
