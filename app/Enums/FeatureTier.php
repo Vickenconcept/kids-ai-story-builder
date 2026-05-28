@@ -16,4 +16,9 @@ enum FeatureTier: string
             default => false,
         };
     }
+
+    public function isUnlimited(): bool
+    {
+        return $this === self::Elite;
+    }
 }

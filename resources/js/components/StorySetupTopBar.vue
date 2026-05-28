@@ -43,6 +43,7 @@ const kdpToast = ref<{ kind: 'info' | 'success' | 'error'; message: string } | n
 let kdpToastTimer: ReturnType<typeof setTimeout> | null = null;
 
 const isElite = computed(() => props.featureTier === 'elite');
+const creditsLabel = computed(() => (isElite.value ? 'Unlimited' : String(props.storyCredits)));
 
 const kdpExportHref = computed(() => {
     const params = new URLSearchParams({
@@ -236,7 +237,7 @@ const socialShareLinks = computed(() => {
                                 <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
                                 <path d="M8.8 12h6.4M12 8.8v6.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                             </svg>
-                            Credits: {{ storyCredits }}
+                            Credits: {{ creditsLabel }}
                         </span>
                     </div>
                 </div>

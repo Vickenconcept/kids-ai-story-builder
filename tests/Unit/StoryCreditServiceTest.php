@@ -45,4 +45,22 @@ class StoryCreditServiceTest extends TestCase
             'cost' => 3,
         ]);
     }
+
+    public function test_elite_users_are_not_charged_or_blocked(): void
+    {
+        config(['story.credit_costs.video' => 30]);
+
+        $user = User::factory()->create([
+            'feature_tier' => 'elite',
+            'story_credits' => 0,
+        ]);
+        $service = app(StoryCreditService::class);
+
+        $service->assertCanSpend($user, 'video');
+        $service->spend($user, 'video');
+        $service->spendOnce('video:page:999', $user, 'video');
+
+        $this->assertSame(0, (int) $user->fresh()->story_credits);
+        $this->assertDatabaseCount('story_credit_spend_events', 0);
+    }
 }

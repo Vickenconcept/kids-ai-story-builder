@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookMarked, Coins, Crown, Film, LayoutGrid, Link2, Mail, Monitor, Moon, Settings, ShieldCheck, Sparkles, Sun, UserPlus, Users, Zap } from 'lucide-vue-next';
+import { BookMarked, Coins, Crown, Film, GraduationCap, LayoutGrid, Link2, Mail, Monitor, Moon, Settings, ShieldCheck, Sparkles, Sun, UserPlus, Users, Zap } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -26,6 +26,7 @@ const { appearance, updateAppearance } = useAppearance();
 
 const storyCredits = computed(() => page.props.auth?.user?.story_credits ?? 0);
 const featureTier = computed(() => page.props.auth?.user?.feature_tier ?? 'basic');
+const isElite = computed(() => featureTier.value === 'elite');
 const appearanceOptions = [
     { value: 'light', label: 'Light', icon: Sun },
     { value: 'dark', label: 'Dark', icon: Moon },
@@ -44,6 +45,7 @@ const cycleAppearance = () => {
 
 const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
+        { title: 'Tutorial', href: '/tutorial', icon: GraduationCap },
         { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
         { title: 'Stories', href: '/stories', icon: BookMarked },
     ];
@@ -101,7 +103,7 @@ const mainNavItems = computed<NavItem[]>(() => {
                             <Zap class="size-3.5 text-amber-500" />
                             <span class="text-xs font-semibold text-violet-900 dark:text-violet-200">Credits</span>
                         </div>
-                        <span class="text-sm font-bold text-amber-600 dark:text-amber-400">{{ storyCredits }}</span>
+                        <span class="text-sm font-bold text-amber-600 dark:text-amber-400">{{ isElite ? 'Unlimited' : storyCredits }}</span>
                     </div>
 
                     <!-- Tier badge -->
@@ -112,12 +114,19 @@ const mainNavItems = computed<NavItem[]>(() => {
 
                     <!-- Top-up button -->
                     <button
+                        v-if="!isElite"
                         type="button"
                         class="w-full rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-violet-700 active:scale-95"
                         @click="creditsModal.open()"
                     >
                         + Top Up Credits
                     </button>
+                    <div
+                        v-else
+                        class="w-full rounded-lg border border-violet-300/70 bg-violet-100/60 px-3 py-1.5 text-center text-xs font-semibold text-violet-700 dark:border-violet-700/60 dark:bg-violet-900/30 dark:text-violet-300"
+                    >
+                        Elite includes unlimited generation
+                    </div>
                 </div>
             </div>
 
@@ -144,7 +153,7 @@ const mainNavItems = computed<NavItem[]>(() => {
             </div>
 
             <!-- Collapsed icon-only top-up button -->
-            <div class="hidden px-2 pb-2 group-data-[collapsible=icon]:block">
+            <div v-if="!isElite" class="hidden px-2 pb-2 group-data-[collapsible=icon]:block">
                 <button
                     type="button"
                     class="flex w-full items-center justify-center rounded-lg bg-violet-600 p-2 text-white transition hover:bg-violet-700"

@@ -125,6 +125,7 @@ const unsavedPagesCount = computed(() => {
 });
 const hasUnsavedPageChanges = computed(() => unsavedPagesCount.value > 0);
 const isPro = computed(() => props.feature_tier === 'pro' || props.feature_tier === 'elite');
+const isUnlimited = computed(() => props.feature_tier === 'elite');
 
 const displayPages = computed((): PageRow[] =>
     props.pages.map((p) => {
@@ -167,8 +168,8 @@ function toNonNegativeInt(value: unknown): number {
 const videoCreditCost = computed(() => toNonNegativeInt(props.video_credit_cost));
 const audioCreditCost = computed(() => toNonNegativeInt(props.audio_credit_cost));
 
-const canAffordSingleVideo = computed(() => storyCreditsBalance.value >= videoCreditCost.value);
-const canAffordSingleAudio = computed(() => storyCreditsBalance.value >= audioCreditCost.value);
+const canAffordSingleVideo = computed(() => isUnlimited.value || storyCreditsBalance.value >= videoCreditCost.value);
+const canAffordSingleAudio = computed(() => isUnlimited.value || storyCreditsBalance.value >= audioCreditCost.value);
 
 const mergedPageVideoBusy = computed(() => {
     const m: Record<string, boolean> = { ...pageVideoBusy.value };
@@ -204,7 +205,7 @@ const pageVideoActionHint = computed(() => {
     }
 
     if (!canAffordSingleVideo.value) {
-        return 'Not enough credits for a page video.';
+        return isUnlimited.value ? '' : 'Not enough credits for a page video.';
     }
 
     return '';
@@ -215,12 +216,20 @@ const pageAudioActionHint = computed(() => {
     }
 
     if (!canAffordSingleAudio.value) {
+        if (isUnlimited.value) {
+            return '';
+        }
+
         return `Not enough credits for page narration (${audioCreditCost.value} required, ${storyCreditsBalance.value} available).`;
     }
 
     return '';
 });
 const creditsExhausted = computed(() => {
+    if (isUnlimited.value) {
+        return false;
+    }
+
     if (props.project.status !== 'failed') {
         return false;
     }
@@ -1176,9 +1185,9 @@ onUnmounted(() => {
                         <!-- Credit / pro hints -->
                         <div class="px-4 pt-3 pb-1 flex flex-wrap gap-2 text-xs">
                             <template v-if="isPro">
-                                <span class="text-muted-foreground">Video: {{ props.video_credit_cost }} credits/page</span>
+                                <span class="text-muted-foreground">Video: {{ isUnlimited ? 'Unlimited' : `${props.video_credit_cost} credits/page` }}</span>
                                 <span v-if="!canAffordSingleVideo" class="text-destructive">· Not enough credits</span>
-                                <button v-if="!canAffordSingleVideo" class="text-violet-600 hover:underline" type="button" @click="openCreditsModal">Buy credits</button>
+                                <button v-if="!canAffordSingleVideo && !isUnlimited" class="text-violet-600 hover:underline" type="button" @click="openCreditsModal">Buy credits</button>
                             </template>
                             <span v-else class="text-muted-foreground">Page video is available on Pro and Elite.</span>
                         </div>
@@ -1445,7 +1454,7 @@ onUnmounted(() => {
                                             (!currentScrollPage.audio_url || isPageAudioGenerating(currentScrollPage))
                                         "
                                     >
-                                        <span class="text-muted-foreground text-xs">Narration: {{ props.audio_credit_cost }} cr</span>
+                                        <span class="text-muted-foreground text-xs">Narration: {{ isUnlimited ? 'Unlimited' : `${props.audio_credit_cost} cr` }}</span>
                                         <Button
                                             type="button"
                                             size="sm"
@@ -1460,7 +1469,7 @@ onUnmounted(() => {
                                         </Button>
                                     </template>
                                     <template v-if="isPro">
-                                        <span class="text-muted-foreground text-xs">Video: {{ props.video_credit_cost }} cr</span>
+                                        <span class="text-muted-foreground text-xs">Video: {{ isUnlimited ? 'Unlimited' : `${props.video_credit_cost} cr` }}</span>
                                         <Button
                                             type="button"
                                             size="sm"

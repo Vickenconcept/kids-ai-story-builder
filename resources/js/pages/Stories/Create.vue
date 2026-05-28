@@ -79,6 +79,7 @@ const form = useForm({
 
 const isPro = props.featureTier === 'pro' || props.featureTier === 'elite';
 const isElite = props.featureTier === 'elite';
+const isUnlimited = isElite;
 
 const creationMode = ref<'none' | 'manual' | 'template'>(isElite ? 'none' : 'manual');
 const isTemplateDialogOpen = ref(false);
@@ -160,10 +161,10 @@ const requiredWithVideoOn = computed(() => {
     return costs.value.text + (pages.value * costs.value.image) + audio + (pages.value * costs.value.video);
 });
 
-const canEnableNarration = computed(() => props.storyCredits >= requiredWithNarrationOn.value);
-const canEnableVideo = computed(() => isPro && props.storyCredits >= requiredWithVideoOn.value);
-const canSubmit = computed(() => props.storyCredits >= breakdown.value.total);
-const remainingCredits = computed(() => props.storyCredits - breakdown.value.total);
+const canEnableNarration = computed(() => isUnlimited || props.storyCredits >= requiredWithNarrationOn.value);
+const canEnableVideo = computed(() => isPro && (isUnlimited || props.storyCredits >= requiredWithVideoOn.value));
+const canSubmit = computed(() => isUnlimited || props.storyCredits >= breakdown.value.total);
+const remainingCredits = computed<number | null>(() => (isUnlimited ? null : props.storyCredits - breakdown.value.total));
 const hasSelectedTemplateWhenNeeded = computed(() => creationMode.value !== 'template' || selectedTemplate.value !== null);
 const canGenerate = computed(() => canSubmit.value && hasSelectedTemplateWhenNeeded.value);
 const creditsModal = useCreditsModal();
@@ -252,7 +253,7 @@ function templateDisableReason(template: StoryTemplate): string | null {
 
     const required = estimateTemplateCredits(template);
 
-    if (required > props.storyCredits) {
+    if (!isUnlimited && required > props.storyCredits) {
         return `Requires ${required} credits`;
     }
 
@@ -327,6 +328,10 @@ onMounted(() => {
 });
 
 const maxPagesWithNarration = computed(() => {
+    if (isUnlimited) {
+        return 15;
+    }
+
     const perPage = costs.value.image + costs.value.audio + (form.include_video && isPro ? costs.value.video : 0);
     const available = props.storyCredits - costs.value.text;
 
@@ -338,6 +343,10 @@ const maxPagesWithNarration = computed(() => {
 });
 
 const maxPagesWithVideo = computed(() => {
+    if (isUnlimited) {
+        return 15;
+    }
+
     const perPage = costs.value.image + costs.value.video + (form.include_narration ? costs.value.audio : 0);
     const available = props.storyCredits - costs.value.text;
 
@@ -377,6 +386,13 @@ watch(
 
 const warnings = computed<string[]>(() => {
     const list: string[] = [];
+    if (isUnlimited) {
+        if (creationMode.value === 'template' && !selectedTemplate.value) {
+            list.push('Choose a template to continue.');
+        }
+        return list;
+    }
+
     if (!form.include_narration && !canEnableNarration.value && pages.value > 0) {
         list.push(`Not enough credits for narration — you can afford up to ${maxPagesWithNarration.value} page(s) with audio.`);
     }
@@ -717,7 +733,7 @@ const illustrationStyleOptions = [
                                             Include Narration
                                             <span class="rounded-full px-2 py-0.5 text-xs font-medium"
                                                 :class="form.include_narration ? 'bg-blue-200 text-blue-800 dark:bg-blue-800/40 dark:text-blue-300' : 'bg-muted text-muted-foreground'">
-                                                {{ pages * costs.audio }} credits
+                                                {{ isUnlimited ? 'Unlimited' : `${pages * costs.audio} credits` }}
                                             </span>
                                         </p>
                                         <p class="text-xs mt-0.5" :class="form.include_narration ? 'text-blue-700/70 dark:text-blue-400' : 'text-muted-foreground'">AI text-to-speech audio for every page</p>
@@ -758,7 +774,7 @@ const illustrationStyleOptions = [
                                                 :class="form.include_video ? 'bg-violet-200 text-violet-800 dark:bg-violet-800/40 dark:text-violet-300' : 'bg-muted text-muted-foreground'">Pro</span>
                                             <span class="rounded-full px-2 py-0.5 text-xs font-medium"
                                                 :class="form.include_video ? 'bg-violet-200 text-violet-800 dark:bg-violet-800/40 dark:text-violet-300' : 'bg-muted text-muted-foreground'">
-                                                {{ pages * costs.video }} credits
+                                                {{ isUnlimited ? 'Unlimited' : `${pages * costs.video} credits` }}
                                             </span>
                                         </p>
                                         <p class="text-xs mt-0.5" :class="form.include_video ? 'text-violet-700/70 dark:text-violet-400' : 'text-muted-foreground'">AI-generated video for each illustrated page</p>
@@ -804,7 +820,7 @@ const illustrationStyleOptions = [
                             <!-- Warnings panel — shown at the top so it's impossible to miss -->
                             <transition name="warnings-fade">
                                 <div
-                                    v-if="warnings.length"
+                                    v-if="warnings.length && !isUnlimited"
                                     class="mb-4 rounded-xl border border-amber-300/70 bg-amber-50 px-3 py-2.5 dark:border-amber-700/50 dark:bg-amber-950/30"
                                 >
                                     <div class="mb-1.5 flex items-center gap-1.5">
@@ -833,7 +849,7 @@ const illustrationStyleOptions = [
                             <!-- Balance -->
                             <div class="mb-4 flex items-center justify-between rounded-xl bg-muted/50 px-3 py-2">
                                 <span class="text-xs text-muted-foreground">Your balance</span>
-                                <span class="font-bold text-amber-600 dark:text-amber-400">{{ props.storyCredits }} credits</span>
+                                <span class="font-bold text-amber-600 dark:text-amber-400">{{ isUnlimited ? 'Unlimited' : `${props.storyCredits} credits` }}</span>
                             </div>
 
                             <!-- Breakdown rows -->
@@ -857,12 +873,12 @@ const illustrationStyleOptions = [
                                 <div class="mt-1 border-t pt-2 flex justify-between font-semibold">
                                     <span>Total cost</span>
                                     <span :class="canSubmit ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive'">
-                                        {{ breakdown.total }}
+                                        {{ isUnlimited ? 'Unlimited plan' : breakdown.total }}
                                     </span>
                                 </div>
                                 <div class="flex justify-between text-xs" :class="canSubmit ? 'text-muted-foreground' : 'text-destructive font-semibold'">
-                                    <span>{{ canSubmit ? 'Remaining after' : 'Short by' }}</span>
-                                    <span>{{ Math.abs(remainingCredits) }}</span>
+                                    <span>{{ isUnlimited ? 'Plan status' : (canSubmit ? 'Remaining after' : 'Short by') }}</span>
+                                    <span>{{ isUnlimited ? 'Unlimited' : Math.abs(remainingCredits ?? 0) }}</span>
                                 </div>
                             </div>
 
@@ -871,7 +887,7 @@ const illustrationStyleOptions = [
                                 <div
                                     class="h-full rounded-full transition-all"
                                     :class="canSubmit ? 'bg-emerald-500' : 'bg-destructive'"
-                                    :style="{ width: `${Math.min(100, (breakdown.total / Math.max(1, props.storyCredits)) * 100)}%` }"
+                                    :style="{ width: `${isUnlimited ? 0 : Math.min(100, (breakdown.total / Math.max(1, props.storyCredits)) * 100)}%` }"
                                 />
                             </div>
                         </div>
@@ -961,7 +977,7 @@ const illustrationStyleOptions = [
                                 <div class="mt-3 flex flex-wrap gap-1.5 text-[11px]">
                                     <span class="rounded-full bg-muted px-2 py-0.5">{{ mediaProfileLabel(template.media_profile) }}</span>
                                     <span class="rounded-full bg-muted px-2 py-0.5">{{ template.page_count }} pages</span>
-                                    <span class="rounded-full bg-amber-100 text-amber-700 px-2 py-0.5 dark:bg-amber-900/30 dark:text-amber-400">{{ estimateTemplateCredits(template) }} cr</span>
+                                    <span class="rounded-full bg-amber-100 text-amber-700 px-2 py-0.5 dark:bg-amber-900/30 dark:text-amber-400">{{ isUnlimited ? 'Unlimited' : `${estimateTemplateCredits(template)} cr` }}</span>
                                 </div>
                                 <p v-if="templateDisableReason(template)" class="text-destructive mt-2 text-xs">{{ templateDisableReason(template) }}</p>
                             </button>

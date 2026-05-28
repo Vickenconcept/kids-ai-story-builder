@@ -29,7 +29,9 @@ const props = defineProps<{
     packs: CreditPack[];
     purchases: CreditPurchase[];
     storyCredits: number;
+    featureTier: string;
 }>();
+const isElite = computed(() => props.featureTier === 'elite');
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -62,12 +64,15 @@ const history = computed(() => props.purchases ?? []);
                         <div>
                             <p class="text-sm font-medium text-violet-200">Current balance</p>
                             <div class="mt-1 flex items-end gap-2">
-                                <span class="text-5xl font-bold tracking-tight">{{ storyCredits }}</span>
-                                <span class="mb-1.5 text-lg text-violet-200">credits</span>
+                                <span class="text-5xl font-bold tracking-tight">{{ isElite ? 'Unlimited' : storyCredits }}</span>
+                                <span class="mb-1.5 text-lg text-violet-200">{{ isElite ? 'plan' : 'credits' }}</span>
                             </div>
-                            <p class="mt-1 text-sm text-violet-200">Use credits to generate stories, illustrations, narration &amp; video.</p>
+                            <p class="mt-1 text-sm text-violet-200">
+                                {{ isElite ? 'Elite plan includes unlimited generation across text, images, narration, and video.' : 'Use credits to generate stories, illustrations, narration & video.' }}
+                            </p>
                         </div>
                         <Button
+                            v-if="!isElite"
                             type="button"
                             class="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow"
                             @click="modal.open()"
@@ -81,7 +86,7 @@ const history = computed(() => props.purchases ?? []);
                 </section>
 
                 <!-- Available packs -->
-                <section class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
+                <section v-if="!isElite" class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
                     <div class="mb-1">
                         <h2 class="text-lg font-semibold">Available Packs</h2>
                         <p class="text-sm text-muted-foreground">One-time payment. No subscription required.</p>
@@ -144,7 +149,7 @@ const history = computed(() => props.purchases ?? []);
                 </section>
 
                 <!-- Purchase history -->
-                <section class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
+                <section v-if="!isElite" class="rounded-2xl border border-sidebar-border/70 bg-card shadow-sm p-5 dark:border-sidebar-border">
                     <h2 class="text-lg font-semibold">Purchase History</h2>
 
                     <div v-if="history.length === 0" class="mt-6 flex flex-col items-center gap-2 py-10 text-center">
@@ -198,6 +203,13 @@ const history = computed(() => props.purchases ?? []);
                             </tbody>
                         </table>
                     </div>
+                </section>
+
+                <section v-else class="rounded-2xl border border-violet-200/70 bg-violet-50/50 p-5 shadow-sm dark:border-violet-700/50 dark:bg-violet-950/20">
+                    <h2 class="text-lg font-semibold">Elite Unlimited Access</h2>
+                    <p class="mt-2 text-sm text-muted-foreground">
+                        Your account is on Elite, so credit packs and credit tracking are not required. Story generation is unlimited across the app.
+                    </p>
                 </section>
 
             </div>

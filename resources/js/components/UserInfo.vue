@@ -20,6 +20,7 @@ const storyCredits = computed(() => {
 
     return typeof value === 'number' ? value : null;
 });
+const isElite = computed(() => props.user?.feature_tier === 'elite');
 
 // Compute whether we should show the avatar image
 const showAvatar = computed(
@@ -41,7 +42,7 @@ const showAvatar = computed(
             v-if="storyCredits !== null"
             class="truncate text-[11px] font-semibold text-amber-700 dark:text-amber-300"
         >
-            Credits: {{ storyCredits }}
+            Credits: {{ isElite ? 'Unlimited' : storyCredits }}
         </span>
         <span v-if="showEmail" class="truncate text-xs text-muted-foreground">{{
             user.email

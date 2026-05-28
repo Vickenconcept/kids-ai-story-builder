@@ -16,30 +16,9 @@ use App\Http\Controllers\Story\PublicStoryController;
 use App\Http\Controllers\Story\StoryPageController;
 use App\Http\Controllers\Story\StoryProjectController;
 use App\Http\Controllers\Story\StoryVideoLibraryController;
-use App\Models\StoryPlan;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-        'plans' => StoryPlan::query()
-            ->active()
-            ->ordered()
-            ->get([
-                'id',
-                'name',
-                'description',
-                'tier',
-                'included_credits',
-                'price_cents',
-                'currency',
-                'is_featured',
-                'feature_list',
-            ]),
-    ]);
-})->name('home');
+Route::redirect('/', '/login')->name('home');
 
 Route::inertia('/jv', 'Jv')->name('jv');
 Route::inertia('/sales', 'Sales')->name('sales');
@@ -64,6 +43,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::inertia('/tutorial', 'Tutorial')->name('tutorial');
 
     Route::prefix('credits')->name('credits.')->group(function () {
         Route::get('/', [CreditPurchaseController::class, 'index'])->name('index');

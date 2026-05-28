@@ -50,6 +50,8 @@ const props = defineProps<{
 const page = usePage<{ auth: { user: { name: string } } }>();
 const userName = page.props.auth?.user?.name ?? 'there';
 const firstName = userName.split(' ')[0];
+const isElite = props.tier === 'elite';
+const creditsLabel = isElite ? 'Unlimited' : String(props.credits);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
@@ -174,10 +176,11 @@ function progressPercent(project: RecentProject) {
                         <Zap class="size-4 text-amber-500" />
                     </CardHeader>
                     <CardContent>
-                        <p class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ credits }}</p>
-                        <p class="text-muted-foreground mt-0.5 text-xs">
+                        <p class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ creditsLabel }}</p>
+                        <p v-if="!isElite" class="text-muted-foreground mt-0.5 text-xs">
                             <Link href="/credits" class="hover:underline">Top up credits</Link>
                         </p>
+                        <p v-else class="text-muted-foreground mt-0.5 text-xs">Elite unlimited generation</p>
                     </CardContent>
                 </Card>
             </div>
@@ -306,8 +309,10 @@ function progressPercent(project: RecentProject) {
                                 <CreditCard class="size-5 text-amber-600 dark:text-amber-400" />
                             </div>
                             <div>
-                                <p class="text-sm font-medium">Buy Credits</p>
-                                <p class="text-muted-foreground text-xs">{{ credits }} credits remaining</p>
+                                <p class="text-sm font-medium">{{ isElite ? 'Elite Access' : 'Buy Credits' }}</p>
+                                <p class="text-muted-foreground text-xs">
+                                    {{ isElite ? 'Unlimited generation enabled' : `${credits} credits remaining` }}
+                                </p>
                             </div>
                         </Link>
                     </div>

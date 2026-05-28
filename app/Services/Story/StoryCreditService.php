@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class StoryCreditService
 {
+    public function hasUnlimitedCredits(User $user): bool
+    {
+        return $user->feature_tier?->isUnlimited() ?? false;
+    }
+
     public function cost(string $kind): int
     {
         return max(0, (int) config("story.credit_costs.$kind", 0));
@@ -42,6 +47,10 @@ class StoryCreditService
 
     public function assertCanSpend(User $user, string $kind): void
     {
+        if ($this->hasUnlimitedCredits($user)) {
+            return;
+        }
+
         $cost = $this->cost($kind);
         if ($cost <= 0) {
             return;
@@ -53,6 +62,10 @@ class StoryCreditService
 
     public function spend(User $user, string $kind): void
     {
+        if ($this->hasUnlimitedCredits($user)) {
+            return;
+        }
+
         $cost = $this->cost($kind);
         if ($cost <= 0) {
             return;
@@ -73,6 +86,10 @@ class StoryCreditService
      */
     public function spendOnce(string $idempotencyKey, User $user, string $kind): void
     {
+        if ($this->hasUnlimitedCredits($user)) {
+            return;
+        }
+
         $cost = $this->cost($kind);
 
         DB::transaction(function () use ($idempotencyKey, $user, $kind, $cost): void {

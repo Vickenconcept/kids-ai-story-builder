@@ -167,9 +167,10 @@ class StoryProjectController extends Controller
             && $user->feature_tier?->isPro();
         $includeNarration = $request->boolean('include_narration');
         $pageCount = $request->integer('page_count');
+        $hasUnlimitedCredits = $credits->hasUnlimitedCredits($user);
 
         $estimate = $credits->estimateForProject($pageCount, true, $includeNarration, $includeVideo, includeText: true);
-        if ((int) $user->story_credits < $estimate['total']) {
+        if (! $hasUnlimitedCredits && (int) $user->story_credits < $estimate['total']) {
             throw ValidationException::withMessages([
                 'page_count' => 'Not enough credits for this setup. Required: '.$estimate['total'].' credits.',
             ]);
@@ -363,8 +364,9 @@ class StoryProjectController extends Controller
                 : back()->with('info', $message);
         }
 
+        $hasUnlimitedCredits = $credits->hasUnlimitedCredits($user);
         $needed = $credits->cost('video');
-        if ((int) $user->story_credits < $needed) {
+        if (! $hasUnlimitedCredits && (int) $user->story_credits < $needed) {
             $message = 'Not enough credits for page video. Required: '.$needed.' credits.';
 
             return $expectsJson
@@ -450,8 +452,9 @@ class StoryProjectController extends Controller
                 : back()->with('info', $message);
         }
 
+        $hasUnlimitedCredits = $credits->hasUnlimitedCredits($user);
         $needed = $credits->cost('audio');
-        if ((int) $user->story_credits < $needed) {
+        if (! $hasUnlimitedCredits && (int) $user->story_credits < $needed) {
             $message = 'Not enough credits for page narration. Required: '.$needed.' credits.';
 
             return $expectsJson
@@ -524,6 +527,7 @@ class StoryProjectController extends Controller
         if (! $isPro) {
             $generateVideo = false;
         }
+        $hasUnlimitedCredits = $credits->hasUnlimitedCredits($request->user());
 
         $estimate = $credits->estimateForProject(
             $story->page_count,
@@ -533,7 +537,7 @@ class StoryProjectController extends Controller
             includeText: false,
         );
 
-        if ((int) $request->user()->story_credits < $estimate['total']) {
+        if (! $hasUnlimitedCredits && (int) $request->user()->story_credits < $estimate['total']) {
             return back()->with('error', 'Not enough credits to start selected media. Required: '.$estimate['total'].' credits.');
         }
 

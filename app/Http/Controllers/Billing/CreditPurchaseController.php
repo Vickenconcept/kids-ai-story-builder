@@ -50,6 +50,7 @@ class CreditPurchaseController extends Controller
                     'purchased_at',
                 ]),
             'storyCredits' => (int) $user->story_credits,
+            'featureTier' => $user->feature_tier?->value ?? 'basic',
         ]);
     }
 
